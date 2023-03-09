@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:client/widgets/MainButton.dart';
 
+// 촬영 전 페이지 statelessWidget으로 구현
+// 만약 애니메이션 효과 추가 시, 수정 필요
 class BeforeRecordingScreen extends StatelessWidget {
   const BeforeRecordingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
+      // backgroundColor는 흰색으로 설정
       backgroundColor: Colors.white,
+
+      // Column 정렬 이용해 화면 정가운데에 이하 요소들을 정렬
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // padding 추가해줌
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 60,
               vertical: 60,
             ),
+            // 각 요소를 묶어 간격 조절하기를 원하므로, Wrap를 이용
+            // 일단 모든 요소를 Wrap을 통해 하나로 묶은 후, 원하는 파트 별로 다시 Wrap으로 묶었음(button 이외)
             child: Wrap(
               direction: Axis.horizontal,
               // 나열 방향
