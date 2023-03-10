@@ -32,7 +32,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "CAR")
-    private List<CAR> cars = new ArrayList<>();
+    private List<Car> cars = new ArrayList<>();
 
     @Builder
     public User(
@@ -40,13 +40,15 @@ public class User {
             String UId,
             String nickName,
             String picture,
-            String email,
-            Car car
+            String email
     ){
-        this.car = car;
         this.UId = UId;
         this.nickName = nickName;
         this.picture = picture;
         this.email = email;
+    }
+
+    public void updateCar(Car car){
+        this.cars.add(car);
     }
 }
