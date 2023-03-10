@@ -43,6 +43,9 @@ dependencies {
 	// mysql
 	implementation 'mysql:mysql-connector-java'
 
+	// aop
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
