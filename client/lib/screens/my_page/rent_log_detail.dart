@@ -1,6 +1,5 @@
 import 'package:client/screens/my_page/rent_log_detail_after.dart';
 import 'package:flutter/material.dart';
-import '../../widgets/common/header.dart';
 import '../../widgets/common/footer.dart';
 import './rent_log_detail_before.dart';
 
@@ -65,7 +64,15 @@ class RentLogDetail extends StatelessWidget {
                 carNumber: "38모 6715",
                 id: id,
               ),
-              AfterRent(),
+              AfterRent(
+                startDate: "2021.10.20 11:00",
+                endDate: "2021.10.23 17:00",
+                rentCompany: "쏘카",
+                manufacturingCompany: "현대",
+                carName: "소나타",
+                carNumber: "38모 6715",
+                id: id,
+              ),
             ],
           ),
           bottomNavigationBar: Footer(),

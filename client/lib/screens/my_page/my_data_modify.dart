@@ -18,7 +18,18 @@ class MyDataModify extends StatelessWidget {
             height: 40,
           ),
           Expanded(
-            child: Column(),
+            child: Column(
+              children: [
+                Text(
+                  "user 정보가 뭐뭐 있는지 모르곘어서 비워둡니당",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+              ],
+            ),
           ),
           Footer(),
         ],

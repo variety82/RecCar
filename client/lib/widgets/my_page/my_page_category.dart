@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../screens/my_page/my_data_modify.dart';
 import '../../screens/my_page/car_info.dart';
 import '../../screens/my_page/rent_log.dart';
+import '../../screens/my_page/alarm_setting.dart';
 
 class MyPageCategory extends StatelessWidget {
   final String category;
@@ -38,6 +39,11 @@ class MyPageCategory extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const RentLog()),
+          );
+        }else if (category == "알림 설정") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AlarmSetting()),
           );
         }
       },
