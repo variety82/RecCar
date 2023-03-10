@@ -41,7 +41,7 @@ dependencies {
 	implementation('ch.qos.logback:logback-classic')
 
 	// mysql
-	implementation 'mysql:mysql-connector-java'
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
 
 	// aop
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
@@ -64,6 +64,10 @@ dependencies {
 	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
 	implementation 'com.amazonaws:aws-java-sdk-s3'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws-parameter-store-config:2.2.6.RELEASE'
+
+	// Swagger 3.0
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+//	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
 }
 
 tasks.named('test') {
