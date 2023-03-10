@@ -1,15 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:client/screens/before_recording_screen/before_recording_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MaterialApp(
+    title: 'TEST',
+    home: FirstRoute(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FirstRoute extends StatelessWidget {
+  const FirstRoute({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('First Route'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: const Text('Open route'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const BeforeRecordingScreen()),
+            );
+          },
+        ),
+      ),
+    );
   }
 }

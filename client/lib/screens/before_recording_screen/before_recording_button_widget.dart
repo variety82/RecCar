@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // import screens
 import 'package:client/screens/video_recording_screen/video_recording_screen.dart';
+import 'package:client/screens/video_recording_screen/camera_screen.dart';
 
 // MainButton widget으로 구현함
 class BeforeRecordingButton extends StatelessWidget {
@@ -27,7 +28,8 @@ class BeforeRecordingButton extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const VideoRecordingScreen(),
+              builder: (context) => CameraScreen(),
+              // builder: (context) => const VideoRecordingScreen(),
             ),
           );
         },
