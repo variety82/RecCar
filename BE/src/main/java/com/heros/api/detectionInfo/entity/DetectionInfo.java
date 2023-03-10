@@ -1,6 +1,7 @@
 package com.heros.api.detectionInfo.entity;
 
 
+import com.heros.api.car.entity.Car;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,11 +34,11 @@ public class DetectionInfo {
     @Column(name = "DAMAGE_IMAGE_URL")
     private String damageImageUrl;
 
-    @Column(name = "BEFORE")
-    private boolean before;
+    @Column(name = "FORMER")
+    private boolean former;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "car_id")
+    @JoinColumn(name = "CAR_ID")
     private Car car;
 
     @Builder
@@ -48,7 +49,7 @@ public class DetectionInfo {
             LocalDate damageDate,
             String memo,
             String damageImageUrl,
-            boolean before
+            boolean former,
             Car car
     ){
         this.detectionInfoId = detectionInfoId;
@@ -57,7 +58,7 @@ public class DetectionInfo {
         this.damageDate = damageDate;
         this.memo = memo;
         this.damageImageUrl = damageImageUrl;
-        this.before = before;
+        this.former = former;
         this.car = car;
     }
 }

@@ -1,6 +1,7 @@
 package com.heros.api.user.entity;
 
 
+import com.heros.api.car.entity.Car;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,7 +32,7 @@ public class User {
     @Column(name = "EMAIL", length = 50)
     private String email;
 
-    @OneToMany(mappedBy = "CAR")
+    @OneToMany(mappedBy = "user")
     private List<Car> cars = new ArrayList<>();
 
     @Builder
