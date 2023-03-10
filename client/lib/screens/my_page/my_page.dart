@@ -106,7 +106,7 @@ class MyPage extends StatelessWidget {
                 MyPageCategory(category: "내 정보 수정", textColor: Colors.black),
                 MyPageCategory(category: "차량 정보 조회", textColor: Colors.black),
                 MyPageCategory(category: "렌트 내역", textColor: Colors.black),
-                MyPageCategory(category: "알림", textColor: Colors.black),
+                MyPageCategory(category: "알림 설정", textColor: Colors.black),
                 MyPageCategory(category: "로그아웃", textColor: Colors.black),
                 MyPageCategory(category: "회원 탈퇴", textColor: Colors.red),
               ],
