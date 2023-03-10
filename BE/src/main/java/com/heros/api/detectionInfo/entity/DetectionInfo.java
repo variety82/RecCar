@@ -34,7 +34,7 @@ public class DetectionInfo {
     @Column(name = "DAMAGE_IMAGE_URL")
     private String damageImageUrl;
 
-    @Column(name = "FORMER")
+    @Column(name = "FORMER", columnDefinition="tinyint(1)")
     private boolean former;
 
     @ManyToOne(fetch = FetchType.LAZY)
