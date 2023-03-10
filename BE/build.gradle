@@ -41,7 +41,8 @@ dependencies {
 	implementation('ch.qos.logback:logback-classic')
 
 	// mysql
-	implementation 'mysql:mysql-connector-java'
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
+
 
 	// aop
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
