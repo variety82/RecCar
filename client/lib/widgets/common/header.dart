@@ -32,7 +32,7 @@ class Header extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 16,
-                  fontWeight: FontWeight.w600
+                  fontWeight: FontWeight.w700
                 ),
               ),
             ),
