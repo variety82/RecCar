@@ -1,6 +1,7 @@
 package com.heros.api.detectionInfo.service;
 
 import com.heros.api.detectionInfo.dto.response.PartWithDetectionInfoResponse;
+import com.heros.api.detectionInfo.dto.response.RentDetailResponse;
 import com.heros.api.detectionInfo.repository.DetectionInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,5 +19,10 @@ public class DetectionInfoService {
     public PartWithDetectionInfoResponse getDetectionInfos(Long carId){
         PartWithDetectionInfoResponse detectionInfos = detectionInfoRepository.getDetectionInfos(carId);
         return detectionInfos;
+    }
+
+    public RentDetailResponse getRentDetailInfos(Long carId){
+        RentDetailResponse rentDetailInfos = detectionInfoRepository.getRentalDetailInfos(carId);
+        return rentDetailInfos;
     }
 }
