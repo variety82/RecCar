@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
@@ -26,7 +27,7 @@ public class DetectionInfo {
     private String damage;
 
     @Column(name = "DAMAGE_DATE")
-    private LocalDate damageDate;
+    private Date damageDate;
 
     @Column(name = "MEMO")
     private String memo;
@@ -46,7 +47,7 @@ public class DetectionInfo {
             @NotNull Long detectionInfoId,
             String part,
             String damage,
-            LocalDate damageDate,
+            Date damageDate,
             String memo,
             String damageImageUrl,
             boolean former,
