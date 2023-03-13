@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import 'package:client/screens/after_recording_screen/after_recording_screen.dart';
+
 class CheckVideoPage extends StatefulWidget {
   final String filePath;
 
@@ -39,7 +41,12 @@ class _CheckVideoPageState extends State<CheckVideoPage> {
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
-              print('do something with the file');
+              Navigator.pop(context);
+              final route = MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (_) => AfterRecordingScreen(),
+              );
+              Navigator.push(context, route);
             },
           )
         ],
@@ -49,7 +56,10 @@ class _CheckVideoPageState extends State<CheckVideoPage> {
         future: _initVideoPlayer(),
         builder: (context, state) {
           if (state.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Color(0xFFE0426F),
+            ));
           } else {
             return VideoPlayer(_videoPlayerController);
           }
