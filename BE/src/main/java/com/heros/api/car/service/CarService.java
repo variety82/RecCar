@@ -49,4 +49,11 @@ public class CarService {
         }
         return carResponseList;
     }
+
+    public CarResponse findCar(Long userId) {
+        Car car = carRepository.findByUserAndReturned(userRepository.findById(userId).get(), false);
+        if (car == null)
+            return null;
+        return new CarResponse(car);
+    }
 }
