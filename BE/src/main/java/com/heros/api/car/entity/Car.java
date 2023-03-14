@@ -1,5 +1,6 @@
 package com.heros.api.car.entity;
 
+import com.heros.api.car.dto.request.CarModify;
 import com.heros.api.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class Car {
     @Column(name = "CAR_ID", columnDefinition = "INT UNSIGNED")
     private long carId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
 
@@ -58,7 +59,8 @@ public class Car {
     private int newDamageCount;
 
     @Builder
-    public Car(String carNumber, String carManufacturer, String carModel, String carFuel, LocalDateTime rentalDate, LocalDateTime returnDate, String rentalCompany, boolean returned, String initialVideo, String latterVideo, int newDamageCount) {
+    public Car(User user, String carNumber, String carManufacturer, String carModel, String carFuel, LocalDateTime rentalDate, LocalDateTime returnDate, String rentalCompany, boolean returned, String initialVideo, String latterVideo, int newDamageCount) {
+        this.user = user;
         this.carNumber = carNumber;
         this.carManufacturer = carManufacturer;
         this.carModel = carModel;
@@ -70,5 +72,21 @@ public class Car {
         this.initialVideo = initialVideo;
         this.latterVideo = latterVideo;
         this.newDamageCount = newDamageCount;
+    }
+
+    public Car(CarModify carModify, Car car) {
+        this.carId = carModify.getCarId();
+        this.user = car.getUser();
+        this.carNumber = carModify.getCarNumber();
+        this.carManufacturer = carModify.getCarManufacturer();
+        this.carModel = carModify.getCarModel();
+        this.carFuel = carModify.getCarFuel();
+        this.rentalDate = carModify.getRentalDate();
+        this.returnDate = carModify.getReturnDate();
+        this.rentalCompany = carModify.getRentalCompany();
+        this.returned = car.isReturned();
+        this.initialVideo = carModify.getInitialVideo();
+        this.latterVideo = carModify.getLatterVideo();
+        this.newDamageCount = car.getNewDamageCount();
     }
 }
