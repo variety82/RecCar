@@ -30,7 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  naver_map_plugin:
+    git: https://github.com/LBSTECH/naver_map_plugin.git
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,6 +41,7 @@ dependencies:
   permission_handler: ^10.2.0
   video_player: ^2.5.3
   path_provider: ^2.0.13
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:
@@ -91,5 +93,27 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: lib/assets/fonts/Pretendard-Thin.ttf
+          weight: 100
+        - asset: lib/assets/fonts/Pretendard-ExtraLight.ttf
+          weight: 200
+        - asset: lib/assets/fonts/Pretendard-Light.ttf
+          weight: 300
+        - asset: lib/assets/fonts/Pretendard-Regular.ttf
+          weight: 400
+        - asset: lib/assets/fonts/Pretendard-Medium.ttf
+          weight: 500
+        - asset: lib/assets/fonts/Pretendard-SemiBold.ttf
+          weight: 600
+        - asset: lib/assets/fonts/Pretendard-Bold.ttf
+          weight: 700
+        - asset: lib/assets/fonts/Pretendard-ExtraBold.ttf
+          weight: 800
+        - asset: lib/assets/fonts/Pretendard-Black.ttf
+          weight: 900
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
