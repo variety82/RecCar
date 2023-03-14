@@ -36,6 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 
+### Querydsl ###
+/src/main/generated
+
 ### yml
 application-aws.yml
 application-db.yml
