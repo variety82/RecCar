@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../screens/gas_station_search_page/gas_station_search.dart';
 import '../../screens/my_page/my_page.dart';
+import '../../screens/before_recording_screen/before_recording_screen.dart';
 
 class Footer extends StatelessWidget {
   const Footer({Key? key}) : super(key: key);
@@ -29,8 +30,7 @@ class Footer extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => NaverMapTest()),
+                MaterialPageRoute(builder: (context) => NaverMapTest()),
               );
             },
             child: Icon(
@@ -40,7 +40,14 @@ class Footer extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              // Navigator.pushNamed(context, '/before_recording');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BeforeRecordingScreen()),
+              );
+            },
             child: Transform.translate(
               offset: Offset(0, -10),
               child: Transform.scale(
@@ -72,8 +79,7 @@ class Footer extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const MyPage()),
+                MaterialPageRoute(builder: (context) => const MyPage()),
               );
             },
             child: Icon(
