@@ -14,20 +14,30 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      height: 60,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
         children: [
-          Text(
-            "$title",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-              decoration: TextDecoration.none,
-            ),
+          const SizedBox(
+            height: 50,
           ),
-        ],
+          Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10
+              ),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700
+                ),
+              ),
+            ),
+          ],
+        ),]
       ),
     );
   }
