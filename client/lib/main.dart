@@ -9,8 +9,14 @@ void main() {
   runApp(
       MaterialApp(
         title: 'cilent',
-
-        theme: ThemeData(fontFamily: 'Pretendard'),
+        theme: ThemeData(
+          fontFamily: 'Pretendard',
+          primaryColor: const Color(0xFFE0426F),
+          primaryColorLight : const Color(0xFFFBD5DC),
+          secondaryHeaderColor: const Color(0xFF453F52),
+          shadowColor: const Color(0xFFEFEFEF),
+          disabledColor: const Color(0xFF999999),
+        ),
         themeMode: ThemeMode.system,
         initialRoute: '/home',
         routes: {
@@ -39,7 +45,7 @@ class MyApp extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children:[
-                const Text('대충 차고 이미지'),
+                const Text('대충 차고 이미지',),
                 IconButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/register');
