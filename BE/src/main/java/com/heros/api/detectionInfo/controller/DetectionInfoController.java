@@ -6,7 +6,8 @@ import com.heros.api.detectionInfo.dto.response.PartWithDetectionInfoResponse;
 import com.heros.api.detectionInfo.dto.response.RentDetailResponse;
 import com.heros.api.detectionInfo.service.DetectionInfoService;
 import com.heros.api.example.model.ErrorResponseExample;
-import com.heros.api.example.model.UserValue;
+import com.heros.exception.ErrorCode;
+import com.heros.exception.customException.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +21,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.function.EntityResponse;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Tag(name = "DetectionInfoController", description = "차량 파손 정보 API")
 @RestController
@@ -35,9 +39,12 @@ public class DetectionInfoController {
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
     @GetMapping(value = "/api/v1/detection")
-    public ResponseEntity<?> getDetectionInfos(@Param(value = "carId") Long carId){
-
+    public ResponseEntity<?> getDetectionInfos(@NotNull @Min(1) @Param(value = "carId") Long carId){
         PartWithDetectionInfoResponse detectionInfos = detectionInfoService.getDetectionInfos(carId);
+
+        if (detectionInfos == null) {
+            throw (new BusinessException(ErrorCode.PAGE_NOT_FOUND));
+        }
 
         return ResponseEntity.ok().body(detectionInfos);
     }
@@ -48,8 +55,11 @@ public class DetectionInfoController {
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
     @GetMapping(value = "/api/v1/detection/rental")
-    public ResponseEntity<?> getRentDetailInfos(@Param(value = "carId") Long carId){
+    public ResponseEntity<?> getRentDetailInfos(@NotNull @Min(1) @Param(value = "carId") Long carId){
         RentDetailResponse rentalDetailInfos = detectionInfoService.getRentDetailInfos(carId);
+        if (rentalDetailInfos == null) {
+            throw (new BusinessException(ErrorCode.PAGE_NOT_FOUND));
+        }
 
         return ResponseEntity.ok().body(rentalDetailInfos);
     }
@@ -60,7 +70,7 @@ public class DetectionInfoController {
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
     @PostMapping(value = "/api/v1/detection")
-    public ResponseEntity<?> login(@RequestBody DetectionInfoCreate detectionInfoCreate) {
+    public ResponseEntity<?> addDetectionInfo(@Valid @RequestBody DetectionInfoCreate detectionInfoCreate) {
         detectionInfoService.createDamageInfo(detectionInfoCreate);
         return ResponseEntity.status(201).body(null);
     }
