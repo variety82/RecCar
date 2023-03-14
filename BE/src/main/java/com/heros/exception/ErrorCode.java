@@ -5,8 +5,10 @@ public enum ErrorCode {
     // Global
     INVALID_INPUT_VALUE(400, "G001", "Invalid Input Value"),
     HANDLE_ACCESS_DENIED(403, "G002", "Access is Denied"),
-    METHOD_NOT_ALLOWED(405, "G003", "Invalid Input Value"),
-    INTERNAL_SERVER_ERROR(500, "G004", "Internal Server Error"),
+    PAGE_NOT_FOUND(404, "G003", "요청하신 정보가 없습니다. id 등 파라미터를 확인하세요"),
+    METHOD_NOT_ALLOWED(405, "G004", "Invalid Input Value"),
+    INTERNAL_SERVER_ERROR(500, "G005", "Internal Server Error"),
+
 
     // Car
     DATE_INPUT_INVALID(400, "C001", "대여기간이 유효하지 않습니다. 렌트 시작일이 반납 기간 이전인지 확인하세요"),
