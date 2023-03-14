@@ -49,9 +49,20 @@ public class CarController {
             @ApiResponse(responseCode = "200", description = "차량 리스트 조회 성공", content = @Content(schema = @Schema(implementation = CarResponse.class))),
             @ApiResponse(responseCode = "400", description = "bad request operation")
     })
-    @PostMapping(value = "history")
-    public ResponseEntity<?> carListGet(@Schema(description = "조회할 userId", example = "1") @RequestBody Long userId) {
+    @GetMapping(value = "history/{userId}")
+    public ResponseEntity<?> carListGet(@Schema(description = "조회할 userId", example = "1") @PathVariable Long userId) {
         List<CarResponse> carList = carService.findCarList(userId);
         return ResponseEntity.status(200).body(carList);
+    }
+
+    @Operation(summary = "대여중인 차량 조회", description = "userId의 대여중인 차량 조회 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "대여중인 차량 조회 성공", content = @Content(schema = @Schema(implementation = CarResponse.class))),
+            @ApiResponse(responseCode = "400", description = "bad request operation")
+    })
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity<?> carGet(@Schema(description = "조회할 userId", example = "1") @PathVariable Long userId) {
+        CarResponse carResponse = carService.findCar(userId);
+        return ResponseEntity.status(200).body(carResponse);
     }
 }
