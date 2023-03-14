@@ -46,7 +46,7 @@ public class Car {
     @Column(name = "RENTAL_COMPANY")
     private String rentalCompany;
 
-    @Column(name = "RETURNED")
+    @Column(name = "RETURNED", columnDefinition="tinyint(1)")
     private boolean returned;
 
     @Column(name = "INITIAL_VIDEO")
