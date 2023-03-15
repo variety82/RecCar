@@ -3,8 +3,11 @@ import 'package:client/widgets/register/category_title.dart';
 import 'package:client/widgets/register/maker_item.dart';
 
 class SelectMaker extends StatefulWidget {
+  final void Function(int, String) updateSelectedMaker;
+
+
   const SelectMaker({
-    super.key,
+    super.key, required this.updateSelectedMaker,
   });
 
   @override
@@ -51,21 +54,28 @@ class _SelectMakerState extends State<SelectMaker> {
               horizontal: 20
           ),
           // 카테고리 리스트, 현재는 선택해서 이동 불가하고 시간 남으면 클릭시 모달 내용 변경하도록 설정
-          child: Row(
-            children: [
-              categoryTitle(
-                  title: '제조사',
-                  isSelected: true
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(left: 0),
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  CategoryTitle(
+                      title: '제조사',
+                      isSelected: true
+                  ),
+                  CategoryTitle(
+                      title: '차종',
+                      isSelected: false
+                  ),
+                  CategoryTitle(
+                      title: '연료',
+                      isSelected: false
+                  ),
+                ],
               ),
-              categoryTitle(
-                  title: '차종',
-                  isSelected: false
-              ),
-              categoryTitle(
-                  title: '연료',
-                  isSelected: false
-              ),
-            ],
+            ),
           ),
         ),
         // 카테고리 하단 바
@@ -103,6 +113,7 @@ class _SelectMakerState extends State<SelectMaker> {
               direction: Axis.horizontal,
               children: [
                 MakerItem(
+                  updateSelectedMaker : widget.updateSelectedMaker,
                   changeSelectedItem: _changeSelectedItem,
                   isSelected: selectedMaker == 1 ? true : false,
                   makerId: 1,
@@ -110,10 +121,11 @@ class _SelectMakerState extends State<SelectMaker> {
                   makerImageUrl: 'https://scontent-ssn1-1.xx.fbcdn.net/v/t1.6435-9/71140183_2565406580147654_6224942049100038144_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=rFRCaBYqX_kAX-6Pv-x&_nc_ht=scontent-ssn1-1.xx&oh=00_AfA_fpZatlF37xtx_gAEwJunxUpppE_QUaVmozu5c9EURA&oe=64364939',
                 ),
                 MakerItem(
+                  updateSelectedMaker : widget.updateSelectedMaker,
                   changeSelectedItem: _changeSelectedItem,
                   isSelected: selectedMaker == 2 ? true : false,
                   makerId: 2,
-                  makerTitle: '싸피',
+                  makerTitle: '싸피2',
                   makerImageUrl: 'https://scontent-ssn1-1.xx.fbcdn.net/v/t1.6435-9/71140183_2565406580147654_6224942049100038144_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=rFRCaBYqX_kAX-6Pv-x&_nc_ht=scontent-ssn1-1.xx&oh=00_AfA_fpZatlF37xtx_gAEwJunxUpppE_QUaVmozu5c9EURA&oe=64364939',
                 ),
               ],
