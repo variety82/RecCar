@@ -111,7 +111,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                       // 나열 방향
                       crossAxisAlignment: WrapCrossAlignment.center,
                       // 정렬 방식
-                      spacing: 40,
+                      spacing: 32,
                       // 좌우 간격
                       runSpacing: 10,
                       children: [
