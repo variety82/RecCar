@@ -53,15 +53,15 @@ class _SelectCarState extends State<SelectCar> {
           // 카테고리 리스트, 현재는 선택해서 이동 불가하고 시간 남으면 클릭시 모달 내용 변경하도록 설정
           child: Row(
             children: [
-              categoryTitle(
+              CategoryTitle(
                   title: '제조사',
                   isSelected: false
               ),
-              categoryTitle(
+              CategoryTitle(
                   title: '차종',
                   isSelected: true
               ),
-              categoryTitle(
+              CategoryTitle(
                   title: '연료',
                   isSelected: false
               ),
@@ -94,30 +94,94 @@ class _SelectCarState extends State<SelectCar> {
           ),
         ),
         // 제조사 선택 영역이 나열될 곳
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: SizedBox(
             width: double.infinity,
             child: Wrap(
               alignment: WrapAlignment.start,
-              direction: Axis.vertical,
               children: [
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
-                Text('그렌저'),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('그랜져'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('롤스로이스'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('그랜쟈'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                
+
+
               ],
             ),
           ),
