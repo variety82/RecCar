@@ -398,11 +398,8 @@ class _CameraScreenState extends State<CameraScreen>
 
   @override
   Widget build(BuildContext context) {
-    final screen_size = MediaQuery.of(context).size;
-    final deviceRatio = screen_size.width / screen_size.height;
     final Orientation orientation = MediaQuery.of(context).orientation;
 
-    print((1 / deviceRatio) * (9 / 16));
     if (!controller!.value.isInitialized) {
       return Container();
     }
@@ -514,10 +511,10 @@ class _CameraScreenState extends State<CameraScreen>
                                               height: 80,
                                               width: 160,
                                               decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          40)),
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(40),
+                                              ),
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -540,7 +537,7 @@ class _CameraScreenState extends State<CameraScreen>
                                                       children: [
                                                         controller!.value
                                                                 .isRecordingPaused
-                                                            ? Stack(
+                                                            ? const Stack(
                                                                 alignment:
                                                                     Alignment
                                                                         .center,
@@ -578,7 +575,16 @@ class _CameraScreenState extends State<CameraScreen>
                                                       print(rawVideo);
                                                       File videoFile =
                                                           File(rawVideo!.path);
-                                                      print(videoFile);
+                                                      print('Video length');
+                                                      print(videoFile.length());
+                                                      int fileSizeInBytes =
+                                                          await videoFile
+                                                              .length();
+                                                      double fileSizeInMB =
+                                                          fileSizeInBytes /
+                                                              (1024 * 1024);
+                                                      print(
+                                                          'Video file size: $fileSizeInMB MB');
                                                       int currentUnix = DateTime
                                                               .now()
                                                           .millisecondsSinceEpoch;
