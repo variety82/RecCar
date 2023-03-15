@@ -7,10 +7,11 @@ class MakerItem extends StatefulWidget {
   final String makerImageUrl;
   final ValueChanged<int> changeSelectedItem;
   final bool isSelected;
+  final void Function(int, String) updateSelectedMaker;
 
 
   const MakerItem({
-    super.key, required this.makerTitle, required this.makerImageUrl, required this.makerId, required this.isSelected, required this.changeSelectedItem,
+    super.key, required this.makerTitle, required this.makerImageUrl, required this.makerId, required this.isSelected, required this.changeSelectedItem, required this.updateSelectedMaker,
   });
 
   @override
@@ -29,6 +30,7 @@ class _MakerItemState extends State<MakerItem> {
             onTap: () {
               setState(() {
                 widget.changeSelectedItem(widget.makerId);
+                widget.updateSelectedMaker(widget.makerId, widget.makerTitle);
               });
             },
             child: Container(

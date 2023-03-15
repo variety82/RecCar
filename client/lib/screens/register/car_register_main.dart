@@ -16,38 +16,54 @@ class CarRegister extends StatefulWidget {
 }
 
 class _CarRegisterState extends State<CarRegister> {
-  @override
 
+  void updateSelectedMaker(makerId, makerTitle) {
+    setState(() {
+      selectedMaker = {
+        'id' : makerId,
+        'title' : makerTitle,
+      };
+    });
+  }
+
+  Map<String, dynamic> selectedMaker = {
+    'id' : null,
+    'title' : null,
+  };
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
         body: Column(
           children: [
-            Header(
+            const Header(
                 title: '차량 등록'
             ),
             Expanded(child:
             Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 vertical: 8,
                 horizontal: 14,
               ),
               child: Column(
                 children: [
-                  RegisterTitle(
+                  const RegisterTitle(
                       title: '차량 정보'
                   ),
                   RegisterList(
                     lineList: [
                       ModalNavigator(
-                        showedWidget: SelectMaker(),
+                        showedWidget: SelectMaker(
+                            updateSelectedMaker: updateSelectedMaker,
+                        ),
                         child: registerLine(
                           category: '제조사',
-                          content: '르노 삼성',
+                          content: selectedMaker['title'],
                           isLastLine: false,
                         ),
                       ),
-                      ModalNavigator(
+                      const ModalNavigator(
                         showedWidget: SelectCar(),
                         child: registerLine(
                           category: '차종',
@@ -55,17 +71,17 @@ class _CarRegisterState extends State<CarRegister> {
                           isLastLine: false,
                         ),
                       ),
-                      registerLine(
+                      const registerLine(
                         category: '연료 종류',
                         content: '가솔린',
                         isLastLine: true,
                       ),
                     ],
                   ),
-                  RegisterTitle(
+                  const RegisterTitle(
                       title: '대여 정보'
                   ),
-                  RegisterList(
+                  const RegisterList(
                     lineList: [
                       registerLine(
                         category: '대여 일자',
@@ -93,7 +109,7 @@ class _CarRegisterState extends State<CarRegister> {
               ),
             ),
             ),
-            Footer()
+            const Footer()
           ],
         )
     );
