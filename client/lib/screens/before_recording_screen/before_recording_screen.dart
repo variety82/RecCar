@@ -75,12 +75,14 @@ class BeforeRecordingScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
                   child: Column(
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(
-                          vertical: 20,
+                          vertical: 12,
                         ),
                         child: Column(
                           children: [

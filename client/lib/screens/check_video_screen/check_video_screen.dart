@@ -44,7 +44,9 @@ class _CheckVideoPageState extends State<CheckVideoPage> {
               Navigator.pop(context);
               final route = MaterialPageRoute(
                 fullscreenDialog: true,
-                builder: (_) => AfterRecordingScreen(),
+                builder: (_) => AfterRecordingScreen(
+                  filePath: widget.filePath,
+                ),
               );
               Navigator.push(context, route);
             },
