@@ -6,7 +6,10 @@ import 'package:client/widgets/register/register_title.dart';
 import 'package:client/widgets/register/register_list.dart';
 import 'package:client/screens/register/select_maker.dart';
 import 'package:client/screens/register/select_car.dart';
+import 'package:client/screens/register/select_borrow_date.dart';
 import 'package:client/widgets/common/modal_navigator.dart';
+import 'package:intl/intl.dart';
+
 
 class CarRegister extends StatefulWidget {
   const CarRegister({Key? key}) : super(key: key);
@@ -35,6 +38,14 @@ class _CarRegisterState extends State<CarRegister> {
           'title' : makerTitle,
         };
       }
+    });
+  }
+
+  DateTime _borrowingDate = DateTime.now().add(const Duration(hours: 9));
+
+  void updateSelectedDate(seletedDate) {
+    setState(() {
+      _borrowingDate = seletedDate;
     });
   }
 
@@ -88,24 +99,29 @@ class _CarRegisterState extends State<CarRegister> {
                   const RegisterTitle(
                       title: '대여 정보'
                   ),
-                  const RegisterList(
+                  RegisterList(
                     lineList: [
-                      registerLine(
-                        category: '대여 일자',
-                        content: '2023년 10월 25일',
-                        isLastLine: false,
+                      ModalNavigator(
+                        showedWidget: SelectBorrowDate(
+                            updateSelectedDate : updateSelectedDate,
+                        ),
+                        child: registerLine(
+                          category: '대여 일자',
+                          content: DateFormat('yyyy년 MM월 dd일').format(_borrowingDate),
+                          isLastLine: false,
+                        ),
                       ),
-                      registerLine(
+                      const registerLine(
                         category: '반납 일자',
                         content: '2023년 10월 25일',
                         isLastLine: false,
                       ),
-                      registerLine(
+                      const registerLine(
                         category: '렌트카 업체',
                         content: 'SSAFY',
                         isLastLine: false,
                       ),
-                      registerLine(
+                      const registerLine(
                         category: '차량 번호',
                         content: '00허 2102',
                         isLastLine: true,
