@@ -17,19 +17,26 @@ class CarRegister extends StatefulWidget {
 
 class _CarRegisterState extends State<CarRegister> {
 
-  void updateSelectedMaker(makerId, makerTitle) {
-    setState(() {
-      selectedMaker = {
-        'id' : makerId,
-        'title' : makerTitle,
-      };
-    });
-  }
-
   Map<String, dynamic> selectedMaker = {
     'id' : null,
     'title' : null,
   };
+
+  void updateSelectedMaker(makerId, makerTitle) {
+    setState(() {
+      if (selectedMaker['id'] == makerId) {
+        selectedMaker = {
+          'id' : null,
+          'title': null,
+        };
+      } else {
+        selectedMaker = {
+          'id' : makerId,
+          'title' : makerTitle,
+        };
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

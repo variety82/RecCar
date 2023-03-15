@@ -31,7 +31,7 @@ class registerLine extends StatelessWidget {
                 ),
               ),
               Text(
-                content ?? '입력해주세요',
+                content ?? '',
                 style: const TextStyle(
                     color: Color(0xFF453F52)
                 ),
