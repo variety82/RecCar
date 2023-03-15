@@ -5,28 +5,32 @@ import 'screens/register/car_register_main.dart';
 import 'screens/my_page/my_page.dart';
 import 'screens/gas_station_search_page/gas_station_search.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
+import 'screens/video_recording_screen/camera_screen.dart';
 
 void main() {
-  runApp(MaterialApp(
-    title: 'cilent',
-    theme: ThemeData(
-      fontFamily: 'Pretendard',
-      primaryColor: const Color(0xFFE0426F),
-      primaryColorLight: const Color(0xFFFBD5DC),
-      secondaryHeaderColor: const Color(0xFF453F52),
-      shadowColor: const Color(0xFFEFEFEF),
-      disabledColor: const Color(0xFF999999),
+  runApp(
+    MaterialApp(
+      title: 'cilent',
+      theme: ThemeData(
+        fontFamily: 'Pretendard',
+        primaryColor: const Color(0xFFE0426F),
+        primaryColorLight: const Color(0xFFFBD5DC),
+        secondaryHeaderColor: const Color(0xFF453F52),
+        shadowColor: const Color(0xFFEFEFEF),
+        disabledColor: const Color(0xFF999999),
+      ),
+      themeMode: ThemeMode.system,
+      initialRoute: '/home',
+      routes: {
+        '/home': (context) => const MyApp(),
+        '/register': (context) => const CarRegister(),
+        '/my-page': (context) => const MyPage(),
+        '/station': (context) => NaverMapTest(),
+        '/before-recording': (context) => BeforeRecordingScreen(),
+        '/recording': (context) => CameraScreen(),
+      },
     ),
-    themeMode: ThemeMode.system,
-    initialRoute: '/home',
-    routes: {
-      '/home': (context) => const MyApp(),
-      '/register': (context) => const CarRegister(),
-      '/my-page': (context) => const MyPage(),
-      '/station': (context) => NaverMapTest(),
-      '/before-recording': (context) => BeforeRecordingScreen(),
-    },
-  ));
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:client/widgets/common/moveable_button.dart';
+
 // 만약 애니메이션 효과 추가 시, 수정 필요
 class AfterRecordingScreen extends StatefulWidget {
   final String filePath;
@@ -346,31 +348,9 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                             ),
                           ],
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            minimumSize: Size(200, 50),
-                            backgroundColor: Color(0xFFE0426F),
-                          ),
-                          onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => {},
-                            //     // builder: (context) => const VideoRecordingScreen(),
-                            //   ),
-                            // );
-                          },
-                          child: Text(
-                            '확인하기',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                        MoveableButton(
+                          text: '확인하기',
+                          routing: widget.filePath,
                         ),
                       ],
                     ),

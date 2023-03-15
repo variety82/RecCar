@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // import widgets
-import 'package:client/screens/before_recording_screen/before_recording_button_widget.dart';
+import 'package:client/widgets/common/moveable_button.dart';
 
 // 촬영 전 페이지 statelessWidget으로 구현
 // 만약 애니메이션 효과 추가 시, 수정 필요
@@ -133,10 +133,11 @@ class BeforeRecordingScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: 20,
+                    vertical: 32,
                   ),
-                  child: BeforeRecordingButton(
+                  child: MoveableButton(
                     text: '녹화 시작',
+                    routing: '/recording',
                   ),
                 ),
               ],

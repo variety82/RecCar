@@ -28,7 +28,8 @@ class _CameraScreenState extends State<CameraScreen>
   bool _isCameraPermissionGranted = false;
 
   bool _isRearCameraSelected = true;
-  bool _isVideoCameraSelected = true;
+
+  // bool _isVideoCameraSelected = true;
 
   bool _isRecordingInProgress = false;
 
@@ -370,6 +371,7 @@ class _CameraScreenState extends State<CameraScreen>
     getCameras();
     // 카메라, 마이크 장치 허락 받기
     getPermissionStatus();
+    controller?.initialize();
     super.initState();
   }
 
@@ -400,9 +402,6 @@ class _CameraScreenState extends State<CameraScreen>
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
 
-    if (!controller!.value.isInitialized) {
-      return Container();
-    }
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
