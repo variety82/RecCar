@@ -42,6 +42,8 @@ dependencies:
   video_player: ^2.5.3
   path_provider: ^2.0.13
   http: ^0.13.4
+  syncfusion_flutter_datepicker: ^20.4.54
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
