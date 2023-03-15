@@ -43,7 +43,14 @@ class Footer extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              // Navigator.pushNamed(context, '/before_recording');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BeforeRecordingScreen()),
+              );
+            },
             child: Transform.translate(
               offset: const Offset(0, -8),
               child: Transform.scale(
