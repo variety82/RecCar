@@ -18,7 +18,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
   // naver.MapType _mapType = naver.MapType.Basic;
   late naver.NaverMapController _controller;
   List<Map<String, dynamic>> result =
-  List<Map<String, dynamic>>.filled(100, {});
+      List<Map<String, dynamic>>.filled(100, {});
   bool beforeSearch = true;
   List<naver.Marker> marker = List<naver.Marker>.filled(
       1, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)));
@@ -103,7 +103,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     // flex: 1,
@@ -182,7 +182,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        labelText: '검색어',
+                        labelText: "검색어",
                       ),
                       onSubmitted: (value) => search(value),
                     ),
@@ -252,10 +252,11 @@ class _NaverMapTestState extends State<NaverMapTest> {
       marker[0] = naver.Marker(
         markerId: "${result[i]["name"]}",
         position: latLng,
-        infoWindow: result[i]["telNo"]==""?"${result[i]["name"]}\n전화번호없음":"${result[i]["name"]}\n${result[i]["telNo"]}",
+        infoWindow: result[i]["telNo"] == ""
+            ? "${result[i]["name"]}\n전화번호없음"
+            : "${result[i]["name"]}\n${result[i]["telNo"]}",
       );
     });
-
 
     // if(result[i]["name"].toString().contains("주유소")) { // 주유소의 경우 유가 정보 출력해주려했는데
     //   getGasInfo(result[i]["id"]);
