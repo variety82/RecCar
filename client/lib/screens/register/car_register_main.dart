@@ -5,7 +5,7 @@ import 'package:client/widgets/register/register_line.dart';
 import 'package:client/widgets/register/register_title.dart';
 import 'package:client/widgets/register/register_list.dart';
 import 'package:client/screens/register/select_maker.dart';
-import 'package:client/screens/register/select_car.dart';
+import 'package:client/screens/register/select_item.dart';
 import 'package:client/screens/register/select_borrow_date.dart';
 import 'package:client/widgets/common/modal_navigator.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +26,7 @@ class _CarRegisterState extends State<CarRegister> {
 
   // 제조사를 업데이트 해주는 function
   // parameter로 id와 이름을 받음
-  void updateSelectedMaker(makerId, makerTitle) {
+  void _updateSelectedMaker(makerId, makerTitle) {
     setState(() {
       // 선택되어 있는 제조사로 변경했을 경우
       if (selectedMaker['id'] == makerId) {
@@ -46,11 +46,36 @@ class _CarRegisterState extends State<CarRegister> {
     });
   }
 
+  Map<String, dynamic> selectedCar = {
+    'id' : null,
+    'title' : null,
+  };
+
+  void _updateSelectedCar(carId, carName) {
+    setState(() {
+      // 선택되어 있는 제조사로 변경했을 경우
+      if (selectedCar['id'] == carId) {
+        // null값으로 변경
+        selectedCar = {
+          'id': null,
+          'title': null,
+        };
+        // 선택되어 있는 제조사와 다른 값으로 변경했을 경우
+      } else {
+        // 새롭게 선택한 값으로 업데이트
+        selectedCar = {
+          'id': carId,
+          'title': carName,
+        };
+      }
+    });
+  }
+
   // 입력한 대여기간
   DateTime _borrowingDate = DateTime.now().add(const Duration(hours: 9));
 
   // 대여기간 업데이트
-  void updateSelectedDate(seletedDate) {
+  void _updateSelectedDate(seletedDate) {
     setState(() {
       // 입력받은 DateTime타입의 값을 입력
       _borrowingDate = seletedDate;
@@ -85,7 +110,7 @@ class _CarRegisterState extends State<CarRegister> {
                         ModalNavigator(
                           // SelectMaker 위젯을 보여줌
                           showedWidget: SelectMaker(
-                            updateSelectedMaker: updateSelectedMaker,
+                            updateSelectedMaker: _updateSelectedMaker,
                           ),
                           // 클릭하는 영역
                           child: registerLine(
@@ -94,11 +119,13 @@ class _CarRegisterState extends State<CarRegister> {
                             isLastLine: false,
                           ),
                         ),
-                        const ModalNavigator(
-                          showedWidget: SelectCar(),
+                        ModalNavigator(
+                          showedWidget: SelectItem(
+                              updateSelectedItem: _updateSelectedCar,
+                          ),
                           child: registerLine(
                             category: '차종',
-                            content: 'SM5',
+                            content: selectedCar['title'],
                             isLastLine: false,
                           ),
                         ),
@@ -114,7 +141,7 @@ class _CarRegisterState extends State<CarRegister> {
                       lineList: [
                         ModalNavigator(
                           showedWidget: SelectBorrowDate(
-                            updateSelectedDate: updateSelectedDate,
+                            updateSelectedDate: _updateSelectedDate,
                           ),
                           child: registerLine(
                             category: '대여 일자',
