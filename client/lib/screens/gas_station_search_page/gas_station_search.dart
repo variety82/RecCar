@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:naver_map_plugin/naver_map_plugin.dart' as naver;
+import 'package:flutter_naver_map/flutter_naver_map.dart' as naver;
 import '../../widgets/common/footer.dart';
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:http/http.dart';
@@ -14,11 +15,13 @@ class NaverMapTest extends StatefulWidget {
 }
 
 class _NaverMapTestState extends State<NaverMapTest> {
-  naver.MapType _mapType = naver.MapType.Basic;
+  // naver.MapType _mapType = naver.MapType.Basic;
   late naver.NaverMapController _controller;
   List<Map<String, dynamic>> result =
-      List<Map<String, dynamic>>.filled(100, {});
+  List<Map<String, dynamic>>.filled(100, {});
   bool beforeSearch = true;
+  List<naver.Marker> marker = List<naver.Marker>.filled(
+      1, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)));
 
   Widget _previewWidget() {
     return Container(
@@ -100,10 +103,10 @@ class _NaverMapTestState extends State<NaverMapTest> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    flex: 1,
+                                    // flex: 1,
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: 5,
@@ -162,7 +165,8 @@ class _NaverMapTestState extends State<NaverMapTest> {
                 child: Container(
                   child: naver.NaverMap(
                     onMapCreated: onMapCreated,
-                    mapType: _mapType,
+                    markers: marker,
+                    // mapType: _mapType,
                     // onMapTap: onMapTap,
                   ),
                 ),
@@ -244,10 +248,15 @@ class _NaverMapTestState extends State<NaverMapTest> {
     var latLng = naver.LatLng(lat, lng);
     _controller.moveCamera(naver.CameraUpdate.toCameraPosition(
         naver.CameraPosition(target: latLng)));
-    naver.Marker(
+    setState(() {
+      marker[0] = naver.Marker(
         markerId: "${result[i]["name"]}",
         position: latLng,
-        iconTintColor: Colors.black);
+        infoWindow: result[i]["telNo"]==""?"${result[i]["name"]}\n전화번호없음":"${result[i]["name"]}\n${result[i]["telNo"]}",
+      );
+    });
+
+
     // if(result[i]["name"].toString().contains("주유소")) { // 주유소의 경우 유가 정보 출력해주려했는데
     //   getGasInfo(result[i]["id"]);
     // }
