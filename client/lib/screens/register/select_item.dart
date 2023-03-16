@@ -107,7 +107,9 @@ class _SelectItemState extends State<SelectItem> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      widget.updateSelectedCar(1, '그랜져');
+                      widget.updateSelectedItem(1, '그랜져');
+                      _changeSelectedItem(1);
+                      print(selectedItem);
                     });
                   }
                   ,
