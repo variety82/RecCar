@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_naver_map: ^0.10.7
   naver_map_plugin:
     git: https://github.com/LBSTECH/naver_map_plugin.git
 
@@ -48,6 +49,7 @@ dependencies:
   draggable_bottom_sheet: ^1.0.2
   flutter_dotenv: ^5.0.2
   gallery_saver: ^2.3.2
+  image_picker: ^0.8.7
 
 dev_dependencies:
   flutter_test:
