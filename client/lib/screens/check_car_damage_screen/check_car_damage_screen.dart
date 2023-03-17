@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -16,52 +17,168 @@ class CheckCarDamageScreen extends StatefulWidget {
 class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   late VideoPlayerController _videoPlayerController;
   bool loading_api = true;
-  bool video_pause = false;
+  bool loading_video = false;
+
+  bool _isVisible = true;
+  bool video_pause = true;
+
+  late Timer _timer;
 
   @override
   void dispose() {
+    _timer?.cancel();
     _videoPlayerController.dispose();
     super.dispose();
   }
 
   Future _initVideoPlayer() async {
-    _videoPlayerController = VideoPlayerController.file(File(widget.filePath));
+    _videoPlayerController = VideoPlayerController.file(
+      File(widget.filePath),
+    );
     await _videoPlayerController.initialize();
+    setState(
+      () {
+        loading_video = true;
+      },
+    );
+    _videoPlayerController.addListener(
+      () {
+        // if (!_videoPlayerController.value.isPlaying) {
+        //   // 동영상이 재생 중이지 않을 때 수행할 작업
+        //   setState(
+        //     () {
+        //       _isVisible = true;
+        //     },
+        //   );
+        // }
+        if (_videoPlayerController.value.position >=
+            _videoPlayerController.value.duration) {
+          setState(
+            () {
+              _isVisible = true;
+              video_pause = true; // 영상이 끝나면 버튼 표시
+            },
+          );
+        }
+      },
+    );
     // await _videoPlayerController.setLooping(true);
-    await _videoPlayerController.play();
+    // await _videoPlayerController.play();
+  }
+
+  void _watchVideoMenu() {
+    setState(
+      () {
+        _isVisible = !_isVisible;
+        print(_isVisible);
+      },
+    );
+  }
+
+  void _timeChecker() {
+    const duration = Duration(seconds: 3); // 버튼이 사라지는 시간 설정 (3초)
+    _timer = Timer(
+      duration,
+      () {
+        if (_isVisible && !video_pause) {
+          print('video_pause');
+          print(video_pause);
+          setState(
+            () {
+              _isVisible = false; // 버튼 숨기기
+            },
+          );
+        }
+      },
+    );
+  }
+
+  void _resetTimer() {
+    if (_isVisible) {
+      _timer?.cancel(); // 기존 타이머 취소
+      _timeChecker(); // 새로운 타이머 시작
+    }
   }
 
   @override
   void initState() {
     super.initState();
+    _initVideoPlayer();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        // 이후 Future.wait으로 다수 비동기 작업(비디오 임시 저장소에서 불러오기, api 신호 받아오기) 수행하도록 조치할 것
-        future: Future.wait([
-          _initVideoPlayer(),
-        ]),
-        builder: (context, state) {
-          if (state.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child: CircularProgressIndicator(
-              color: Color(0xFFE0426F),
-            ));
-          } else {
-            return Column(
+      body: loading_video
+          ? Column(
               children: [
-                _videoPlayerController.value.isInitialized
-                    ? RotatedBox(
-                        quarterTurns: 3, // 시계 방향으로 90도 회전시킵니다.
-                        child: AspectRatio(
-                          aspectRatio: _videoPlayerController.value.aspectRatio,
-                          child: VideoPlayer(_videoPlayerController),
-                        ),
-                      )
-                    : Container(),
+                GestureDetector(
+                  onTap: () {
+                    _watchVideoMenu();
+                  },
+                  child: RotatedBox(
+                    quarterTurns: 3, // 시계 방향으로 90도 회전시킵니다.
+                    child: AspectRatio(
+                      aspectRatio: _videoPlayerController.value.aspectRatio,
+                      child: Stack(
+                        children: [
+                          VideoPlayer(_videoPlayerController),
+                          AnimatedOpacity(
+                            opacity: _isVisible ? 1.0 : 0.0,
+                            duration: Duration(milliseconds: 100),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    if (_isVisible) {
+                                      if (video_pause) {
+                                        _videoPlayerController.play();
+                                        setState(() {
+                                          video_pause = false;
+                                        });
+                                        _timeChecker();
+                                      } else {
+                                        _videoPlayerController.pause();
+                                        setState(() {
+                                          video_pause = true;
+                                        });
+                                      }
+                                    } else {
+                                      setState(() {
+                                        _isVisible = true;
+                                      });
+                                    }
+                                  },
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.circle,
+                                        color: Colors.black38,
+                                        size: 80,
+                                      ),
+                                      _videoPlayerController.value.isPlaying
+                                          ? Icon(
+                                              Icons.pause,
+                                              color: Colors.white,
+                                              size: 40,
+                                            )
+                                          : Icon(
+                                              Icons.play_arrow,
+                                              color: Colors.white,
+                                              size: 40,
+                                            ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 Container(
                   height: 30,
                   decoration: BoxDecoration(
@@ -115,10 +232,12 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _videoPlayerController.seekTo(Duration(
-                            seconds: _videoPlayerController
-                                    .value.position.inSeconds +
-                                10));
+                        _videoPlayerController.seekTo(
+                          Duration(
+                              seconds: _videoPlayerController
+                                      .value.position.inSeconds +
+                                  10),
+                        );
                       },
                       child: Icon(Icons.fast_forward),
                     ),
@@ -143,10 +262,12 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                   ),
                 )
               ],
-            );
-          }
-        },
-      ),
+            )
+          : Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFFE0426F),
+              ),
+            ),
     );
   }
 }
