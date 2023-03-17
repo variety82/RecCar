@@ -2,34 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:client/widgets/register/category_title.dart';
 import 'package:client/widgets/register/maker_item.dart';
 
-class SelectCar extends StatefulWidget {
-  const SelectCar({
-    super.key,
+class SelectItem extends StatefulWidget {
+
+  final void Function(int, String) updateSelectedItem;
+
+  const SelectItem({
+    super.key, required this.updateSelectedItem,
   });
 
   @override
-  State<SelectCar> createState() => _SelectCarState();
+  State<SelectItem> createState() => _SelectItemState();
 }
 
-class _SelectCarState extends State<SelectCar> {
+class _SelectItemState extends State<SelectItem> {
   /*
   selectedItem에는 선택되는 제조사의 id가 들어간다
   isSelected는 만약 makerId가 selectedItem이 같을 때 true가 되도록 한다.
    */
 
   // 선택된 제조사의 ID 값이 들어간다
-  // int? selectedMaker;
-  // void _changeSelectedItem(itemId) {
-  //   setState(() {
-  //     if (selectedMaker == itemId) {
-  //       // 선택한 제조사가 현재 선택된 제조사일 경우 null값으로 변경
-  //       selectedMaker = null;
-  //     } else {
-  //       // 다를 경우 해당 제조사 ID로 selectedMaker 변경
-  //       selectedMaker = itemId;
-  //     }
-  //   });
-  // }
+  int? selectedItem;
+  void _changeSelectedItem(itemId) {
+    setState(() {
+      if (selectedItem == itemId) {
+        // 선택한 제조사가 현재 선택된 제조사일 경우 null값으로 변경
+        selectedItem = null;
+      } else {
+        // 다를 경우 해당 제조사 ID로 selectedMaker 변경
+        selectedItem = itemId;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,87 +97,97 @@ class _SelectCarState extends State<SelectCar> {
           ),
         ),
         // 제조사 선택 영역이 나열될 곳
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SizedBox(
             width: double.infinity,
             child: Wrap(
               alignment: WrapAlignment.start,
               children: [
-                SizedBox(
-                  width: 180,
-                  height: 30,
-                  child: Text('그랜져'),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      widget.updateSelectedItem(1, '그랜져');
+                      _changeSelectedItem(1);
+                      print(selectedItem);
+                    });
+                  }
+                  ,
+                  child: const SizedBox(
+                    width: 180,
+                    height: 30,
+                    child: Text('그랜져'),
+                  ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('롤스로이스'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('그랜쟈'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
-                ),                SizedBox(
+                ),                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
-                ),                SizedBox(
-                  width: 180,
-                  height: 30,
-                  child: Text('ㅋㅋ'),
-                ),
-                SizedBox(
+                ),                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
                 ),
-                SizedBox(
+                const SizedBox(
+                  width: 180,
+                  height: 30,
+                  child: Text('ㅋㅋ'),
+                ),
+                const SizedBox(
                   width: 180,
                   height: 30,
                   child: Text('ㅋㅋ'),
