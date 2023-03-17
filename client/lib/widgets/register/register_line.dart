@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class registerLine extends StatelessWidget {
   final String category;
-  final String content;
+  final String? content;
   final bool isLastLine;
 
 
@@ -31,7 +31,7 @@ class registerLine extends StatelessWidget {
                 ),
               ),
               Text(
-                content,
+                content ?? '',
                 style: const TextStyle(
                     color: Color(0xFF453F52)
                 ),
