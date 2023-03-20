@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:dio/dio.dart'; // DIO 패키지로 HTTP 통신
-import 'dart:convert'; // JSON Encode, Decode를 위한 패키지
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // flutter_secure_storage 패키지
-import '../../main.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -32,7 +29,6 @@ class _LoginState extends State<Login> {
     if (userInfo != null) {
       Navigator.pushNamed(context, '/home');
     } else {
-      print('로그인이 필요합니다');
     }
   }
 
@@ -105,6 +101,10 @@ class _LoginState extends State<Login> {
       await storage.write(
         key: 'id',
         value: googleUser.id,
+      );
+      await storage.write(
+        key: 'profileImg',
+        value: googleUser.photoUrl,
       );
       Navigator.pushNamed(context, '/home');
     }

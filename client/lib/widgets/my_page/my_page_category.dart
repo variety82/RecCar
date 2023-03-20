@@ -7,6 +7,7 @@ import '../../screens/my_page/rent_log.dart';
 import '../../screens/my_page/alarm_setting.dart';
 import '../../screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class MyPageCategory extends StatefulWidget {
   final String category;
@@ -37,14 +38,17 @@ class _MyPageCategoryState extends State<MyPageCategory> {
   @override
   void initState() {
     super.initState();
+    checkUserState();
     // 비동기로 flutter secure storage 정보를 불러오는 작업
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      checkUserState();
+      // checkUserState();
     });
   }
 
   logout() async {
     await storage.deleteAll();
+    final GoogleSignIn _googleSignIn = new GoogleSignIn();
+    _googleSignIn.signOut();
     Navigator.pushNamed(context, '/login');
   }
 
@@ -53,16 +57,12 @@ class _MyPageCategoryState extends State<MyPageCategory> {
     var name = await storage.read(key: 'name');
     var email = await storage.read(key: 'email');
     setState(() {
-      userId = id;
+      // userId = id;
       userName = name;
-      userEmail = email;
+      // userEmail = email;
     });
     if (userId == null) {
-      print('로그인 페이지로 이동');
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
-    } else {
-      print('로그인 중');
-      print(userName);
     }
   }
 
@@ -73,7 +73,7 @@ class _MyPageCategoryState extends State<MyPageCategory> {
         if (widget.category == "내 정보 수정") {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const Login()),
+            MaterialPageRoute(builder: (context) => const MyDataModify()),
           );
         } else if (widget.category == "차량 정보 조회") {
           Navigator.push(

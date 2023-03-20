@@ -19,6 +19,7 @@ class _MyPageState extends State<MyPage> {
   dynamic userId = '';
   dynamic userName = '';
   dynamic userEmail = '';
+  dynamic userProfileImg = '';
 
   @override
   void initState() {
@@ -34,17 +35,16 @@ class _MyPageState extends State<MyPage> {
     var id = await storage.read(key: 'id');
     var name = await storage.read(key: 'name');
     var email = await storage.read(key: 'email');
+    var img = await storage.read(key: 'profileImg');
     setState(() {
       userId = id;
       userName = name;
       userEmail = email;
+      userProfileImg = img;
     });
     if (userId == null) {
-      print('로그인 페이지로 이동');
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
     } else {
-      print('로그인 중');
-      print(userName);
     }
   }
 
@@ -75,8 +75,8 @@ class _MyPageState extends State<MyPage> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
                         image: DecorationImage(
-                            image: NetworkImage(
-                                "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large")),
+                            image: NetworkImage(userProfileImg==null?
+                                "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large":userProfileImg.toString())),
                       ),
                     ),
                     // 이메일 및 프로필 편집 버튼 Container
@@ -170,14 +170,15 @@ class _MyPageState extends State<MyPage> {
       ),
     );
   }
-
+  
+  // 프로필 사진 변경하는 메소드
   _getPhotoLibraryImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() {
-        profileImg = pickedFile;
-      });
+    print("HEY!!!!!${pickedFile.path}");
+    storage.write(key: 'profileImg', value: pickedFile.path);
+
     } else {
       print('이미지 선택안함');
     }
