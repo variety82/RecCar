@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:client/widgets/common/header.dart';
 import 'package:client/widgets/common/footer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 
 class CarDetail extends StatefulWidget {
   const CarDetail({Key? key}) : super(key: key);
@@ -10,28 +12,40 @@ class CarDetail extends StatefulWidget {
 }
 
 class _CarDetailState extends State<CarDetail> {
-  @override
 
+  int sideDamageLevel = 3;
+  int frontDamageLevel = 1;
+  int backDamageLevel = 2;
+  int wheelDamageLevel = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          Header(
+          const Header(
             title: '차량 상세'
           ),
           Expanded(child: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                SizedBox(
-                  height: 20,
+                const SizedBox(
+                  height: 50,
                 ),
-                Text('자동차 이미지')
+                SvgPicture.asset(
+                  'lib/assets/car_damage_img/car_f${frontDamageLevel}_s${sideDamageLevel}_b${backDamageLevel}_w$wheelDamageLevel.svg',
+                ),
+                Text('측면 $sideDamageLevel건'),
+                Text('전면부 $frontDamageLevel건'),
+                Text('후면부 $backDamageLevel건'),
+                Text('타이어 $wheelDamageLevel건'),
+
               ]
             ),
           )),
-          Footer()
+          const Footer()
         ],
       )
     );
