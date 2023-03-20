@@ -22,9 +22,10 @@ class DamageLogCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => DamageDetail(
-                    id: id,
-                  )),
+            builder: (context) => DamageDetail(
+              id: id,
+            ),
+          ),
         );
       },
       child: Container(
@@ -56,12 +57,13 @@ class DamageLogCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 140,
                         height: 100,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
-                          image:
-                              DecorationImage(fit: BoxFit.fill, image: NetworkImage("$imageUrl")),
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: NetworkImage("$imageUrl")),
                         ),
                       ),
                       SizedBox(width: 15),

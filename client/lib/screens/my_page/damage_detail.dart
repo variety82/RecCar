@@ -26,7 +26,7 @@ class DamageDetail extends StatelessWidget {
                 children: [
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
-                    height: 320,
+                    height: 300,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
