@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart' as naver;
 import '../../widgets/common/footer.dart';
@@ -48,6 +47,8 @@ class _NaverMapTestState extends State<NaverMapTest> {
     );
   }
 
+
+  // 늘렸을 때 보이는 형태
   Widget _expandedWidget() {
     return Container(
       decoration: const BoxDecoration(
@@ -86,7 +87,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
                       ),
                     if (!result[0].isEmpty)
                       for (int i = 0; i < 100; i++)
-                        if (result[i] != {})
+                        if (!result[i].isEmpty)
                           TextButton(
                             onPressed: () => move(i),
                             child: Container(

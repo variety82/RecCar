@@ -13,8 +13,8 @@ class RentLogDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
+    return Card(
+      child: DefaultTabController(
         // 탭의 수 설정
         length: 2,
         child: Scaffold(

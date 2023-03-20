@@ -33,7 +33,7 @@ class _MyPageState extends State<MyPage> {
               children: [
                 // 마이페이지에 들어갈 UI
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // 프로필 사진 Container
                     Container(
