@@ -138,9 +138,8 @@ class MyPageCategory extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: 30,
-          vertical: 10,
         ),
-        height: 40,
+        height: 37,
         child: Text(
           "$category",
           style: TextStyle(

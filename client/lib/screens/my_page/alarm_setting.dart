@@ -76,7 +76,6 @@ class _AlarmSettingState extends State<AlarmSetting> {
                                         });
                                       },
                                       activeColor: Color(0xFFE0426F),
-
                                     ),
                                   ),
                                 ),
