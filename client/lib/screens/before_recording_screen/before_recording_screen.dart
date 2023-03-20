@@ -40,6 +40,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                     // 정렬 방식
                     spacing: 10,
                     // 좌우 간격
+
                     children: [
                       Text(
                         '지금부터',
@@ -76,7 +77,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 20,
+                    horizontal: 50,
                   ),
                   child: Column(
                     children: [
