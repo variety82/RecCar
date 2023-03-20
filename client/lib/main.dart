@@ -5,6 +5,8 @@ import 'screens/register/car_register_main.dart';
 import 'screens/my_page/my_page.dart';
 import 'screens/gas_station_search_page/gas_station_search.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
+import 'screens/login_screen/login_screen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -25,12 +27,51 @@ void main() {
       '/my-page': (context) => const MyPage(),
       '/station': (context) => NaverMapTest(),
       '/before-recording': (context) => BeforeRecordingScreen(),
+      '/login': (context) => Login(),
     },
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  static final storage = FlutterSecureStorage();
+  dynamic userId = '';
+  dynamic userName = '';
+  dynamic userEmail = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkUserState();
+    });
+  }
+
+  checkUserState() async {
+    var id = await storage.read(key: 'id');
+    var name = await storage.read(key: 'name');
+    var email = await storage.read(key: 'email');
+    setState(() {
+      userId = id;
+      userName = name;
+      userEmail = email;
+    });
+
+    if (userId == null) {
+      print('로그인 페이지로 이동');
+      Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
+    } else {
+      print('${userName}님 환영합니다!');
+      print('${userEmail}님 환영합니다!');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -4,6 +4,7 @@ import '../../widgets/common/header.dart';
 import '../../widgets/common/footer.dart';
 import '../../widgets/my_page/my_page_category.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -14,6 +15,38 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   XFile? profileImg;
+  static final storage = FlutterSecureStorage();
+  dynamic userId = '';
+  dynamic userName = '';
+  dynamic userEmail = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 비동기로 flutter secure storage 정보를 불러오는 작업
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkUserState();
+    });
+  }
+
+  checkUserState() async {
+    var id = await storage.read(key: 'id');
+    var name = await storage.read(key: 'name');
+    var email = await storage.read(key: 'email');
+    setState(() {
+      userId = id;
+      userName = name;
+      userEmail = email;
+    });
+    if (userId == null) {
+      print('로그인 페이지로 이동');
+      Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
+    } else {
+      print('로그인 중');
+      print(userName);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +58,7 @@ class _MyPageState extends State<MyPage> {
             title: '마이 페이지',
           ),
           SizedBox(
-            height: 40,
+            height: 10,
           ),
           Expanded(
             child: Column(
@@ -46,27 +79,27 @@ class _MyPageState extends State<MyPage> {
                                 "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large")),
                       ),
                     ),
-
                     // 이메일 및 프로필 편집 버튼 Container
                     Container(
-                      width: 250,
+                      // width: 250,
                       height: 100,
+                      margin: EdgeInsets.only(left: 27),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             // 이메일 출력
                             Text(
-                              "songheew1020@gmail.com",
+                              "${userName}",
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 13,
+                                  fontSize: 14,
                                   decoration: TextDecoration.none),
                             ),
 
                             // 간격
                             SizedBox(
-                              height: 15,
+                              height: 5,
                             ),
                             // 프로필 편집 버튼 Container
                             Container(
@@ -115,7 +148,7 @@ class _MyPageState extends State<MyPage> {
 
                 // User 프로필과 메뉴를 가르는 Divider
                 const Divider(
-                  height: 50,
+                  height: 40,
                   thickness: 2,
                   indent: 20,
                   endIndent: 20,
