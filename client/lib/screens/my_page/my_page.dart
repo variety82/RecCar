@@ -1,10 +1,19 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../widgets/common/header.dart';
 import '../../widgets/common/footer.dart';
 import '../../widgets/my_page/my_page_category.dart';
+import 'package:image_picker/image_picker.dart';
 
-class MyPage extends StatelessWidget {
+class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
+
+  @override
+  State<MyPage> createState() => _MyPageState();
+}
+
+class _MyPageState extends State<MyPage> {
+  XFile? profileImg;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +33,7 @@ class MyPage extends StatelessWidget {
               children: [
                 // 마이페이지에 들어갈 UI
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // 프로필 사진 Container
                     Container(
@@ -59,33 +68,44 @@ class MyPage extends StatelessWidget {
                             SizedBox(
                               height: 15,
                             ),
-
                             // 프로필 편집 버튼 Container
                             Container(
-                              height: 30,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(
-                                  width: 1,
-                                  color: Colors.white,
+                              child: TextButton(
+                                onPressed: () => {
+                                  _getPhotoLibraryImage()
+                                  // showDialog(
+                                  //     context: context,
+                                  //     builder: (BuildContext) {
+                                  //       return Dialog();
+                                  //     })
+                                },
+                                child: Container(
+                                  height: 30,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 30, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      width: 1,
+                                      color: Colors.white,
+                                    ),
+                                    borderRadius: BorderRadius.circular(5),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.7),
+                                        blurRadius: 2.0,
+                                        spreadRadius: 0.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Text(
+                                    "⚙ 프로필 편집",
+                                    style: TextStyle(
+                                        color: Color(0xFF6A6A6A),
+                                        fontSize: 13,
+                                        decoration: TextDecoration.none),
+                                  ),
                                 ),
-                                borderRadius: BorderRadius.circular(5),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.7),
-                                    blurRadius: 2.0,
-                                    spreadRadius: 0.0,
-                                  )
-                                ],
-                              ),
-                              child: Text(
-                                "⚙ 프로필 편집",
-                                style: TextStyle(
-                                    color: Color(0xFF6A6A6A),
-                                    fontSize: 13,
-                                    decoration: TextDecoration.none),
                               ),
                             ),
                           ]),
@@ -116,5 +136,17 @@ class MyPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _getPhotoLibraryImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        profileImg = pickedFile;
+      });
+    } else {
+      print('이미지 선택안함');
+    }
   }
 }

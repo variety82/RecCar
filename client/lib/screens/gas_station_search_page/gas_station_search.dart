@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:naver_map_plugin/naver_map_plugin.dart' as naver;
+import 'package:flutter_naver_map/flutter_naver_map.dart' as naver;
 import '../../widgets/common/footer.dart';
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
-// import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart';
 
 class NaverMapTest extends StatefulWidget {
   @override
@@ -14,11 +13,14 @@ class NaverMapTest extends StatefulWidget {
 }
 
 class _NaverMapTestState extends State<NaverMapTest> {
-  naver.MapType _mapType = naver.MapType.Basic;
+  // naver.MapType _mapType = naver.MapType.Basic;
   late naver.NaverMapController _controller;
+  late Position _position;
   List<Map<String, dynamic>> result =
       List<Map<String, dynamic>>.filled(100, {});
   bool beforeSearch = true;
+  List<naver.Marker> marker = List<naver.Marker>.filled(
+      1, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)));
 
   Widget _previewWidget() {
     return Container(
@@ -45,6 +47,8 @@ class _NaverMapTestState extends State<NaverMapTest> {
     );
   }
 
+
+  // 늘렸을 때 보이는 형태
   Widget _expandedWidget() {
     return Container(
       decoration: const BoxDecoration(
@@ -83,7 +87,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
                       ),
                     if (!result[0].isEmpty)
                       for (int i = 0; i < 100; i++)
-                        if (result[i] != {})
+                        if (!result[i].isEmpty)
                           TextButton(
                             onPressed: () => move(i),
                             child: Container(
@@ -103,7 +107,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    flex: 1,
+                                    // flex: 1,
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: 5,
@@ -162,7 +166,8 @@ class _NaverMapTestState extends State<NaverMapTest> {
                 child: Container(
                   child: naver.NaverMap(
                     onMapCreated: onMapCreated,
-                    mapType: _mapType,
+                    markers: marker,
+                    // mapType: _mapType,
                     // onMapTap: onMapTap,
                   ),
                 ),
@@ -178,7 +183,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        labelText: '검색어',
+                        labelText: "검색어",
                       ),
                       onSubmitted: (value) => search(value),
                     ),
@@ -188,6 +193,31 @@ class _NaverMapTestState extends State<NaverMapTest> {
                 left: 50,
                 right: 50,
               ),
+              Positioned(
+                child: TextButton(
+                  onPressed: getCurrentLocation,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xFF6A6A6A),
+                          blurRadius: 1.5,
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(10),
+                    child: Icon(
+                      Icons.my_location,
+                      color: Color(0xFF6A6A6A),
+                      size: 25,
+                    ),
+                  ),
+                ),
+                bottom: 70,
+                left: 15,
+              )
             ],
           ),
         ),
@@ -227,10 +257,22 @@ class _NaverMapTestState extends State<NaverMapTest> {
     );
   }
 
+  Future<void> getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    var lat = double.parse(position.latitude.toString());
+    var lng = double.parse(position.longitude.toString());
+    var latLng = naver.LatLng(lat, lng);
+    _controller.moveCamera(naver.CameraUpdate.toCameraPosition(
+        naver.CameraPosition(target: latLng)));
+  }
+
   void onMapCreated(naver.NaverMapController controller) {
     setState(() {
       _controller = controller;
     });
+    getCurrentLocation();
   }
 
   // void onMapTap(naver.LatLng latLng) {
@@ -244,10 +286,16 @@ class _NaverMapTestState extends State<NaverMapTest> {
     var latLng = naver.LatLng(lat, lng);
     _controller.moveCamera(naver.CameraUpdate.toCameraPosition(
         naver.CameraPosition(target: latLng)));
-    naver.Marker(
+    setState(() {
+      marker[0] = naver.Marker(
         markerId: "${result[i]["name"]}",
         position: latLng,
-        iconTintColor: Colors.black);
+        infoWindow: result[i]["telNo"] == ""
+            ? "${result[i]["name"]}\n전화번호없음"
+            : "${result[i]["name"]}\n${result[i]["telNo"]}",
+      );
+    });
+
     // if(result[i]["name"].toString().contains("주유소")) { // 주유소의 경우 유가 정보 출력해주려했는데
     //   getGasInfo(result[i]["id"]);
     // }
@@ -285,5 +333,9 @@ class _NaverMapTestState extends State<NaverMapTest> {
         result[i] = ret[i];
       }
     });
+  }
+
+  void moveToCurLoc() {
+    // 현재위치로 이동하는 함수
   }
 }

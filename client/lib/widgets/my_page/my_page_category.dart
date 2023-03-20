@@ -40,19 +40,106 @@ class MyPageCategory extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => const RentLog()),
           );
-        }else if (category == "알림 설정") {
+        } else if (category == "알림 설정") {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AlarmSetting()),
+          );
+        } else if (category == "회원 탈퇴") {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Dialog(
+                child: Container(
+                  height: 190,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 15,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "songheew1020@gmail.com 님,",
+                        style: TextStyle(
+                          height: 2,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        "모든 렌트 내역 및 차량 파손 내역이 삭제됩니다.\n그래도 탈퇴하시겠습니까?",
+                        style: TextStyle(height: 2),
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () => {},
+                            child: Container(
+                              width: 110,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6,
+                                horizontal: 20,
+                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xFFE0426F)),
+                              child: Text(
+                                "확인",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => {},
+                            child: Container(
+                              width: 110,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6,
+                                horizontal: 20,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.7),
+                                    blurRadius: 2.0,
+                                    spreadRadius: 0.0,
+                                  )
+                                ],
+                              ),
+                              child: Text(
+                                "취소",
+                                style: TextStyle(
+                                  color: Color(0xFF453F52),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           );
         }
       },
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: 30,
-          vertical: 10,
         ),
-        height: 40,
+        height: 37,
         child: Text(
           "$category",
           style: TextStyle(
