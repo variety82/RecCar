@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:client/widgets/common/header.dart';
 import 'package:client/widgets/common/footer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:client/widgets/detail/damage_level_card.dart';
+dimport 'package:client/widgets/detail/damage_level_card.dart';
 
 
 class CarDetail extends StatefulWidget {
