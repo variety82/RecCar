@@ -7,6 +7,7 @@ import 'screens/gas_station_search_page/gas_station_search.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'screens/car_detail/car_detail.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -24,10 +25,12 @@ void main() {
     routes: {
       '/home': (context) => const MyApp(),
       '/register': (context) => const CarRegister(),
+      '/detail': (context) => const CarDetail(),
       '/my-page': (context) => const MyPage(),
       '/station': (context) => NaverMapTest(),
       '/before-recording': (context) => BeforeRecordingScreen(),
       '/login': (context) => Login(),
+      '/before-recording': (context) => const BeforeRecordingScreen(),
     },
   ));
 }
@@ -65,11 +68,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     if (userId == null) {
-      print('로그인 페이지로 이동');
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
-    } else {
-      print('${userName}님 환영합니다!');
-      print('${userEmail}님 환영합니다!');
     }
   }
 
@@ -89,11 +88,28 @@ class _MyAppState extends State<MyApp> {
                 const Text(
                   '대충 차고 이미지',
                 ),
+                const SizedBox(
+                  height: 100,
+                ),
+                const Text(
+                  '차량 등록 아직 안했을 경우'
+                ),
                 IconButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/register');
                     },
                     icon: const Icon(Icons.add_box_rounded)),
+                const Text(
+                  '차량 등록됐을 경우',
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      print(1);
+                      Navigator.pushNamed(context, '/detail');
+                    },
+                    child: const Text(
+                      '차량 상세 페이지'
+                    ))
               ],
             ),
           ),
