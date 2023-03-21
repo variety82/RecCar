@@ -391,7 +391,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                   ),
                 ),
                 Container(
-                  height: 30,
+                  height: 16,
                   decoration: BoxDecoration(
                     color: Colors.black,
                   ),
@@ -438,8 +438,13 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                       removeCategories(category);
                                       print(category);
                                     },
-                                    deleteIcon: const Icon(Icons.remove_circle),
+                                    deleteIcon: const Icon(
+                                      Icons.clear_rounded,
+                                      size: 16,
+                                    ),
                                     label: Text(category),
+                                    labelPadding:
+                                        EdgeInsets.fromLTRB(10, 0, 0, 0),
                                     backgroundColor: Color(0xFFFBD5DC),
                                     deleteIconColor: Color(0xFFE0426F),
                                   );

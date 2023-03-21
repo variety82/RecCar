@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class MyFABMenu extends StatefulWidget {
   @override
@@ -33,59 +34,58 @@ class _MyFABMenuState extends State<MyFABMenu>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
+    return SpeedDial(
+      animatedIcon: AnimatedIcons.menu_close,
+      visible: true,
+      curve: Curves.bounceIn,
+      backgroundColor: Color(0xFFE0426F),
       children: [
-        AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return Transform.rotate(
-              angle: _rotateAnimation.value,
-              child: FloatingActionButton(
-                onPressed: _toggleMenu,
-                child: Icon(_isMenuOpen ? Icons.close : Icons.add),
-              ),
-            );
-          },
-        ),
-        SizedBox(height: 20.0),
-        AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return Transform.translate(
-              offset: Offset(0.0, _translateAnimation.value * -1),
-              child: child,
-            );
-          },
-          child: FloatingActionButton(
-            onPressed: () {},
-            child: Icon(Icons.ac_unit),
+        SpeedDialChild(
+          child: const Icon(
+            Icons.save_as,
+            color: Colors.white,
           ),
-        ),
-        SizedBox(height: 20.0),
-        AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return Transform.translate(
-              offset: Offset(0.0, _translateAnimation.value * -2),
-              child: child,
-            );
-          },
-          child: FloatingActionButton(
-            onPressed: () {},
-            child: Icon(Icons.access_alarm),
+          label: "저장",
+          labelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+            fontSize: 13.0,
           ),
+          backgroundColor: Color(0xFFE0426F),
+          labelBackgroundColor: Color(0xFFE0426F),
+          onTap: () {},
+        ),
+        SpeedDialChild(
+          child: const Icon(
+            Icons.add_photo_alternate,
+            color: Colors.white,
+          ),
+          label: "손상 추가",
+          labelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+            fontSize: 13.0,
+          ),
+          backgroundColor: Color(0xFFE0426F),
+          labelBackgroundColor: Color(0xFFE0426F),
+          onTap: () {},
+        ),
+        SpeedDialChild(
+          child: const Icon(
+            Icons.filter_alt,
+            color: Colors.white,
+          ),
+          label: "필터링 설정",
+          labelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+            fontSize: 13.0,
+          ),
+          backgroundColor: Color(0xFFE0426F),
+          labelBackgroundColor: Color(0xFFE0426F),
+          onTap: () {},
         ),
       ],
     );
-  }
-
-  void _toggleMenu() {
-    if (_isMenuOpen) {
-      _animationController.reverse();
-    } else {
-      _animationController.forward();
-    }
-    _isMenuOpen = !_isMenuOpen;
   }
 }

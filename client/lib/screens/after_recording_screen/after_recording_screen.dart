@@ -242,13 +242,20 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                             fontSize: 16,
                                           ),
                                         ),
-                                        Text(
-                                          '------',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
+                                        Divider(
+                                          color: Colors.white,
+                                          thickness: 2,
+                                          indent: 16,
+                                          endIndent: 16,
+                                          height: 24,
                                         ),
+                                        // Text(
+                                        //   '------',
+                                        //   style: TextStyle(
+                                        //     color: Colors.white,
+                                        //     fontSize: 16,
+                                        //   ),
+                                        // ),
                                         Text(
                                           '8건',
                                           style: TextStyle(

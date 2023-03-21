@@ -416,7 +416,7 @@ class _CameraScreenState extends State<CameraScreen>
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         body: _isCameraPermissionGranted
             ? _isCameraInitialized
                 ? Column(

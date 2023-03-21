@@ -88,7 +88,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              '주변이 어두울 때에는 라이트를 켠 상태에서 촬영해주세요.',
+                              '주변이 어두울 때에는',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 20,
@@ -96,10 +96,19 @@ class BeforeRecordingScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '영상이 너무 어두울 시, AI가 손상을 잡아내지 못할 가능성이 높아요.',
+                              '라이트를 켠 상태에서',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              '촬영해주세요.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
@@ -112,7 +121,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              '너무 빠르게 화면을 이동하지 말아주세요.',
+                              '빠르게 카메라를',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 20,
@@ -120,10 +129,11 @@ class BeforeRecordingScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '화면 전환이 빠를 경우, AI가 손상 부위를 놓칠 수 있어요!',
+                              '이동하지 말아주세요.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
