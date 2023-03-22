@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:client/widgets/common/header.dart';
 import 'package:client/widgets/common/footer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-dimport 'package:client/widgets/detail/damage_level_card.dart';
+import 'package:client/widgets/detail/damage_level_card.dart';
 
 
 class CarDetail extends StatefulWidget {
@@ -16,7 +16,7 @@ class _CarDetailState extends State<CarDetail> {
 
   int sideDamageLevel = 2;
   int frontDamageLevel = 1;
-  int backDamageLevel = 2;
+  int backDamageLevel = 4;
   int wheelDamageLevel = 0;
 
   @override
@@ -63,8 +63,22 @@ class _CarDetailState extends State<CarDetail> {
                     ),
                   ),
                 ),
-                DamageLevelCard(sideDamageLevel: sideDamageLevel),
-
+                DamageLevelCard(
+                  damageLevel: frontDamageLevel,
+                  partName: '앞펜더 / 앞범퍼 / 전조등'
+                ),
+                DamageLevelCard(
+                    damageLevel: sideDamageLevel,
+                    partName: '옆면 / 사이드 / 스텝'
+                ),
+                DamageLevelCard(
+                    damageLevel: backDamageLevel,
+                    partName: '뒷펜더 / 뒷범퍼 / 후미등'
+                ),
+                DamageLevelCard(
+                    damageLevel: wheelDamageLevel,
+                    partName: '타이얼 / 휠'
+                ),
               ],
             ),
           ),
