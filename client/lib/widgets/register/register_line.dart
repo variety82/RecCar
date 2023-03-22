@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 
-class registerLine extends StatelessWidget {
+class registerLine extends StatefulWidget {
   final String category;
-  final String? content;
+  final String content;
   final bool isLastLine;
-
+  final bool isSelected;
 
   const registerLine({
-    super.key, required this.category, required this.content, required this.isLastLine,
+    super.key, required this.category, required this.content, required this.isLastLine, required this.isSelected,
   });
 
+  @override
+  State<registerLine> createState() => _registerLineState();
+}
+
+class _registerLineState extends State<registerLine> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,26 +28,27 @@ class registerLine extends StatelessWidget {
               SizedBox(
                 width: 100,
                 child: Text(
-                  category,
-                  style: const TextStyle(
+                  widget.category,
+                  style: TextStyle(
                       fontSize: 14,
-                      color: Color(0xFF999999)
+                      color: Theme.of(context).disabledColor
                   ),
                 ),
               ),
               Text(
-                content ?? '',
-                style: const TextStyle(
-                    color: Color(0xFF453F52)
+                widget.content,
+                style: TextStyle(
+                    color: widget.isSelected
+                        ? Theme.of(context).secondaryHeaderColor
+                        : Theme.of(context).disabledColor
                 ),
               ),
-
             ],
           ),
         ),
 
         Offstage(
-          offstage: isLastLine,
+          offstage: widget.isLastLine,
           child: Container(
             height: 1,
             width: double.infinity,

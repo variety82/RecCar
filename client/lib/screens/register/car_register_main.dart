@@ -24,6 +24,11 @@ class _CarRegisterState extends State<CarRegister> {
     'title': null,
   };
 
+  final bool _allregistered = false;
+
+
+
+
   // 제조사를 업데이트 해주는 function
   // parameter로 id와 이름을 받음
   void _updateSelectedMaker(makerId, makerTitle) {
@@ -99,7 +104,7 @@ class _CarRegisterState extends State<CarRegister> {
                   horizontal: 14,
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     // 등록페이지의 제목 Class화
                     const RegisterTitle(title: '차량 정보'),
@@ -116,8 +121,9 @@ class _CarRegisterState extends State<CarRegister> {
                           // 클릭하는 영역
                           child: registerLine(
                             category: '제조사',
-                            content: selectedMaker['title'],
+                            content: selectedMaker['title'] ?? '제조사를 선택해주세요',
                             isLastLine: false,
+                            isSelected: selectedMaker['id'] != null,
                           ),
                         ),
                         ModalNavigator(
@@ -126,16 +132,21 @@ class _CarRegisterState extends State<CarRegister> {
                           ),
                           child: registerLine(
                             category: '차종',
-                            content: selectedCar['title'],
+                            content: selectedCar['title'] ?? '차종을 선택해주세요',
                             isLastLine: false,
+                            isSelected: selectedCar['id'] != null,
                           ),
                         ),
                         const registerLine(
                           category: '연료 종류',
                           content: '가솔린',
                           isLastLine: true,
+                          isSelected: true,
                         ),
                       ],
+                    ),
+                    const SizedBox(
+                      height: 30,
                     ),
                     const RegisterTitle(title: '대여 정보'),
                     RegisterList(
@@ -149,25 +160,60 @@ class _CarRegisterState extends State<CarRegister> {
                             content: DateFormat('yyyy년 MM월 dd일')
                                 .format(_borrowingDate),
                             isLastLine: false,
+                            isSelected: true,
                           ),
                         ),
                         const registerLine(
                           category: '반납 일자',
                           content: '2023년 10월 25일',
                           isLastLine: false,
+                          isSelected: true,
                         ),
                         const registerLine(
                           category: '렌트카 업체',
                           content: 'SSAFY',
                           isLastLine: false,
+                          isSelected: false,
                         ),
                         const registerLine(
                           category: '차량 번호',
                           content: '00허 2102',
                           isLastLine: true,
+                          isSelected: false,
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 5,
+                          ),
+                          child: ElevatedButton(
+                            onPressed:
+                              _allregistered
+                                ? () {
+                                    //  나중에 등록 메소드 추가
+                                  }
+                                : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor
+                            ),
+                            child: const SizedBox(
+                                width: 70,
+                                child: Text(
+                                  '등록하기',
+                                  textAlign: TextAlign.center,
+                                ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),

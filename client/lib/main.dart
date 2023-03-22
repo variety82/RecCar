@@ -5,34 +5,37 @@ import 'screens/register/car_register_main.dart';
 import 'screens/my_page/my_page.dart';
 import 'screens/gas_station_search_page/gas_station_search.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
+import 'screens/video_recording_screen/camera_screen.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'screens/car_detail/car_detail.dart';
+import 'screens/detail/car_detail.dart';
 
 void main() {
-  runApp(MaterialApp(
-    title: 'cilent',
-    theme: ThemeData(
-      fontFamily: 'Pretendard',
-      primaryColor: const Color(0xFFE0426F),
-      primaryColorLight: const Color(0xFFFBD5DC),
-      secondaryHeaderColor: const Color(0xFF453F52),
-      shadowColor: const Color(0xFFEFEFEF),
-      disabledColor: const Color(0xFF999999),
+  runApp(
+    MaterialApp(
+      title: 'cilent',
+      theme: ThemeData(
+        fontFamily: 'Pretendard',
+        primaryColor: const Color(0xFFE0426F),
+        primaryColorLight: const Color(0xFFFBD5DC),
+        secondaryHeaderColor: const Color(0xFF453F52),
+        shadowColor: const Color(0xFFEFEFEF),
+        disabledColor: const Color(0xFF999999),
+      ),
+      themeMode: ThemeMode.system,
+      initialRoute: '/home',
+      routes: {
+        '/home': (context) => const MyApp(),
+        '/register': (context) => const CarRegister(),
+        '/detail': (context) => const CarDetail(),
+        '/my-page': (context) => const MyPage(),
+        '/station': (context) => NaverMapTest(),
+        '/login': (context) => const Login(),
+        '/before-recording': (context) => const BeforeRecordingScreen(),
+        '/recording': (context) => CameraScreen(),
+      },
     ),
-    themeMode: ThemeMode.system,
-    initialRoute: '/home',
-    routes: {
-      '/home': (context) => const MyApp(),
-      '/register': (context) => const CarRegister(),
-      '/detail': (context) => const CarDetail(),
-      '/my-page': (context) => const MyPage(),
-      '/station': (context) => NaverMapTest(),
-      '/before-recording': (context) => BeforeRecordingScreen(),
-      '/login': (context) => Login(),
-      '/before-recording': (context) => const BeforeRecordingScreen(),
-    },
-  ));
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -43,7 +46,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static final storage = FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
   dynamic userId = '';
   dynamic userName = '';
   dynamic userEmail = '';
@@ -92,9 +95,7 @@ class _MyAppState extends State<MyApp> {
                 const SizedBox(
                   height: 100,
                 ),
-                const Text(
-                  '차량 등록 아직 안했을 경우'
-                ),
+                const Text('차량 등록 아직 안했을 경우'),
                 IconButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/register');
@@ -108,9 +109,7 @@ class _MyAppState extends State<MyApp> {
                       print(1);
                       Navigator.pushNamed(context, '/detail');
                     },
-                    child: const Text(
-                      '차량 상세 페이지'
-                    ))
+                    child: const Text('차량 상세 페이지'))
               ],
             ),
           ),
