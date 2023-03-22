@@ -812,7 +812,7 @@ class _CameraScreenState extends State<CameraScreen>
                 children: [
                   Row(),
                   Text(
-                    '권한 거부됨',
+                    '권한이 거부되었습니다.',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -820,6 +820,12 @@ class _CameraScreenState extends State<CameraScreen>
                   ),
                   SizedBox(height: 24),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: Color(0xFFE0426F),
+                    ),
                     onPressed: () {
                       getPermissionStatus();
                     },

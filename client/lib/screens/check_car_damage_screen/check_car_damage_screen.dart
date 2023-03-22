@@ -36,6 +36,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     '찌그러짐',
     '파손',
     '이격',
+    '앞천장/뒤천장/하하호호호하하하',
+    '히히히히히ㅣ히히히히히히히히ㅣ힛'
   ];
 
   late Timer _timer;
@@ -420,40 +422,58 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              '현재 필터링',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 20,
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  '현재 필터링',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  categories.length.toString(),
+                                  style: TextStyle(
+                                    color: Color(0xFFE0426F),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: categories.map(
-                                (category) {
-                                  return Chip(
-                                    onDeleted: () {
-                                      removeCategories(category);
-                                      print(category);
-                                    },
-                                    deleteIcon: const Icon(
-                                      Icons.clear_rounded,
-                                      size: 16,
-                                    ),
-                                    label: Text(category),
-                                    labelPadding:
-                                        EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                    backgroundColor: Color(0xFFFBD5DC),
-                                    deleteIconColor: Color(0xFFE0426F),
-                                  );
-                                },
-                              ).toList(),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
+                                children: categories.map(
+                                  (category) {
+                                    return Chip(
+                                      onDeleted: () {
+                                        removeCategories(category);
+                                        print(category);
+                                      },
+                                      deleteIcon: const Icon(
+                                        Icons.clear_rounded,
+                                        size: 16,
+                                      ),
+                                      label: Text(category),
+                                      labelPadding:
+                                          EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                      backgroundColor: Color(0xFFFBD5DC),
+                                      deleteIconColor: Color(0xFFE0426F),
+                                    );
+                                  },
+                                ).toList(),
+                              ),
                             ),
                             if (categories.isEmpty)
                               Container(
-                                height: screenHeight * 0.075,
+                                height: screenHeight * 0.07,
                                 child: const Center(
                                   child: Text('현재 적용된 필터링이 없습니다.'),
                                 ),

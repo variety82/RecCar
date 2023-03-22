@@ -35,6 +35,7 @@ class _MyFABMenuState extends State<MyFABMenu>
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
+      overlayOpacity: 0.0,
       animatedIcon: AnimatedIcons.menu_close,
       visible: true,
       curve: Curves.bounceIn,
