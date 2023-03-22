@@ -99,6 +99,7 @@ class _CarRegisterState extends State<CarRegister> {
                   horizontal: 14,
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // 등록페이지의 제목 Class화
                     const RegisterTitle(title: '차량 정보'),

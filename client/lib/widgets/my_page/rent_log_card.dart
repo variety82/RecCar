@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../screens/my_page/rent_log_detail.dart';
-
+import './rent_log_line.dart';
 
 class RentLogCard extends StatelessWidget {
   final String startDate;
@@ -24,7 +24,16 @@ class RentLogCard extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => RentLogDetail(id: id,)),
+          MaterialPageRoute(
+              builder: (context) => RentLogDetail(
+                    id: id,
+                    startDate: "2021.11.26",
+                    endDate: "2021.11.27",
+                    rentCompany: "그린카",
+                    manufacturingCompany: "현대",
+                    carName: "그렌저",
+                    carNumber: "38모 6715",
+                  )),
         );
       },
       child: Container(
@@ -53,39 +62,44 @@ class RentLogCard extends StatelessWidget {
                       )
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "$startDate ~ $endDate",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "- $company",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          decoration: TextDecoration.none,
-                          fontWeight: FontWeight.w500,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RentLogLine(infoTitle: "대여 일자", info: "${startDate}", space: 100,),
+                        SizedBox(
+                          height: 5,
                         ),
-                      ),
-                      Text(
-                        "- 총 $damage개의 파손 발견",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          decoration: TextDecoration.none,
-                          fontWeight: FontWeight.w500,
+                        RentLogLine(infoTitle: "반납 일자", info: "${endDate}", space: 100,),
+                        SizedBox(
+                          height: 5,
                         ),
-                      ),
-                    ],
+                        RentLogLine(infoTitle: "대여 업체", info: "${company}", space: 100,),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        RentLogLine(infoTitle: "파손 개수", info: "${damage} 개", space: 100,),
+                        Divider(
+                          thickness: 1.5,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Center(
+                          child: Text(
+                            "자세히 보기",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w600,
+                            )
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -95,7 +109,7 @@ class RentLogCard extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 2,
+            height: 3,
           ),
         ],
       )),

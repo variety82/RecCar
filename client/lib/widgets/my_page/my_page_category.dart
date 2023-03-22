@@ -23,6 +23,25 @@ class MyPageCategory extends StatefulWidget {
   State<MyPageCategory> createState() => _MyPageCategoryState();
 }
 
+enum CategoryName { ModifyInfo, MyCar, RentLog, NoticeSetting, Logout, Resign }
+
+String convertCategoryNameToKor(CategoryName name) {
+  switch (name) {
+    case CategoryName.ModifyInfo:
+      return "내 정보 수정";
+    case CategoryName.MyCar:
+      return "차량 정보 조회";
+    case CategoryName.RentLog:
+      return "렌트 내역";
+    case CategoryName.NoticeSetting:
+      return "알림 설정";
+    case CategoryName.Logout:
+      return "로그아웃";
+    case CategoryName.Resign:
+      return "회원 탈퇴";
+  }
+}
+
 class _MyPageCategoryState extends State<MyPageCategory> {
   // void clickCategory(context) {
   //   Navigator.push(
@@ -35,13 +54,14 @@ class _MyPageCategoryState extends State<MyPageCategory> {
   dynamic userName = '';
   dynamic userEmail = '';
 
+
   @override
   void initState() {
     super.initState();
-    checkUserState();
+    // checkUserState();
     // 비동기로 flutter secure storage 정보를 불러오는 작업
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // checkUserState();
+      checkUserState();
     });
   }
 
@@ -70,30 +90,36 @@ class _MyPageCategoryState extends State<MyPageCategory> {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        if (widget.category == "내 정보 수정") {
+        if (widget.category ==
+            convertCategoryNameToKor(CategoryName.ModifyInfo)) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const MyDataModify()),
           );
-        } else if (widget.category == "차량 정보 조회") {
+        } else
+        if (widget.category == convertCategoryNameToKor(CategoryName.MyCar)) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const CarInfo()),
           );
-        } else if (widget.category == "렌트 내역") {
+        } else
+        if (widget.category == convertCategoryNameToKor(CategoryName.RentLog)) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const RentLog()),
           );
-        } else if (widget.category == "알림 설정") {
+        } else if (widget.category ==
+            convertCategoryNameToKor(CategoryName.NoticeSetting)) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AlarmSetting()),
           );
-        } else if(widget.category == "로그아웃") {
+        } else
+        if (widget.category == convertCategoryNameToKor(CategoryName.Logout)) {
           logout();
         }
-        else if (widget.category == "회원 탈퇴") {
+        else
+        if (widget.category == convertCategoryNameToKor(CategoryName.Resign)) {
           showDialog(
             context: context,
             builder: (BuildContext context) {

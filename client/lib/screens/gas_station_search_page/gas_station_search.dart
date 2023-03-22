@@ -107,7 +107,6 @@ class _NaverMapTestState extends State<NaverMapTest> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    // flex: 1,
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: 5,
@@ -115,7 +114,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
                                       child: Text(
                                         "${result[i]['name']}",
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: Theme.of(context).secondaryHeaderColor,
                                           decoration: TextDecoration.none,
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500,
@@ -125,15 +124,14 @@ class _NaverMapTestState extends State<NaverMapTest> {
                                     ),
                                   ),
                                   Expanded(
-                                    flex: 1,
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: 5,
                                       ),
                                       child: Text(
-                                        "${result[i]['upperAddrName']} ${result[i]['middleAddrName']} ${result[i]['lowerAddrName']}",
+                                        "${result[i]['upperAddrName']} ${result[i]['middleAddrName']} ${result[i]['lowerAddrName']} ${result[i]['detailAddrName']}",
                                         style: TextStyle(
-                                          // color: Colors.black,
+                                          color: Color(0xFF8B8B8B),
                                           // decoration: TextDecoration.none,
                                           // fontSize: 15,
                                           fontWeight: FontWeight.w500,
