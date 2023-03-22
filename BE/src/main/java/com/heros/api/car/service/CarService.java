@@ -2,6 +2,7 @@ package com.heros.api.car.service;
 
 import com.heros.api.car.dto.request.CarCreate;
 import com.heros.api.car.dto.request.CarModify;
+import com.heros.api.car.dto.response.CarCatalogResponse;
 import com.heros.api.car.dto.response.CarResponse;
 import com.heros.api.car.entity.Car;
 import com.heros.api.car.repository.CarRepository;
@@ -55,5 +56,10 @@ public class CarService {
         if (car == null)
             return null;
         return new CarResponse(car);
+    }
+
+    public List<CarCatalogResponse> getCatalog() {
+        List<CarCatalogResponse> catalog = carRepository.getCatalog();
+        return catalog;
     }
 }
