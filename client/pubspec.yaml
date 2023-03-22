@@ -49,6 +49,7 @@ dependencies:
   draggable_bottom_sheet: ^1.0.2
   flutter_dotenv: ^5.0.2
   gallery_saver: ^2.3.2
+  flutter_speed_dial: ^6.2.0
   flutter_svg: ^2.0.4
   image_picker: ^0.8.7
   google_sign_in: ^5.4.1
