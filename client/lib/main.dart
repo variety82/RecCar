@@ -8,7 +8,7 @@ import 'screens/before_recording_screen/before_recording_screen.dart';
 import 'screens/video_recording_screen/camera_screen.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'screens/car_detail/car_detail.dart';
+import 'screens/detail/car_detail.dart';
 
 void main() {
   runApp(
@@ -30,8 +30,8 @@ void main() {
         '/detail': (context) => const CarDetail(),
         '/my-page': (context) => const MyPage(),
         '/station': (context) => NaverMapTest(),
-        '/login': (context) => Login(),
-        '/before-recording': (context) => BeforeRecordingScreen(),
+        '/login': (context) => const Login(),
+        '/before-recording': (context) => const BeforeRecordingScreen(),
         '/recording': (context) => CameraScreen(),
       },
     ),
@@ -46,7 +46,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static final storage = FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
   dynamic userId = '';
   dynamic userName = '';
   dynamic userEmail = '';

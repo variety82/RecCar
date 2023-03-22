@@ -79,7 +79,7 @@ flutter:
   uses-material-design: true
   assets:
     - .env
-    - lib/assets/car_damage_img/
+    - lib/assets/images/car_damage_img/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
