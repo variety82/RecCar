@@ -12,7 +12,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   static final storage =
       FlutterSecureStorage(); // FlutterSecureStorage를 storage로 저장
-  dynamic userInfo = ''; // storage에 있는 유저 정보를 저장
+  dynamic userId = ''; // storage에 있는 유저 정보를 저장
 
   //flutter_secure_storage 사용을 위한 초기화 작업
   @override
@@ -25,8 +25,8 @@ class _LoginState extends State<Login> {
   }
 
   _asyncMethod() async {
-    userInfo = await storage.read(key: 'id');
-    if (userInfo != null) {
+    userId = await storage.read(key: 'id');
+    if (userId != null) {
       Navigator.pushNamed(context, '/home');
     } else {
     }
@@ -75,7 +75,7 @@ class _LoginState extends State<Login> {
               ),
               SizedBox(width: 15),
               Text(
-                "Login with Google",
+                "구글로 시작하기",
                 style: TextStyle(
                   color: Color(0xFF6A6A6A),
                 ),
@@ -89,6 +89,15 @@ class _LoginState extends State<Login> {
 
   Future<void> loginWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    // final GoogleSignInAuthentication gAuth = await googleUser!.authentication;
+    // final credential = gAuth.accessToken;
+    // // final test = await gAuth.idToken;
+    // final test2 = await googleUser.id;
+    // // final GoogleSignInAuthentication gAuth = await googleUser!.
+    //
+    // print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+credential.toString());
+    // // print(test);
+    // print(test2);
     if (googleUser != null) {
       await storage.write(
         key: 'name',

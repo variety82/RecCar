@@ -24,7 +24,7 @@ class _MyPageState extends State<MyPage> {
   @override
   void initState() {
     super.initState();
-
+    // checkUserState();
     // 비동기로 flutter secure storage 정보를 불러오는 작업
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkUserState();
@@ -44,7 +44,6 @@ class _MyPageState extends State<MyPage> {
     });
     if (userId == null) {
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
-    } else {
     }
   }
 
@@ -70,33 +69,34 @@ class _MyPageState extends State<MyPage> {
                   children: [
                     // 프로필 사진 Container
                     Container(
-                      width: 100,
-                      height: 100,
+                      width: 110,
+                      height: 110,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
                         image: DecorationImage(
-                            image: NetworkImage(userProfileImg==null?
-                                "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large":userProfileImg.toString())),
+                            image: NetworkImage(userProfileImg == null
+                                ? "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"
+                                : userProfileImg.toString())),
                       ),
                     ),
                     // 이메일 및 프로필 편집 버튼 Container
                     Container(
                       // width: 250,
-                      height: 100,
-                      margin: EdgeInsets.only(left: 27),
+                      // height: 100,
+                      margin: EdgeInsets.only(left: 20),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             // 이메일 출력
                             Text(
                               "${userName}",
                               style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  decoration: TextDecoration.none),
+                                color: Theme.of(context).secondaryHeaderColor,
+                                fontSize: 14,
+                                decoration: TextDecoration.none,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-
                             // 간격
                             SizedBox(
                               height: 5,
@@ -106,11 +106,6 @@ class _MyPageState extends State<MyPage> {
                               child: TextButton(
                                 onPressed: () => {
                                   _getPhotoLibraryImage()
-                                  // showDialog(
-                                  //     context: context,
-                                  //     builder: (BuildContext) {
-                                  //       return Dialog();
-                                  //     })
                                 },
                                 child: Container(
                                   height: 30,
@@ -131,12 +126,26 @@ class _MyPageState extends State<MyPage> {
                                       ),
                                     ],
                                   ),
-                                  child: Text(
-                                    "⚙ 프로필 편집",
-                                    style: TextStyle(
-                                        color: Color(0xFF6A6A6A),
-                                        fontSize: 13,
-                                        decoration: TextDecoration.none),
+                                  child: Center(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.settings,
+                                          color: Theme.of(context).secondaryHeaderColor,
+                                          size: 17,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "프로필 편집",
+                                          style: TextStyle(
+                                              color: Theme.of(context).secondaryHeaderColor,
+                                              fontSize: 13,
+                                              decoration: TextDecoration.none),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -148,7 +157,7 @@ class _MyPageState extends State<MyPage> {
 
                 // User 프로필과 메뉴를 가르는 Divider
                 const Divider(
-                  height: 40,
+                  height: 50,
                   thickness: 2,
                   indent: 20,
                   endIndent: 20,
@@ -156,12 +165,24 @@ class _MyPageState extends State<MyPage> {
                 ),
 
                 // 메뉴 카테고리
-                MyPageCategory(category: "내 정보 수정", textColor: Colors.black),
-                MyPageCategory(category: "차량 정보 조회", textColor: Colors.black),
-                MyPageCategory(category: "렌트 내역", textColor: Colors.black),
-                MyPageCategory(category: "알림 설정", textColor: Colors.black),
-                MyPageCategory(category: "로그아웃", textColor: Colors.black),
-                MyPageCategory(category: "회원 탈퇴", textColor: Colors.red),
+                MyPageCategory(
+                    category: "내 정보 수정",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "차량 정보 조회",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "렌트 내역",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "알림 설정",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "로그아웃",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "회원 탈퇴",
+                    textColor: Theme.of(context).primaryColor),
               ],
             ),
           ),
@@ -170,15 +191,14 @@ class _MyPageState extends State<MyPage> {
       ),
     );
   }
-  
+
   // 프로필 사진 변경하는 메소드
   _getPhotoLibraryImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-    print("HEY!!!!!${pickedFile.path}");
-    storage.write(key: 'profileImg', value: pickedFile.path);
-
+      print("HEY!!!!!${pickedFile.path}");
+      // storage.write(key: 'profileImg', value: pickedFile.path);
     } else {
       print('이미지 선택안함');
     }
