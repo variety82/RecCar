@@ -9,11 +9,11 @@ class CheckCarDamageContainer extends StatelessWidget {
         horizontal: 10,
       ),
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.48, // Container 높이 설정
+        height: MediaQuery.of(context).size.height * 0.45, // Container 높이 설정
         child: RawScrollbar(
           thumbVisibility: true,
-          radius: Radius.circular(5),
-          thumbColor: Color(0xFFE0426F),
+          radius: Radius.circular(10),
+          thumbColor: Color(0xFF453F52),
           thickness: 4,
           child: SingleChildScrollView(
             child: Column(

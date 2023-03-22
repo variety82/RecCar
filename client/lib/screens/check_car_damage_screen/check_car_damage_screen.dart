@@ -429,7 +429,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 20,
+                                    fontSize: 16,
                                   ),
                                 ),
                                 SizedBox(
@@ -440,7 +440,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                   style: TextStyle(
                                     color: Color(0xFFE0426F),
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 20,
+                                    fontSize: 16,
                                   ),
                                 ),
                               ],
@@ -461,7 +461,12 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                         Icons.clear_rounded,
                                         size: 16,
                                       ),
-                                      label: Text(category),
+                                      label: Text(
+                                        category,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                        ),
+                                      ),
                                       labelPadding:
                                           EdgeInsets.fromLTRB(10, 0, 0, 0),
                                       backgroundColor: Color(0xFFFBD5DC),
@@ -478,6 +483,29 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                   child: Text('현재 적용된 필터링이 없습니다.'),
                                 ),
                               ),
+                            Row(
+                              children: [
+                                Text(
+                                  '현재 손상 수',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  categories.length.toString(),
+                                  style: TextStyle(
+                                    color: Color(0xFFE0426F),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),

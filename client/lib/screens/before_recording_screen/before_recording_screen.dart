@@ -91,7 +91,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                               '주변이 어두울 때에는',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -99,7 +99,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                               '라이트를 켠 상태에서',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -107,7 +107,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                               '촬영해주세요.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -124,7 +124,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                               '빠르게 카메라를',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -132,7 +132,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                               '이동하지 말아주세요.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
