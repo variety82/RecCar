@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class DamageLevelCard extends StatefulWidget {
-  final int sideDamageLevel;
+  final int damageLevel;
+  final String partName;
 
   const DamageLevelCard({
     super.key,
-    required this.sideDamageLevel,
+    required this.damageLevel, required this.partName,
   });
 
 
@@ -41,11 +42,11 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
             children: [
               Column(
                 children: [
-                  const SizedBox(
+                  SizedBox(
                     width: 190,
                     child: Text(
-                      '앞펜더 / 앞범퍼 / 전조등',
-                      style: TextStyle(
+                      widget.partName,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w500,
                       ),
                       textAlign: TextAlign.center,
@@ -54,7 +55,7 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
                   Stack(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           top: 10,
                         ),
                         width: 180,
@@ -65,13 +66,19 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           top: 10,
                         ),
-                        width: 135,
+                        width: 180 * (widget.damageLevel / 4),
                         height: 13,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
+                          borderRadius:
+                            widget.damageLevel == 4
+                              ? BorderRadius.circular(5)
+                              : const BorderRadius.only(
+                                  topLeft: Radius.circular(5),
+                                  bottomLeft: Radius.circular(5),
+                            ),
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
@@ -87,7 +94,7 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
                         right: 3
                     ),
                     child: Text(
-                      '${widget.sideDamageLevel}',
+                      '${widget.damageLevel}',
                       style: TextStyle(
                           fontSize: 18,
                           color: Theme.of(context).primaryColor,
@@ -95,7 +102,7 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
                       ),
                     ),
                   ),
-                  Text('건')
+                  const Text('건')
                 ],
               ),
             ],
