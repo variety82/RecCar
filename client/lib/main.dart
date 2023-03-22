@@ -27,8 +27,10 @@ void main() {
       routes: {
         '/home': (context) => const MyApp(),
         '/register': (context) => const CarRegister(),
+        '/detail': (context) => const CarDetail(),
         '/my-page': (context) => const MyPage(),
         '/station': (context) => NaverMapTest(),
+        '/login': (context) => Login(),
         '/before-recording': (context) => BeforeRecordingScreen(),
         '/recording': (context) => CameraScreen(),
       },
@@ -92,9 +94,7 @@ class _MyAppState extends State<MyApp> {
                 const SizedBox(
                   height: 100,
                 ),
-                const Text(
-                  '차량 등록 아직 안했을 경우'
-                ),
+                const Text('차량 등록 아직 안했을 경우'),
                 IconButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/register');
@@ -108,9 +108,7 @@ class _MyAppState extends State<MyApp> {
                       print(1);
                       Navigator.pushNamed(context, '/detail');
                     },
-                    child: const Text(
-                      '차량 상세 페이지'
-                    ))
+                    child: const Text('차량 상세 페이지'))
               ],
             ),
           ),
