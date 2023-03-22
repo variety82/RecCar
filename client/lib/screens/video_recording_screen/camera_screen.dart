@@ -9,6 +9,7 @@ import 'package:client/screens/check_video_screen/check_video_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:video_player/video_player.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -28,7 +29,8 @@ class _CameraScreenState extends State<CameraScreen>
   bool _isCameraPermissionGranted = false;
 
   bool _isRearCameraSelected = true;
-  bool _isVideoCameraSelected = true;
+
+  // bool _isVideoCameraSelected = true;
 
   bool _isRecordingInProgress = false;
 
@@ -118,20 +120,31 @@ class _CameraScreenState extends State<CameraScreen>
     }
   }
 
-  Future<XFile?> takePicture() async {
-    final CameraController? cameraController = controller;
-
-    if (cameraController!.value.isTakingPicture) {
-      // A capture is already pending, do nothing.
+  Future<XFile?> capture() async {
+    try {
+      // 카메라 프리뷰의 이미지를 캡쳐합니다.
+      final image = await controller!.takePicture();
+      return image;
+    } catch (e) {
+      // 캡쳐에 실패한 경우 에러를 출력합니다.
+      print(e);
       return null;
     }
+  }
 
+  Future<void> saveImageToGallery(XFile imageFile, String folderName) async {
     try {
-      XFile file = await cameraController.takePicture();
-      return file;
-    } on CameraException catch (e) {
-      print('Error occured while taking picture: $e');
-      return null;
+      final appDir = await getExternalStorageDirectory(); // 앱의 로컬 디렉토리 가져오기
+      final folderPath = '${appDir!.path}/$folderName'; // 앱의 이름으로 만든 폴더 경로 설정
+      await Directory(folderPath).create(recursive: true); // 해당 경로에 폴더 생성
+      final fileName =
+          '${DateTime.now().millisecondsSinceEpoch}.jpg'; // 이미지 파일 이름 설정
+      final filePath = '$folderPath/$fileName'; // 파일 경로 설정
+      final imageBytes = await imageFile.readAsBytes(); // 이미지 파일 바이트 가져오기
+      await File(filePath).writeAsBytes(imageBytes); // 파일에 이미지 바이트 저장하기
+      await GallerySaver.saveImage(filePath); // 갤러리에 파일 저장하기
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -370,6 +383,7 @@ class _CameraScreenState extends State<CameraScreen>
     getCameras();
     // 카메라, 마이크 장치 허락 받기
     getPermissionStatus();
+    controller?.initialize();
     super.initState();
   }
 
@@ -400,12 +414,9 @@ class _CameraScreenState extends State<CameraScreen>
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
 
-    if (!controller!.value.isInitialized) {
-      return Container();
-    }
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         body: _isCameraPermissionGranted
             ? _isCameraInitialized
                 ? Column(
@@ -570,13 +581,16 @@ class _CameraScreenState extends State<CameraScreen>
                                                   ),
                                                   InkWell(
                                                     onTap: () async {
+                                                      _stopTimer();
+                                                      _isCameraInitialized =
+                                                          false;
+
                                                       XFile? rawVideo =
                                                           await stopVideoRecording();
-                                                      print(rawVideo);
+
                                                       File videoFile =
                                                           File(rawVideo!.path);
-                                                      print('Video length');
-                                                      print(videoFile.length());
+
                                                       int fileSizeInBytes =
                                                           await videoFile
                                                               .length();
@@ -603,7 +617,7 @@ class _CameraScreenState extends State<CameraScreen>
                                                       );
                                                       allFileList
                                                           .add(videoFile);
-                                                      _stopTimer();
+
                                                       final route =
                                                           MaterialPageRoute(
                                                         fullscreenDialog: true,
@@ -654,36 +668,70 @@ class _CameraScreenState extends State<CameraScreen>
                                                 ],
                                               ),
                                             ),
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _isCameraInitialized = false;
-                                          });
-                                          onNewCameraSelected(cameras[
-                                              _isRearCameraSelected ? 1 : 0]);
-                                          setState(() {
-                                            _isRearCameraSelected =
-                                                !_isRearCameraSelected;
-                                          });
-                                        },
-                                        child: Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.circle,
-                                              color: Colors.black38,
-                                              size: 60,
+                                      _isRecordingInProgress
+                                          ? InkWell(
+                                              onTap: () async {
+                                                // XFile? rawImage =
+                                                //     await capture();
+                                                //
+                                                // if (rawImage != null) {
+                                                //   saveImageToGallery(
+                                                //       rawImage, 'capture');
+                                                // }
+                                              },
+                                              child: Stack(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.circle,
+                                                    color: Colors.black38,
+                                                    size: 60,
+                                                  ),
+                                                  // Icon(
+                                                  //   Icons.circle,
+                                                  //   color: Colors.white,
+                                                  //   size: 40,
+                                                  // ),
+                                                  Icon(
+                                                    Icons.camera,
+                                                    color: Colors.white,
+                                                    size: 30,
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          : InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  _isCameraInitialized = false;
+                                                });
+                                                onNewCameraSelected(cameras[
+                                                    _isRearCameraSelected
+                                                        ? 1
+                                                        : 0]);
+                                                setState(() {
+                                                  _isRearCameraSelected =
+                                                      !_isRearCameraSelected;
+                                                });
+                                              },
+                                              child: Stack(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.circle,
+                                                    color: Colors.black38,
+                                                    size: 60,
+                                                  ),
+                                                  Icon(
+                                                    _isRearCameraSelected
+                                                        ? Icons.camera_front
+                                                        : Icons.camera_rear,
+                                                    color: Colors.white,
+                                                    size: 30,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                            Icon(
-                                              _isRearCameraSelected
-                                                  ? Icons.camera_front
-                                                  : Icons.camera_rear,
-                                              color: Colors.white,
-                                              size: 30,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ),
@@ -764,7 +812,7 @@ class _CameraScreenState extends State<CameraScreen>
                 children: [
                   Row(),
                   Text(
-                    'Permission denied',
+                    '권한이 거부되었습니다.',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -772,13 +820,19 @@ class _CameraScreenState extends State<CameraScreen>
                   ),
                   SizedBox(height: 24),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: Color(0xFFE0426F),
+                    ),
                     onPressed: () {
                       getPermissionStatus();
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        'Give permission',
+                        '카메라 권한 허가',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24,

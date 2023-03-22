@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // import widgets
-import 'package:client/screens/before_recording_screen/before_recording_button_widget.dart';
+import 'package:client/widgets/common/moveable_button.dart';
 
 // 촬영 전 페이지 statelessWidget으로 구현
 // 만약 애니메이션 효과 추가 시, 수정 필요
@@ -40,6 +40,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                     // 정렬 방식
                     spacing: 10,
                     // 좌우 간격
+
                     children: [
                       Text(
                         '지금부터',
@@ -76,7 +77,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 20,
+                    horizontal: 50,
                   ),
                   child: Column(
                     children: [
@@ -87,7 +88,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              '주변이 어두울 때에는 라이트를 켠 상태에서 촬영해주세요.',
+                              '주변이 어두울 때에는',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 20,
@@ -95,10 +96,19 @@ class BeforeRecordingScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '영상이 너무 어두울 시, AI가 손상을 잡아내지 못할 가능성이 높아요.',
+                              '라이트를 켠 상태에서',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              '촬영해주세요.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
@@ -111,7 +121,7 @@ class BeforeRecordingScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              '너무 빠르게 화면을 이동하지 말아주세요.',
+                              '빠르게 카메라를',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 20,
@@ -119,10 +129,11 @@ class BeforeRecordingScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '화면 전환이 빠를 경우, AI가 손상 부위를 놓칠 수 있어요!',
+                              '이동하지 말아주세요.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
@@ -133,10 +144,11 @@ class BeforeRecordingScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: 20,
+                    vertical: 32,
                   ),
-                  child: BeforeRecordingButton(
+                  child: MoveableButton(
                     text: '녹화 시작',
+                    routing: '/recording',
                   ),
                 ),
               ],
