@@ -2,7 +2,7 @@ name: client
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0-288.0.dev <4.0.0'
+  sdk: ">=3.0.0-288.0.dev <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_naver_map: ^0.10.7
   naver_map_plugin:
     git: https://github.com/LBSTECH/naver_map_plugin.git
 
@@ -42,9 +43,19 @@ dependencies:
   video_player: ^2.5.3
   path_provider: ^2.0.13
   http: ^0.13.4
+  syncfusion_flutter_datepicker: ^20.4.54
+  intl: ^0.18.0
+  geolocator: ^9.0.2
+  draggable_bottom_sheet: ^1.0.2
   flutter_dotenv: ^5.0.2
   gallery_saver: ^2.3.2
   flutter_speed_dial: ^6.2.0
+  flutter_svg: ^2.0.4
+  image_picker: ^0.8.7
+  google_sign_in: ^5.4.1
+  shared_preferences: ^2.0.18
+  flutter_secure_storage: ^5.0.2
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:
@@ -62,13 +73,13 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
   assets:
     - .env
+    - lib/assets/car_damage_img/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

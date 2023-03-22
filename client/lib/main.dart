@@ -6,6 +6,9 @@ import 'screens/my_page/my_page.dart';
 import 'screens/gas_station_search_page/gas_station_search.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
 import 'screens/video_recording_screen/camera_screen.dart';
+import 'screens/login_screen/login_screen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'screens/car_detail/car_detail.dart';
 
 void main() {
   runApp(
@@ -33,8 +36,42 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  static final storage = FlutterSecureStorage();
+  dynamic userId = '';
+  dynamic userName = '';
+  dynamic userEmail = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkUserState();
+    });
+  }
+
+  checkUserState() async {
+    var id = await storage.read(key: 'id');
+    var name = await storage.read(key: 'name');
+    var email = await storage.read(key: 'email');
+    setState(() {
+      userId = id;
+      userName = name;
+      userEmail = email;
+    });
+
+    if (userId == null) {
+      Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +89,28 @@ class MyApp extends StatelessWidget {
                 const Text(
                   '대충 차고 이미지',
                 ),
+                const SizedBox(
+                  height: 100,
+                ),
+                const Text(
+                  '차량 등록 아직 안했을 경우'
+                ),
                 IconButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/register');
                     },
                     icon: const Icon(Icons.add_box_rounded)),
+                const Text(
+                  '차량 등록됐을 경우',
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      print(1);
+                      Navigator.pushNamed(context, '/detail');
+                    },
+                    child: const Text(
+                      '차량 상세 페이지'
+                    ))
               ],
             ),
           ),
