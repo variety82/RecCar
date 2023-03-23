@@ -9,6 +9,7 @@ import 'package:client/screens/register/select_item.dart';
 import 'package:client/screens/register/select_borrow_date.dart';
 import 'package:client/widgets/common/modal_navigator.dart';
 import 'package:intl/intl.dart';
+import 'package:client/services/api.dart';
 
 class CarRegister extends StatefulWidget {
   const CarRegister({Key? key}) : super(key: key);
@@ -26,7 +27,12 @@ class _CarRegisterState extends State<CarRegister> {
 
   final bool _allregistered = false;
 
-
+  @override
+  void initState() {
+    super.initState();
+    var response = fetchApi('/car/catalog', 'get');
+    print(response);
+  }
 
 
   // 제조사를 업데이트 해주는 function

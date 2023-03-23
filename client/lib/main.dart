@@ -106,9 +106,11 @@ class _MyAppState extends State<MyApp> {
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      print(1);
                       Navigator.pushNamed(context, '/detail');
                     },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor
+                    ),
                     child: const Text('차량 상세 페이지'))
               ],
             ),
