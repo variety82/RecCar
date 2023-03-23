@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -21,8 +23,8 @@ public class DetectionInfoService {
 
     private final DetectionInfoRepository detectionInfoRepository;
     private final CarRepository carRepository;
-    public PartWithDetectionInfoResponse getDetectionInfos(Long carId){
-        PartWithDetectionInfoResponse detectionInfos = detectionInfoRepository.getDetectionInfos(carId);
+    public List<PartWithDetectionInfoResponse> getDetectionInfos(Long carId){
+        List<PartWithDetectionInfoResponse> detectionInfos = detectionInfoRepository.getDetectionInfos(carId);
         return detectionInfos;
     }
 
