@@ -4,6 +4,7 @@ import '../../widgets/my_page/rent_log_card.dart';
 import './rent_log_detail.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:client/services/my_page_api.dart';
 
 class RentLog extends StatefulWidget {
   const RentLog({Key? key}) : super(key: key);
@@ -18,12 +19,22 @@ class _RentLogState extends State<RentLog> {
   dynamic userName = '';
   dynamic userEmail = '';
   dynamic userProfileImg = '';
-  late dynamic damage;
+  dynamic simpleRentInfo = [];
 
   @override
   void initState() {
     super.initState();
-
+    getSimpleRentInfo(
+      success: (dynamic response) {
+        setState(() {
+        simpleRentInfo = response;
+        });
+        // print(response[0]);
+      },
+      fail: (error) {
+        print('렌트 내역 호출 오류: $error');
+      },
+    );
     // 비동기로 flutter secure storage 정보를 불러오는 작업
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkUserState();
@@ -48,21 +59,6 @@ class _RentLogState extends State<RentLog> {
 
   @override
   Widget build(BuildContext context) {
-    // late var rentCnt;
-    Future<void> getRentLog() async {
-      final url = Uri.parse(
-        'https://api/v1/car/history/{userId}',
-      );
-      final response = await http.get(url);
-      print(response.statusCode);
-      setState(() {
-        damage = response.body;
-      });
-      // 여기에 api로 get하고
-      // setState로 rentCnt를 변경해주자!
-      // 날짜, 회사, 파손 개수 데이터도 여기서 setState로 받자!
-    }
-
     return Container(
       color: Colors.white,
       child: Column(
@@ -89,7 +85,7 @@ class _RentLogState extends State<RentLog> {
                         ),
                       ),
                       TextSpan(
-                        text: '6',
+                        text: '${simpleRentInfo.length}',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
@@ -118,16 +114,15 @@ class _RentLogState extends State<RentLog> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  // 추후 rentCnt만큼 돌림
                   // 렌트 내역을 리스트로 출력
-                  for (int i = 0; i < 6; i++)
-                    // RentLogCard라는 widget에 데이터를 넘겨줌
+                  for (int i = 0; i < simpleRentInfo.length; i++)
+                    // RentLogCard 위젯에 데이터를 넘겨줌
                     RentLogCard(
-                      startDate: "2021.11.26",
-                      endDate: "2021.11.27",
-                      company: "그린카",
-                      damage: 3,
-                      id: i,
+                      startDate: simpleRentInfo[i]['rentalDate'].toString().substring(0, 10),
+                      endDate: simpleRentInfo[i]['returnDate'].toString().substring(0, 10),
+                      company: "${simpleRentInfo[i]['rentalCompany']}",
+                      damage: simpleRentInfo[i]['newDamageCount'],
+                      carId: simpleRentInfo[i]['carId'],
                     ),
                 ],
               ),

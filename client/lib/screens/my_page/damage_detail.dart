@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
 import '../../widgets/my_page/rent_log_line.dart';
 import '../../widgets/common/footer.dart';
+import '../../services/my_page_api.dart';
 
-class DamageDetail extends StatelessWidget {
-  final int id;
+class DamageDetail extends StatefulWidget {
+  final int damageId;
 
   const DamageDetail({
     super.key,
-    required this.id,
+    required this.damageId,
   });
+
+  @override
+  State<DamageDetail> createState() => _DamageDetailState();
+}
+
+class _DamageDetailState extends State<DamageDetail> {
+  dynamic detailDamageInfo = [];
+  @override
+  void initState() {
+    super.initState();
+    getDetailDamageInfo(
+      success: (dynamic response) {
+        setState(() {
+          detailDamageInfo = response;
+        });
+        print(response);
+      },
+      fail: (error) {
+        print('렌트 내역 호출 오류: $error');
+      },
+      damageId: widget.damageId,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +55,7 @@ class DamageDetail extends StatelessWidget {
                       image: DecorationImage(
                           fit: BoxFit.fill,
                           image: NetworkImage(
-                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLF9LLlP2p2PEAlUdOMIc_5fuqi6wh15ch7A&usqp=CAU")),
+                              "${detailDamageInfo['damageImageUrl']}")),
                     ),
                   ),
                   // const Divider(
@@ -71,7 +95,7 @@ class DamageDetail extends StatelessWidget {
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               color: Theme.of(context).secondaryHeaderColor,
-                              fontSize: 16,
+                              fontSize: 14,
                               decoration: TextDecoration.none,
                             ),
                           ),
@@ -80,7 +104,7 @@ class DamageDetail extends StatelessWidget {
                           ),
                           RentLogLine(
                             infoTitle: "파손 일자",
-                            info: "2021.02.03",
+                            info: "${detailDamageInfo['damageDate']}",
                             space: 120,
                           ),
                           SizedBox(
@@ -88,7 +112,7 @@ class DamageDetail extends StatelessWidget {
                           ),
                           RentLogLine(
                             infoTitle: "파손 종류",
-                            info: "스크래치",
+                            info: "${detailDamageInfo['damage']}",
                             space: 120,
                           ),
                           SizedBox(
@@ -96,7 +120,15 @@ class DamageDetail extends StatelessWidget {
                           ),
                           RentLogLine(
                             infoTitle: "파손 부위",
-                            info: "앞 범퍼",
+                            info: "${detailDamageInfo['part']}",
+                            space: 120,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          RentLogLine(
+                            infoTitle: "메모",
+                            info: "${detailDamageInfo['memo']}",
                             space: 120,
                           ),
                         ],
