@@ -5,6 +5,7 @@ import com.heros.api.car.dto.request.CarModify;
 import com.heros.api.car.dto.response.CarCatalogResponse;
 import com.heros.api.car.dto.response.CarResponse;
 import com.heros.api.car.entity.Car;
+import com.heros.api.car.entity.CarCatalog;
 import com.heros.api.car.repository.CarRepository;
 import com.heros.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Log4j2
 @Service
@@ -59,7 +62,27 @@ public class CarService {
     }
 
     public List<CarCatalogResponse> getCatalog() {
-        List<CarCatalogResponse> catalog = carRepository.getCatalog();
-        return catalog;
+        List<CarCatalog> catalog = carRepository.getCatalog();
+
+        Set<String> makers = new HashSet<>();
+        for (CarCatalog carCatalog : catalog) {
+            makers.add(carCatalog.getMake());
+        }
+
+        List<CarCatalogResponse> result = new ArrayList<>();
+        for (String make : makers) {
+            List<String> model = new ArrayList<>();
+            for (CarCatalog carCatalog : catalog) {
+                if (carCatalog.getMake().equals(make)){
+                    model.add(carCatalog.getModel());
+                }
+            }
+            result.add(CarCatalogResponse.builder()
+                    .manufacturer(make)
+                    .model(model)
+                    .build());
+        }
+
+        return result;
     }
 }
