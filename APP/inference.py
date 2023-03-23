@@ -5,6 +5,7 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
+from collections import OrderedDict
 from src.Models import Unet
 
 
@@ -17,7 +18,20 @@ def load_model():
     weight_path = './models/[DAMAGE][Scratch_0]Unet.pt'
     #Load pretrained model
     model = Unet(encoder='resnet34', pre_weight='imagenet', num_classes=n_classes).to(device)
-    model.model.load_state_dict(torch.load(weight_path, map_location=torch.device(device)))
+    # model.model.load_state_dict(torch.load(weight_path, map_location=torch.device(device)))
+    ## model load
+    # if isinstance(model.model, torch.nn.DataParallel): #멀티지피유 사용시
+        # model.model.module.load_state_dict(torch.load(weight_path, map_location=torch.device(device))) ## model.module에 state_dict를 불러옴
+    # else:
+        # model.model.load_state_dict(torch.load(weight_path, map_location=torch.device(device))) 
+
+
+    loaded_state_dict = torch.load(weight_path, map_location=torch.device(device))
+    new_state_dict = OrderedDict()
+    for n, v in loaded_state_dict.items():
+        name = n.replace("module.","") # .module이 중간에 포함된 형태라면 (".module","")로 치환
+        new_state_dict[name] = v
+    model.model.load_state_dict(new_state_dict)
     model.eval()
     return model
 
