@@ -30,56 +30,66 @@ class _CarDetailState extends State<CarDetail> {
           ),
           Expanded(child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                Text(
-                  'SM5',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).secondaryHeaderColor,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 50,
                   ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                SvgPicture.asset(
-                  'lib/assets/images/car_damage_img/car_f${frontDamageLevel}_s${sideDamageLevel}_b${backDamageLevel}_w$wheelDamageLevel.svg',
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '손상 부위',
+                  Text(
+                    'SM5',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).secondaryHeaderColor,
                     ),
                   ),
-                ),
-                DamageLevelCard(
-                  damageLevel: frontDamageLevel,
-                  partName: '앞펜더 / 앞범퍼 / 전조등'
-                ),
-                DamageLevelCard(
-                    damageLevel: sideDamageLevel,
-                    partName: '옆면 / 사이드 / 스텝'
-                ),
-                DamageLevelCard(
-                    damageLevel: backDamageLevel,
-                    partName: '뒷펜더 / 뒷범퍼 / 후미등'
-                ),
-                DamageLevelCard(
-                    damageLevel: wheelDamageLevel,
-                    partName: '타이얼 / 휠'
-                ),
-              ],
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  SvgPicture.asset(
+                    'lib/assets/images/car_damage_img/car_f${frontDamageLevel}_s${sideDamageLevel}_b${backDamageLevel}_w$wheelDamageLevel.svg',
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '손상 부위',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).secondaryHeaderColor,
+                      ),
+                    ),
+                  ),
+                  DamageLevelCard(
+                    damageLevel: frontDamageLevel,
+                    partName: '앞펜더 / 앞범퍼 / 전조등'
+                  ),
+                  DamageLevelCard(
+                      damageLevel: sideDamageLevel,
+                      partName: '옆면 / 사이드 / 스텝'
+                  ),
+                  DamageLevelCard(
+                      damageLevel: backDamageLevel,
+                      partName: '뒷펜더 / 뒷범퍼 / 후미등'
+                  ),
+                  DamageLevelCard(
+                      damageLevel: wheelDamageLevel,
+                      partName: '타이얼 / 휠'
+                  ),
+                  DamageLevelCard(
+                      damageLevel: wheelDamageLevel,
+                      partName: '타이얼 / 휠'
+                  ),
+                  DamageLevelCard(
+                      damageLevel: wheelDamageLevel,
+                      partName: '타이얼 / 휠'
+                  ),
+                ],
+              ),
             ),
           ),
           ),
