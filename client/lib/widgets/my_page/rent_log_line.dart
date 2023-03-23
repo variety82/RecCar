@@ -22,7 +22,7 @@ class RentLogLine extends StatelessWidget {
             '${infoTitle}',
             style: TextStyle(
               color: Theme.of(context).secondaryHeaderColor,
-              fontSize: 14,
+              fontSize: 12,
               decoration: TextDecoration.none,
               fontWeight: FontWeight.w600,
             ),
@@ -33,7 +33,7 @@ class RentLogLine extends StatelessWidget {
             '${info}',
             style: TextStyle(
               color: Color(0xFF6A6A6A),
-              fontSize: 15,
+              fontSize: 13,
               decoration: TextDecoration.none,
               fontWeight: FontWeight.normal,
             ),
