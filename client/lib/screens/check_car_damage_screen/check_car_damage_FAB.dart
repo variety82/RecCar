@@ -7,6 +7,17 @@ import 'package:client/screens/check_car_damage_screen/check_car_damage_modal.da
 import 'package:client/screens/check_car_damage_screen/check_car_damage_filter.dart';
 
 class MyFABMenu extends StatefulWidget {
+  final void Function(String) addCategories;
+  final void Function(String) removeCategories;
+  final List<String> selected_categories;
+
+  const MyFABMenu({
+    super.key,
+    required this.selected_categories,
+    required this.addCategories,
+    required this.removeCategories,
+  });
+
   @override
   _MyFABMenuState createState() => _MyFABMenuState();
 }
@@ -100,7 +111,7 @@ class _MyFABMenuState extends State<MyFABMenu>
               ),
               builder: (BuildContext context) {
                 return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.75,
                   child: Card(
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.vertical(
@@ -108,8 +119,11 @@ class _MyFABMenuState extends State<MyFABMenu>
                       ),
                     ),
                     child: CheckCarDamageModal(
-                        // showedWidget: CheckCarDamagefilter(),
-                        ),
+                      selected_categories: widget.selected_categories,
+                      addCategories: widget.addCategories,
+                      removeCategories: widget.removeCategories,
+                      // showedWidget: CheckCarDamagefilter(),
+                    ),
                   ),
                 );
               },

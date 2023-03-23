@@ -31,13 +31,16 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
 
   int skip_counter = 0;
 
-  List<String> categories = [
+  List<String> selected_categories = [
     '스크래치',
     '찌그러짐',
     '파손',
     '이격',
-    '앞천장/뒤천장/하하호호호하하하',
-    '히히히히히ㅣ히히히히히히히히ㅣ힛'
+    '앞범퍼/앞펜더/전조등',
+    '뒷범퍼/뒷펜더/후미등',
+    '옆면/사이드/스텝',
+    '타이어/휠',
+    '기타',
   ];
 
   late Timer _timer;
@@ -50,13 +53,15 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   }
 
   void addCategories(String categoryName) {
-    categories.add(categoryName);
-    setState(() {});
+    setState(() {
+      selected_categories.add(categoryName);
+    });
   }
 
   void removeCategories(String categoryName) {
-    categories.remove(categoryName);
-    setState(() {});
+    setState(() {
+      selected_categories.remove(categoryName);
+    });
   }
 
   Future _initVideoPlayer() async {
@@ -178,7 +183,11 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButton: MyFABMenu(),
+      floatingActionButton: MyFABMenu(
+        selected_categories: selected_categories,
+        addCategories: addCategories,
+        removeCategories: removeCategories,
+      ),
       body: loading_video
           ? Column(
               children: [
@@ -351,7 +360,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                             },
                                           );
                                         },
-                                        child: Stack(
+                                        child: const Stack(
                                           children: [
                                             Icon(
                                               Icons.circle,
@@ -436,7 +445,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                   width: 5,
                                 ),
                                 Text(
-                                  categories.length.toString(),
+                                  selected_categories.length.toString(),
                                   style: TextStyle(
                                     color: Color(0xFFE0426F),
                                     fontWeight: FontWeight.w700,
@@ -450,7 +459,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                               child: Wrap(
                                 spacing: 10,
                                 runSpacing: 10,
-                                children: categories.map(
+                                children: selected_categories.map(
                                   (category) {
                                     return Chip(
                                       onDeleted: () {
@@ -476,7 +485,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                 ).toList(),
                               ),
                             ),
-                            if (categories.isEmpty)
+                            if (selected_categories.isEmpty)
                               Container(
                                 height: screenHeight * 0.07,
                                 child: const Center(
@@ -497,7 +506,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                   width: 5,
                                 ),
                                 Text(
-                                  categories.length.toString(),
+                                  selected_categories.length.toString(),
                                   style: TextStyle(
                                     color: Color(0xFFE0426F),
                                     fontWeight: FontWeight.w700,

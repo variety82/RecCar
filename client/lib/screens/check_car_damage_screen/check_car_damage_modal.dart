@@ -4,13 +4,15 @@ import 'package:client/widgets/register/maker_item.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_filter.dart';
 
 class CheckCarDamageModal extends StatefulWidget {
-  // final void Function(int, String) updateSelectedItem;
-  // final Widget showedWidget;
+  final void Function(String) addCategories;
+  final void Function(String) removeCategories;
+  final List<String> selected_categories;
 
   const CheckCarDamageModal({
     super.key,
-    // required this.updateSelectedItem,
-    // required this.showedWidget,
+    required this.selected_categories,
+    required this.addCategories,
+    required this.removeCategories,
   });
 
   @override
@@ -80,7 +82,11 @@ class _CheckCarDamageModal extends State<CheckCarDamageModal> {
           ),
           Container(
             width: double.infinity,
-            child: CheckCarDamagefilter(),
+            child: CheckCarDamagefilter(
+              selected_categories: widget.selected_categories,
+              addCategories: widget.addCategories,
+              removeCategories: widget.removeCategories,
+            ),
           ),
         ],
       ),

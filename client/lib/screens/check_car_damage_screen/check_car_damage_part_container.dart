@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:client/widgets/common/image_detail.dart';
+import 'package:client/screens/check_car_damage_screen/check_car_damage_part.dart';
 
 class CheckCarDamageContainer extends StatelessWidget {
   @override
@@ -13,23 +13,25 @@ class CheckCarDamageContainer extends StatelessWidget {
         child: RawScrollbar(
           thumbVisibility: true,
           radius: Radius.circular(10),
-          thumbColor: Color(0xFF453F52),
-          thickness: 4,
+          thumbColor: Color(0xFF453F52).withOpacity(0.5),
+          thickness: 5,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.network(
-                    'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_frame1.jpg',
+                  padding: const EdgeInsets.all(20.0),
+                  child: CheckCarDamagePart(
+                    imageUrl:
+                        'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_user_50_2023-03-23_14-24-26_3.jpg',
                   ),
                 ),
-                Image.network(
-                  'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_frame1.jpg',
-                ),
-                Image.network(
-                  'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_frame1.jpg',
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: CheckCarDamagePart(
+                    imageUrl:
+                        'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_user_50_2023-03-23_14-24-26_3.jpg',
+                  ),
                 ),
               ],
             ),
@@ -39,42 +41,3 @@ class CheckCarDamageContainer extends StatelessWidget {
     );
   }
 }
-
-// Center(
-//   child: GestureDetector(
-//     child: Hero(
-//       tag: 'imageHero',
-//       child: Column(
-//         children: [
-//           Image.network(
-//             'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_frame1.jpg',
-//           ),
-//           Image.network(
-//             'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_frame1.jpg',
-//           ),
-//           Image.network(
-//             'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_frame1.jpg',
-//           ),
-//           Image.network(
-//             'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_frame1.jpg',
-//           ),
-//           Image.network(
-//             'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_frame1.jpg',
-//           ),
-//         ],
-//       ),
-//     ),
-//     onTap: () {
-//       Navigator.push(
-//         context,
-//         MaterialPageRoute(
-//           builder: (_) {
-//             return ImageScreen(
-//                 imageUrl:
-//                     'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_frame1.jpg');
-//           },
-//         ),
-//       );
-//     },
-//   ),
-// ),
