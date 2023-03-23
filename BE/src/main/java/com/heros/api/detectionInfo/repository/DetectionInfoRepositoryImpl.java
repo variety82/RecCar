@@ -20,10 +20,12 @@ public class DetectionInfoRepositoryImpl implements DetectionInfoRepositorySuppo
     public List<PartWithDetectionInfoResponse> getDetectionInfos(Long carId){
         List<PartWithDetectionInfoResponse> result = queryFactory
                 .select(Projections.constructor(PartWithDetectionInfoResponse.class,
+                        detectionInfo.detectionInfoId,
                         detectionInfo.part,
                         detectionInfo.damage,
                         detectionInfo.damageDate,
                         detectionInfo.damageImageUrl,
+                        detectionInfo.former,
                         detectionInfo.memo))
                 .from(detectionInfo)
                 .where(detectionInfo.car.carId.eq(carId))
