@@ -4,6 +4,7 @@ package com.heros.api.detectionInfo.controller;
 import com.heros.api.detectionInfo.dto.request.DetectionInfoCreate;
 import com.heros.api.detectionInfo.dto.response.PartWithDetectionInfoResponse;
 import com.heros.api.detectionInfo.dto.response.RentDetailResponse;
+import com.heros.api.detectionInfo.entity.DetectionInfo;
 import com.heros.api.detectionInfo.service.DetectionInfoService;
 import com.heros.api.example.model.ErrorResponseExample;
 import com.heros.exception.ErrorCode;
@@ -17,15 +18,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "DetectionInfoController", description = "차량 파손 정보 API")
 @RestController
@@ -33,6 +32,20 @@ import java.util.List;
 public class DetectionInfoController {
 
     private final DetectionInfoService detectionInfoService;
+
+    @Operation(summary = "차량파손정보상세")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = PartWithDetectionInfoResponse.class))),
+            @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
+    })
+    @GetMapping(value = "/api/v1/detection/{detectionInfoId}")
+    public ResponseEntity<?> getDetectionInfoDetail(@Schema(description = "조회할 detectionInfoId", example = "1") @NotNull @Min(1) @PathVariable Long detectionInfoId){
+        Optional<DetectionInfo> detectionInfoDetail = detectionInfoService.getDetectionInfoDetail(detectionInfoId);
+        if (detectionInfoDetail == null) {
+            throw (new BusinessException(ErrorCode.PAGE_NOT_FOUND));
+        }
+        return ResponseEntity.ok().body(detectionInfoDetail);
+    }
 
     @Operation(summary = "차량파손정보")
     @ApiResponses(value = {

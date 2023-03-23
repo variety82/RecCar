@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,6 +24,7 @@ public class DetectionInfoService {
 
     private final DetectionInfoRepository detectionInfoRepository;
     private final CarRepository carRepository;
+
     public List<PartWithDetectionInfoResponse> getDetectionInfos(Long carId){
         List<PartWithDetectionInfoResponse> detectionInfos = detectionInfoRepository.getDetectionInfos(carId);
         return detectionInfos;
@@ -46,5 +48,10 @@ public class DetectionInfoService {
                 .damageDate(detectionInfoCreate.getDamageDate())
                 .build();
         detectionInfoRepository.save(detectionInfo);
+    }
+
+    public Optional<DetectionInfo> getDetectionInfoDetail(Long detectionInfoId) {
+        Optional<DetectionInfo> detectionInfo = detectionInfoRepository.findById(detectionInfoId);
+        return detectionInfo;
     }
 }
