@@ -9,7 +9,7 @@ import 'package:client/screens/register/select_item.dart';
 import 'package:client/screens/register/select_borrow_date.dart';
 import 'package:client/widgets/common/modal_navigator.dart';
 import 'package:intl/intl.dart';
-import 'package:client/services/register.dart';
+import 'package:client/services/register_api.dart';
 
 class CarRegister extends StatefulWidget {
   const CarRegister({Key? key}) : super(key: key);
@@ -26,20 +26,6 @@ class _CarRegisterState extends State<CarRegister> {
   };
 
   final bool _allregistered = false;
-
-  @override
-  void initState() {
-    super.initState();
-    getCarinfo(
-      success: (dynamic response) {
-        print(response[0]);
-      },
-      fail: (error) {
-        print('차량 리스트 호출 오류: $error');
-      },
-    );
-  }
-
 
   // 제조사를 업데이트 해주는 function
   // parameter로 id와 이름을 받음
