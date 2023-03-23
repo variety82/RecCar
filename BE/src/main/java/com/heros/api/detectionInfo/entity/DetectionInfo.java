@@ -1,13 +1,13 @@
 package com.heros.api.detectionInfo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.heros.api.car.entity.Car;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "DETECTION_INFO")
@@ -40,6 +40,7 @@ public class DetectionInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CAR_ID")
+    @JsonIgnore
     private Car car;
 
     @Builder
