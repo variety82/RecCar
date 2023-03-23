@@ -4,6 +4,6 @@ import com.heros.api.car.entity.Car;
 import com.heros.api.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CarRepository extends JpaRepository<Car, Long> {
+public interface CarRepository extends JpaRepository<Car, Long>, CarRepositorySupport {
     Car findByUserAndReturned(User user, Boolean returned);
 }

@@ -2,6 +2,7 @@ package com.heros.api.car.controller;
 
 import com.heros.api.car.dto.request.CarCreate;
 import com.heros.api.car.dto.request.CarModify;
+import com.heros.api.car.dto.response.CarCatalogResponse;
 import com.heros.api.car.dto.response.CarResponse;
 import com.heros.api.car.service.CarService;
 import com.heros.exception.ErrorCode;
@@ -42,6 +43,17 @@ public class CarController {
         }
         carService.createCar(carCreate);
         return ResponseEntity.status(201).body(null);
+    }
+
+    @Operation(summary = "차량 제조사 및 모델 조회", description = "제조사 및 모델 조회 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "카탈로그 조회 성공 성공"),
+            @ApiResponse(responseCode = "400", description = "bad request operation")
+    })
+    @GetMapping(value = "catalog")
+    public ResponseEntity<?> carCatalog() {
+        List<CarCatalogResponse> carCatalogResponse = carService.getCatalog();
+        return ResponseEntity.status(201).body(carCatalogResponse);
     }
 
     @Operation(summary = "차량 수정", description = "차량 수정 메서드입니다.")
