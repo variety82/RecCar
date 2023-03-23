@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Tag(name = "DetectionInfoController", description = "차량 파손 정보 API")
 @RestController
@@ -40,9 +41,9 @@ public class DetectionInfoController {
     })
     @GetMapping(value = "/api/v1/detection")
     public ResponseEntity<?> getDetectionInfos(@NotNull @Min(1) @Param(value = "carId") Long carId){
-        PartWithDetectionInfoResponse detectionInfos = detectionInfoService.getDetectionInfos(carId);
+        List<PartWithDetectionInfoResponse> detectionInfos = detectionInfoService.getDetectionInfos(carId);
 
-        if (detectionInfos == null) {
+        if (detectionInfos.size() == 0) {
             throw (new BusinessException(ErrorCode.PAGE_NOT_FOUND));
         }
 

@@ -2,12 +2,10 @@ package com.heros.api.detectionInfo.repository;
 
 import com.heros.api.detectionInfo.dto.response.PartWithDetectionInfoResponse;
 import com.heros.api.detectionInfo.dto.response.RentDetailResponse;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 
 import java.util.List;
 
@@ -19,8 +17,8 @@ import static com.heros.api.detectionInfo.entity.QDetectionInfo.detectionInfo;
 public class DetectionInfoRepositoryImpl implements DetectionInfoRepositorySupport{
     private final JPAQueryFactory queryFactory;
     @Override
-    public PartWithDetectionInfoResponse getDetectionInfos(Long carId){
-        PartWithDetectionInfoResponse result = queryFactory
+    public List<PartWithDetectionInfoResponse> getDetectionInfos(Long carId){
+        List<PartWithDetectionInfoResponse> result = queryFactory
                 .select(Projections.constructor(PartWithDetectionInfoResponse.class,
                         detectionInfo.part,
                         detectionInfo.damage,
@@ -29,7 +27,7 @@ public class DetectionInfoRepositoryImpl implements DetectionInfoRepositorySuppo
                         detectionInfo.memo))
                 .from(detectionInfo)
                 .where(detectionInfo.car.carId.eq(carId))
-                .fetchOne();
+                .fetch();
         log.info("DetectionInfo : {result}");
         return result;
     }
