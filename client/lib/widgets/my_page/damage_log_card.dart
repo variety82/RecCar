@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import '../../screens/my_page/damage_detail.dart';
 import './rent_log_line.dart';
+import '../../services/my_page_api.dart';
 
-class DamageLogCard extends StatelessWidget {
+class DamageLogCard extends StatefulWidget {
   final String imageUrl;
   final String kindOfDamage;
   final String damageLocation;
-  final int id;
+  final int damageId;
 
   const DamageLogCard({
     super.key,
     required this.imageUrl,
     required this.kindOfDamage,
     required this.damageLocation,
-    required this.id,
+    required this.damageId,
   });
 
+  @override
+  State<DamageLogCard> createState() => _DamageLogCardState();
+}
+
+class _DamageLogCardState extends State<DamageLogCard> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -24,7 +30,7 @@ class DamageLogCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DamageDetail(
-              id: id,
+              damageId: widget.damageId,
             ),
           ),
         );
@@ -64,7 +70,7 @@ class DamageLogCard extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             image: DecorationImage(
                                 fit: BoxFit.fill,
-                                image: NetworkImage("$imageUrl")),
+                                image: NetworkImage("${widget.imageUrl}")),
                           ),
                         ),
                         SizedBox(width: 18),
@@ -74,7 +80,7 @@ class DamageLogCard extends StatelessWidget {
                           children: [
                             RentLogLine(
                               infoTitle: "파손 종류",
-                              info: "${kindOfDamage}",
+                              info: "${widget.kindOfDamage}",
                               space: 70,
                             ),
                             SizedBox(
@@ -82,7 +88,7 @@ class DamageLogCard extends StatelessWidget {
                             ),
                             RentLogLine(
                               infoTitle: "파손 부위",
-                              info: "${damageLocation}",
+                              info: "${widget.damageLocation}",
                               space: 70,
                             ),
                             Divider(

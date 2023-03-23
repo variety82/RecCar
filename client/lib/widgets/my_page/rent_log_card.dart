@@ -7,7 +7,7 @@ class RentLogCard extends StatelessWidget {
   final String endDate;
   final String company;
   final int damage;
-  final int id;
+  final int carId;
 
   const RentLogCard({
     super.key,
@@ -15,7 +15,7 @@ class RentLogCard extends StatelessWidget {
     required this.endDate,
     required this.company,
     required this.damage,
-    required this.id,
+    required this.carId,
   });
 
   @override
@@ -26,13 +26,7 @@ class RentLogCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => RentLogDetail(
-                    id: id,
-                    startDate: "2021.11.26",
-                    endDate: "2021.11.27",
-                    rentCompany: "그린카",
-                    manufacturingCompany: "현대",
-                    carName: "그렌저",
-                    carNumber: "38모 6715",
+                    carId: carId,
                   )),
         );
       },
