@@ -1,46 +1,43 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+enum Method { get, post }
+
 Future<dynamic> apiInstance({
   required String path,
-  required String method,
+  required Method method,
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
   Map<String, String>? body,
 }) async {
-    String URL = 'http://j8a102.p.ssafy.io:8080/api/v1$path';
-    Map<String, String> headers =  {
-      "Content-Type": "application/json;charset=utf-8",
+  String URL = 'http://j8a102.p.ssafy.io:8080/api/v1$path';
+  Map<String, String> headers = {
+    "Content-Type": "application/json;charset=utf-8",
   };
 
-  if (method == 'get') {
-    final url = Uri.parse(URL);
-    final response = await http.get(
-        url,
-        headers: headers,
-    );
+  final url = Uri.parse(URL);
+  late http.Response response;
 
-    if (200 <= response.statusCode && response.statusCode < 300) {
-      dynamic jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-      return success(jsonResponse);
-    } else {
-      fail('${response.statusCode} 에러');
-    }
+  switch (method) {
+    case Method.get:
+      response = await http.get(
+          url,
+          headers: headers
+      );
+      break;
+    case Method.post:
+      response = await http.post(
+          url,
+          headers: headers,
+          body: body
+      );
+      break;
   }
 
-  if (method == 'post') {
-    final url = Uri.parse(URL);
-    final response = await http.post(
-      url,
-      headers: headers,
-      body : body,
-    );
-
-    if (200 <= response.statusCode && response.statusCode < 300) {
-      List jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-      return success(jsonResponse);
-    } else {
-      fail('${response.statusCode} 에러');
-    }
+  if (200 <= response.statusCode && response.statusCode < 300) {
+    dynamic jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    return success(jsonResponse);
+  } else {
+    fail('${response.statusCode} 에러');
   }
 }

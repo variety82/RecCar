@@ -7,7 +7,7 @@ void getCarinfo({
 }) {
   apiInstance(
     path : '/car/catalog',
-    method : 'get',
+    method : Method.get,
     body: body,
     success: success,
     fail: fail,
