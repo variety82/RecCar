@@ -62,8 +62,9 @@ def upload_file(s3, file_name, bucket, object_name=None):
 
 def upload_s3(s3, bucket, created_img, user_id):
     obj_list = []
+    print(f"created_img : {created_img}")
     for img in created_img:
-        upload_file(s3, f"./output_images/{img}", bucket, f"{user_id}/{img}")
+        upload_file(s3, f"./dataset/output_images/{img}", bucket, f"{user_id}/{img}")
         obj_list.append(f"{user_id}/{img}")
     return obj_list
 

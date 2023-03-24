@@ -5,6 +5,7 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
+import asyncio
 from collections import OrderedDict
 from src.Models import Unet
 
@@ -18,13 +19,6 @@ def load_model():
     weight_path = './models/[DAMAGE][Scratch_0]Unet.pt'
     #Load pretrained model
     model = Unet(encoder='resnet34', pre_weight='imagenet', num_classes=n_classes).to(device)
-    # model.model.load_state_dict(torch.load(weight_path, map_location=torch.device(device)))
-    ## model load
-    # if isinstance(model.model, torch.nn.DataParallel): #멀티지피유 사용시
-        # model.model.module.load_state_dict(torch.load(weight_path, map_location=torch.device(device))) ## model.module에 state_dict를 불러옴
-    # else:
-        # model.model.load_state_dict(torch.load(weight_path, map_location=torch.device(device))) 
-
 
     loaded_state_dict = torch.load(weight_path, map_location=torch.device(device))
     new_state_dict = OrderedDict()
@@ -33,6 +27,7 @@ def load_model():
         new_state_dict[name] = v
     model.model.load_state_dict(new_state_dict)
     model.eval()
+
     return model
 
 def load_img(img_name):
@@ -55,10 +50,7 @@ def load_img(img_name):
 
 def inference_img(model, org_img, img_input, output_name):
 
-    model_before = time.time()
     output = model(img_input)
-    model_after = time.time()
-    print(f"model time : {model_after - model_before}")
 
     image_save_before = time.time()
     img_output = torch.argmax(output, dim=1).detach().cpu().numpy()
@@ -81,10 +73,9 @@ def inference_img(model, org_img, img_input, output_name):
     image_save_after = time.time()
     print(f"image_save_time : {image_save_after - image_save_before}")
 
-
     # 얘가 오래걸림 ;
     plt.savefig(f'./dataset/output_images/{output_name}', dpi=50)
-
+    print(f"인퍼런스 이미지 끝 : {output_name}")
     return output_name
 
 def create_images(model, images):
