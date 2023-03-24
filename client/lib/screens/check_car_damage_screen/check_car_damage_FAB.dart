@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
+import 'package:client/widgets/register/register_line.dart';
+import 'package:client/widgets/register/register_title.dart';
+import 'package:client/screens/check_car_damage_screen/check_car_damage_modal.dart';
+import 'package:client/screens/check_car_damage_screen/check_car_damage_filter.dart';
+
 class MyFABMenu extends StatefulWidget {
+  final void Function(String) addCategories;
+  final void Function(String) removeCategories;
+  final List<String> selected_categories;
+
+  const MyFABMenu({
+    super.key,
+    required this.selected_categories,
+    required this.addCategories,
+    required this.removeCategories,
+  });
+
   @override
   _MyFABMenuState createState() => _MyFABMenuState();
 }
@@ -84,7 +100,35 @@ class _MyFABMenuState extends State<MyFABMenu>
           ),
           backgroundColor: Color(0xFFE0426F),
           labelBackgroundColor: Color(0xFFE0426F),
-          onTap: () {},
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(25.0),
+                ),
+              ),
+              builder: (BuildContext context) {
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  child: Card(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(25.0),
+                      ),
+                    ),
+                    child: CheckCarDamageModal(
+                      selected_categories: widget.selected_categories,
+                      addCategories: widget.addCategories,
+                      removeCategories: widget.removeCategories,
+                      // showedWidget: CheckCarDamagefilter(),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
         ),
       ],
     );
