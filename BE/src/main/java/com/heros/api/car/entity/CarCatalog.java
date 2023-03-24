@@ -19,15 +19,19 @@ public class CarCatalog {
     @Column(name = "CATALOG_ID", columnDefinition = "INT UNSINGED")
     private Long catalogId;
 
-    @JoinColumn(name = "MAKE")
+    @Column(name = "MAKE")
     private String make;
 
-    @JoinColumn(name = "MODEL")
+    @Column(name = "MODEL")
     private String model;
 
+    @Column(name = "LOGO_URL")
+    private String logoURL;
+
     @Builder
-    public CarCatalog(String make, String model) {
+    public CarCatalog(String make, String model, String logoURL) {
         this.make = make;
         this.model = model;
+        this.logoURL = logoURL;
     }
 }
