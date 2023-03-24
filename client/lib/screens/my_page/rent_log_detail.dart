@@ -4,6 +4,7 @@ import '../../widgets/common/footer.dart';
 import '../../widgets/my_page/rent_log_line.dart';
 import './rent_log_detail_before.dart';
 import 'package:client/services/my_page_api.dart';
+import 'package:characters/characters.dart';
 
 class RentLogDetail extends StatefulWidget {
   final int carId;
@@ -18,10 +19,10 @@ class RentLogDetail extends StatefulWidget {
 }
 
 class _RentLogDetailState extends State<RentLogDetail> {
-  dynamic detailRentInfo = [];
+  Map<String, dynamic> detailRentInfo = {};
   dynamic simpleDamageInfo = [];
-  dynamic beforeDamage =  List<dynamic>.filled(0, {}, growable: true);
-  dynamic afterDamage = List<dynamic>.filled(0, {}, growable: true);
+  dynamic beforeDamage =  List<Map<String, dynamic>>.filled(0, {}, growable: true);
+  dynamic afterDamage = List<Map<String, dynamic>>.filled(0, {}, growable: true);
 
   @override
   void initState() {
@@ -29,7 +30,10 @@ class _RentLogDetailState extends State<RentLogDetail> {
     getDetailRentInfo(
       success: (dynamic response) {
         setState(() {
+          print(detailRentInfo.runtimeType);
           detailRentInfo = response;
+          print(response.runtimeType);
+          print(detailRentInfo.runtimeType);
         });
       },
       fail: (error) {
@@ -151,9 +155,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
                   ),
                   RentLogLine(
                     infoTitle: "대여 일자",
-                    info: detailRentInfo['rentalDate']
-                        .toString()
-                        .substring(0, 10),
+                    info: detailRentInfo['rentalDate'].toString().characters.take(10).toString(),
                     space: 120,
                   ),
                   SizedBox(
@@ -161,9 +163,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
                   ),
                   RentLogLine(
                     infoTitle: "반납 일자",
-                    info: detailRentInfo['returnDate']
-                        .toString()
-                        .substring(0, 10),
+                    info: detailRentInfo['returnDate'].toString().characters.take(10).toString(),
                     space: 120,
                   ),
                   SizedBox(

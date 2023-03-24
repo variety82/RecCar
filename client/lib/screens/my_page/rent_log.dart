@@ -27,7 +27,7 @@ class _RentLogState extends State<RentLog> {
     getSimpleRentInfo(
       success: (dynamic response) {
         setState(() {
-        simpleRentInfo = response;
+          simpleRentInfo = response;
         });
         // print(response[0]);
       },
@@ -40,6 +40,7 @@ class _RentLogState extends State<RentLog> {
       checkUserState();
     });
   }
+
 
   checkUserState() async {
     var id = await storage.read(key: 'id');
@@ -118,8 +119,12 @@ class _RentLogState extends State<RentLog> {
                   for (int i = 0; i < simpleRentInfo.length; i++)
                     // RentLogCard 위젯에 데이터를 넘겨줌
                     RentLogCard(
-                      startDate: simpleRentInfo[i]['rentalDate'].toString().substring(0, 10),
-                      endDate: simpleRentInfo[i]['returnDate'].toString().substring(0, 10),
+                      startDate: simpleRentInfo[i]['rentalDate']
+                          .toString()
+                          .substring(0, 10),
+                      endDate: simpleRentInfo[i]['returnDate']
+                          .toString()
+                          .substring(0, 10),
                       company: "${simpleRentInfo[i]['rentalCompany']}",
                       damage: simpleRentInfo[i]['newDamageCount'],
                       carId: simpleRentInfo[i]['carId'],
