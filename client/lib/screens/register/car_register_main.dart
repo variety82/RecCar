@@ -20,11 +20,35 @@ class CarRegister extends StatefulWidget {
 
 class _CarRegisterState extends State<CarRegister> {
   // 선택한 제조사
+  List<dynamic> carInfo = [];
+  List<dynamic> manufacturerList = [];
+  @override
+  void initState() {
+    super.initState();
+    getCarInfo(
+      success: (dynamic response) {
+        setState(() {
+          carInfo = response;
+          manufacturerList = carInfo.map((maker) => maker['manufacturer']).toList();
+        });
+      },
+      fail: (error) {
+        print('차량 리스트 호출 오류: $error');
+      },
+    );
+  }
+
   Map<String, dynamic> selectedMaker = {
     'id': null,
     'title': null,
   };
 
+  Map<String, dynamic> selectedCar = {
+    'id' : null,
+    'title' : null,
+  };
+
+  List<dynamic> carListByMaker = [];
   final bool _allregistered = false;
 
   // 제조사를 업데이트 해주는 function
@@ -38,6 +62,7 @@ class _CarRegisterState extends State<CarRegister> {
           'id': null,
           'title': null,
         };
+        carListByMaker = [];
         // 선택되어 있는 제조사와 다른 값으로 변경했을 경우
       } else {
         // 새롭게 선택한 값으로 업데이트
@@ -45,14 +70,16 @@ class _CarRegisterState extends State<CarRegister> {
           'id': makerId,
           'title': makerTitle,
         };
+        selectedCar = {
+          'id': null,
+          'title': null,
+        };
+        carListByMaker = carInfo.firstWhere((maker) => maker['manufacturer']== makerTitle)['model'];
       }
     });
   }
 
-  Map<String, dynamic> selectedCar = {
-    'id' : null,
-    'title' : null,
-  };
+
 
   void _updateSelectedCar(carId, carName) {
     setState(() {
@@ -115,7 +142,9 @@ class _CarRegisterState extends State<CarRegister> {
                           // SelectMaker 위젯을 보여줌
                           showedWidget: SelectMaker(
                             updateSelectedMaker: _updateSelectedMaker,
+                            manufacturerList : manufacturerList,
                           ),
+                          disable: false,
                           // 클릭하는 영역
                           child: registerLine(
                             category: '제조사',
@@ -125,12 +154,17 @@ class _CarRegisterState extends State<CarRegister> {
                           ),
                         ),
                         ModalNavigator(
-                          showedWidget: SelectItem(
-                              updateSelectedItem: _updateSelectedCar,
+                          showedWidget: SelectCar(
+                            updateSelectedCar: _updateSelectedCar,
+                            carList : carListByMaker,
                           ),
+                          disable: selectedMaker['id'] == null,
                           child: registerLine(
                             category: '차종',
-                            content: selectedCar['title'] ?? '차종을 선택해주세요',
+                            content:
+                              selectedMaker['id'] == null
+                                ? ''
+                                : selectedCar['title'] ?? '차종을 선택해주세요',
                             isLastLine: false,
                             isSelected: selectedCar['id'] != null,
                           ),
@@ -153,6 +187,7 @@ class _CarRegisterState extends State<CarRegister> {
                           showedWidget: SelectBorrowDate(
                             updateSelectedDate: _updateSelectedDate,
                           ),
+                          disable: false,
                           child: registerLine(
                             category: '대여 일자',
                             content: DateFormat('yyyy년 MM월 dd일')
