@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import 'package:client/screens/check_car_damage_screen/check_car_damage_part_container.dart';
+import 'package:client/screens/check_car_damage_screen/check_car_damage_container.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_FAB.dart';
 
 class CheckCarDamageScreen extends StatefulWidget {
