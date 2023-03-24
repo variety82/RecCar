@@ -23,14 +23,17 @@ class _AfterRentState extends State<AfterRent> {
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Column(
               children: [
-                for (int i = 0; i < widget.after.length; i++)
-                  DamageLogCard(
-                    imageUrl:
-                    "${widget.after[i]['damageImageUrl']}",
-                    kindOfDamage: "${widget.after[i]['damage']}",
-                    damageLocation: "${widget.after[i]['part']}",
-                    damageId: widget.after[i]['detectionInfoId'],
-                  ),
+                if (widget.after.length == 0)
+                  Container(child: Text("손상 정보가 없습니다"),),
+                if(widget.after.length != 0)
+                  for (var info in widget.after)
+                    DamageLogCard(
+                      imageUrl:
+                      "${info['damageImageUrl']}",
+                      kindOfDamage: "${info['damage']}",
+                      damageLocation: "${info['part']}",
+                      damageId: info['detectionInfoId'],
+                    ),
               ],
             ),
           ),

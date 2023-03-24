@@ -16,7 +16,7 @@ class DamageDetail extends StatefulWidget {
 }
 
 class _DamageDetailState extends State<DamageDetail> {
-  dynamic detailDamageInfo = [];
+  Map<String, dynamic> detailDamageInfo = {};
   @override
   void initState() {
     super.initState();
@@ -104,7 +104,7 @@ class _DamageDetailState extends State<DamageDetail> {
                           ),
                           RentLogLine(
                             infoTitle: "파손 일자",
-                            info: "${detailDamageInfo['damageDate']}",
+                            info: detailDamageInfo['damageDate'].toString().characters.take(10).toString(),
                             space: 120,
                           ),
                           SizedBox(

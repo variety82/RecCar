@@ -45,6 +45,8 @@ Future<dynamic> apiInstance({
   if (200 <= response.statusCode && response.statusCode < 300) {
     // statuse가 200대이면 성공으로 해서 jsonResponse를 쓰는 콜백함수로 보내줍니다
     dynamic jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    // Iterable list = jsonResponse;
+    // return list.toList(growable: true);
     return success(jsonResponse);
   } else {
     // 200대가 아니면 에러 코드를 보내줍니다
