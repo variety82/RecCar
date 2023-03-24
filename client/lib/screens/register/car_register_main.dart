@@ -6,7 +6,8 @@ import 'package:client/widgets/register/register_title.dart';
 import 'package:client/widgets/register/register_list.dart';
 import 'package:client/screens/register/select_maker.dart';
 import 'package:client/screens/register/select_car.dart';
-import 'package:client/screens/register/select_borrow_date.dart';
+import 'package:client/screens/register/select_fuel.dart';
+import 'package:client/screens/register/select_date.dart';
 import 'package:client/widgets/common/modal_navigator.dart';
 import 'package:intl/intl.dart';
 import 'package:client/services/register_api.dart';
@@ -47,6 +48,14 @@ class _CarRegisterState extends State<CarRegister> {
     'id' : null,
     'title' : null,
   };
+
+  Map<String, dynamic> selectedFuel = {
+    'id' : null,
+    'title' : null,
+  };
+
+  // 입력한 대여기간
+  DateTime _borrowingDate = DateTime.now().add(const Duration(hours: 9));
 
   List<dynamic> carListByMaker = [];
   final bool _allregistered = false;
@@ -101,8 +110,26 @@ class _CarRegisterState extends State<CarRegister> {
     });
   }
 
-  // 입력한 대여기간
-  DateTime _borrowingDate = DateTime.now().add(const Duration(hours: 9));
+  void _updateSelectedFuel(fuelId, fuelName) {
+    setState(() {
+      // 선택되어 있는 제조사로 변경했을 경우
+      if (selectedFuel['id'] == fuelId) {
+        // null값으로 변경
+        selectedFuel = {
+          'id': null,
+          'title': null,
+        };
+        // 선택되어 있는 제조사와 다른 값으로 변경했을 경우
+      } else {
+        // 새롭게 선택한 값으로 업데이트
+        selectedFuel = {
+          'id': fuelId,
+          'title': fuelName,
+        };
+      }
+    });
+  }
+
 
   // 대여기간 업데이트
   void _updateSelectedDate(seletedDate) {
@@ -157,6 +184,7 @@ class _CarRegisterState extends State<CarRegister> {
                           showedWidget: SelectCar(
                             updateSelectedCar: _updateSelectedCar,
                             carList : carListByMaker,
+                            selectedMaker: selectedMaker,
                           ),
                           disable: selectedMaker['id'] == null,
                           child: registerLine(
@@ -169,11 +197,19 @@ class _CarRegisterState extends State<CarRegister> {
                             isSelected: selectedCar['id'] != null,
                           ),
                         ),
-                        const registerLine(
-                          category: '연료 종류',
-                          content: '가솔린',
-                          isLastLine: true,
-                          isSelected: true,
+                        ModalNavigator(
+                          // SelectMaker 위젯을 보여줌
+                          showedWidget: SelectFuel(
+                            updateSelectedFuel: _updateSelectedFuel,
+                          ),
+                          disable: false,
+                          // 클릭하는 영역
+                          child: registerLine(
+                            category: '연료 종류',
+                            content: selectedFuel['title'] ?? '연료 종류를 선택해주세요',
+                            isLastLine: false,
+                            isSelected: selectedFuel['id'] != null,
+                          ),
                         ),
                       ],
                     ),
@@ -184,8 +220,8 @@ class _CarRegisterState extends State<CarRegister> {
                     RegisterList(
                       lineList: [
                         ModalNavigator(
-                          showedWidget: SelectBorrowDate(
-                            updateSelectedDate: _updateSelectedDate,
+                          showedWidget: SelectDate(
+                            updateDate: _updateSelectedDate,
                           ),
                           disable: false,
                           child: registerLine(
@@ -196,11 +232,18 @@ class _CarRegisterState extends State<CarRegister> {
                             isSelected: true,
                           ),
                         ),
-                        const registerLine(
-                          category: '반납 일자',
-                          content: '2023년 10월 25일',
-                          isLastLine: false,
-                          isSelected: true,
+                        ModalNavigator(
+                          showedWidget: SelectDate(
+                            updateDate: _updateSelectedDate,
+                          ),
+                          disable: false,
+                          child: registerLine(
+                            category: '대여 일자',
+                            content: DateFormat('yyyy년 MM월 dd일')
+                                .format(_borrowingDate),
+                            isLastLine: false,
+                            isSelected: true,
+                          ),
                         ),
                         const registerLine(
                           category: '렌트카 업체',
