@@ -43,7 +43,10 @@ class _SelectMakerState extends State<SelectMaker> {
       children: [
         // Modal Bar
         Container(
-          margin: const EdgeInsets.only(top: 2),
+          margin: const EdgeInsets.only(
+            top: 7,
+            bottom: 3,
+          ),
           width: 50,
           height: 3,
           decoration: BoxDecoration(
