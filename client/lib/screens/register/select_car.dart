@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:client/widgets/register/category_title.dart';
-import 'package:client/services/register_api.dart';
 
 class SelectCar extends StatefulWidget {
 
   final void Function(int, String) updateSelectedCar;
   final List<dynamic> carList;
+  final Map<dynamic, dynamic> selectedMaker;
 
   const SelectCar({
-    super.key, required this.updateSelectedCar, required this.carList,
+    super.key, required this.updateSelectedCar, required this.carList, required this.selectedMaker,
   });
 
   @override
@@ -43,7 +43,10 @@ class _SelectCarState extends State<SelectCar> {
       children: [
         // Modal Bar
         Container(
-          margin: const EdgeInsets.only(top: 2),
+          margin: const EdgeInsets.only(
+            top: 7,
+            bottom: 3,
+          ),
           width: 50,
           height: 3,
           decoration: BoxDecoration(
@@ -98,6 +101,11 @@ class _SelectCarState extends State<SelectCar> {
               fontWeight: FontWeight.w600,
             ),
           ),
+        ),
+        Row(
+          children: [
+            Text(widget.selectedMaker['title'] ?? '')
+          ],
         ),
         // 제조사 선택 영역이 나열될 곳
         Padding(
