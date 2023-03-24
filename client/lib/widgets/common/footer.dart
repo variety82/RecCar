@@ -69,7 +69,12 @@ class Footer extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              if (ModalRoute.of(context)?.settings.name !=
+                  '/calendar') {
+                Navigator.pushNamed(context, '/calendar');
+              }
+            },
             child: const Icon(
               Icons.event_note_outlined,
               color: Color(0XFFABABAB),
