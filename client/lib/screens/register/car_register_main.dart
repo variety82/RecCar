@@ -5,7 +5,7 @@ import 'package:client/widgets/register/register_line.dart';
 import 'package:client/widgets/register/register_title.dart';
 import 'package:client/widgets/register/register_list.dart';
 import 'package:client/screens/register/select_maker.dart';
-import 'package:client/screens/register/select_item.dart';
+import 'package:client/screens/register/select_car.dart';
 import 'package:client/screens/register/select_borrow_date.dart';
 import 'package:client/widgets/common/modal_navigator.dart';
 import 'package:intl/intl.dart';
