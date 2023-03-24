@@ -13,9 +13,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @Log4j2
 @Service
@@ -62,23 +62,24 @@ public class CarService {
     }
 
     public List<CarCatalogResponse> getCatalog() {
-        List<CarCatalog> catalog = carRepository.getCatalog();
+        List<CarCatalog> catalogs = carRepository.getCatalog();
 
-        Set<String> makers = new HashSet<>();
-        for (CarCatalog carCatalog : catalog) {
-            makers.add(carCatalog.getMake());
+        Map<String, String> makeWithLogo = new HashMap<>();
+        for (CarCatalog carCatalog : catalogs) {
+            makeWithLogo.put(carCatalog.getMake(), carCatalog.getLogoURL());
         }
 
         List<CarCatalogResponse> result = new ArrayList<>();
-        for (String make : makers) {
+        for (String make : makeWithLogo.keySet()) {
             List<String> model = new ArrayList<>();
-            for (CarCatalog carCatalog : catalog) {
+            for (CarCatalog carCatalog : catalogs) {
                 if (carCatalog.getMake().equals(make)){
                     model.add(carCatalog.getModel());
                 }
             }
             result.add(CarCatalogResponse.builder()
                     .manufacturer(make)
+                    .logoUrl(makeWithLogo.get(make))
                     .model(model)
                     .build());
         }
