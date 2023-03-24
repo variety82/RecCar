@@ -23,14 +23,17 @@ class _BeforeRentState extends State<BeforeRent> {
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Column(
               children: [
-                for (int i = 0; i < widget.before.length; i++)
-                  DamageLogCard(
-                    imageUrl:
-                        "${widget.before[i]['damageImageUrl']}",
-                    kindOfDamage: "${widget.before[i]['damage']}",
-                    damageLocation: "${widget.before[i]['part']}",
-                    damageId: widget.before[i]['detectionInfoId'],
-                  ),
+                if (widget.before.length == 0)
+                  Container(child: Text("손상 정보가 없습니다"),),
+                if (widget.before.length != 0)
+                  for (var info in widget.before)
+                    DamageLogCard(
+                      imageUrl:
+                          "${info['damageImageUrl']}",
+                      kindOfDamage: "${info['damage']}",
+                      damageLocation: "${info['part']}",
+                      damageId: info['detectionInfoId'],
+                    ),
               ],
             ),
           ),
