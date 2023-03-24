@@ -587,7 +587,9 @@ class _CameraScreenState extends State<CameraScreen>
 
                                                       XFile? rawVideo =
                                                           await stopVideoRecording();
-
+                                                      print(
+                                                          'my_file is here!!!');
+                                                      print(rawVideo!.path);
                                                       File videoFile =
                                                           File(rawVideo!.path);
 

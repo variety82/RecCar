@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_container.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_FAB.dart';
+import 'package:client/services/analysis_car_damage_api.dart';
 
 class CheckCarDamageScreen extends StatefulWidget {
   final String filePath;
@@ -19,7 +20,7 @@ class CheckCarDamageScreen extends StatefulWidget {
 
 class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   late VideoPlayerController _videoPlayerController;
-  bool loading_api = true;
+  bool loading_api = false;
   bool loading_video = false;
 
   bool _isVisible = true;
@@ -30,6 +31,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   bool video_pause = true;
 
   int skip_counter = 0;
+
+  List<dynamic> carDamageInfo = [];
 
   List<String> selected_categories = [
     '스크래치',
@@ -172,8 +175,23 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
 
   @override
   void initState() {
-    super.initState();
     _initVideoPlayer();
+
+    analysisCarDamageApi(
+      success: (dynamic response) {
+        setState(() {
+          carDamageInfo = response;
+          print(carDamageInfo);
+        });
+      },
+      fail: (error) {
+        print('차량 손상 분석 오류: error');
+      },
+      filePath: widget.filePath,
+      user_id: 1,
+    );
+    loading_api = true;
+    super.initState();
   }
 
   @override
@@ -197,6 +215,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                   },
                   child: RotatedBox(
                     quarterTurns: 3, // 시계 방향으로 90도 회전시킵니다.
+                    // 수정해야 할 듯 함... 예상되는 비율 받아온 후 AspectRatio 적용
                     child: AspectRatio(
                       aspectRatio: _videoPlayerController.value.aspectRatio,
                       child: Stack(

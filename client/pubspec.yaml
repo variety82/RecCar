@@ -81,6 +81,7 @@ flutter:
   assets:
     - .env
     - lib/assets/images/car_damage_img/
+    - lib/assets/car_video/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
