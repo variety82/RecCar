@@ -36,7 +36,8 @@ public class Calendar {
     private User user;
 
     @Builder
-    public Calendar(LocalDateTime calendarDate, String title, String memo, User user) {
+    public Calendar(Long calendarId, LocalDateTime calendarDate, String title, String memo, User user) {
+        this.calendarId = calendarId;
         this.calendarDate = calendarDate;
         this.title = title;
         this.memo = memo;
