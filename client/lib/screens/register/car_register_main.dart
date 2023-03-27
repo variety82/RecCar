@@ -20,9 +20,15 @@ class CarRegister extends StatefulWidget {
 }
 
 class _CarRegisterState extends State<CarRegister> {
+
+  final FocusNode _rentalCompanyFocusNode = FocusNode();
+  final FocusNode _carNumberFocusNode = FocusNode();
+
   // 선택한 제조사
   List<dynamic> carInfo = [];
   List<dynamic> manufacturerList = [];
+  bool _allRegistered = false;
+
   @override
   void initState() {
     super.initState();
@@ -57,12 +63,34 @@ class _CarRegisterState extends State<CarRegister> {
   // 입력한 대여기간
   DateTime _borrowingDate = DateTime.now().add(const Duration(hours: 9));
 
+  DateTime _returnDate = DateTime.now().add(const Duration(hours: 9));
+
+  String _inputedRentalCompany = '';
+
+  String _inputedCarNumber = '';
+
   List<dynamic> carListByMaker = [];
-  final bool _allregistered = false;
+
+  void _updateAllRegistered() {
+    setState(() {
+      print(selectedMaker);
+      print(selectedCar);
+      print(selectedFuel);
+      print(_inputedRentalCompany);
+      print(_inputedCarNumber);
+      if(selectedMaker['id'] != null && selectedCar['id'] != null && selectedFuel['id'] != null
+          && _inputedRentalCompany.isNotEmpty && _inputedCarNumber.isNotEmpty){
+        _allRegistered = true;
+      } else {
+        _allRegistered = false;
+      }
+    });
+    print(_allRegistered);
+  }
 
   // 제조사를 업데이트 해주는 function
   // parameter로 id와 이름을 받음
-  void _updateSelectedMaker(makerId, makerTitle) {
+  void _updateSelectedMaker(int makerId, String makerTitle) {
     setState(() {
       // 선택되어 있는 제조사로 변경했을 경우
       if (selectedMaker['id'] == makerId) {
@@ -85,12 +113,13 @@ class _CarRegisterState extends State<CarRegister> {
         };
         carListByMaker = carInfo.firstWhere((maker) => maker['manufacturer']== makerTitle)['model'];
       }
+      _updateAllRegistered();
     });
   }
 
 
 
-  void _updateSelectedCar(carId, carName) {
+  void _updateSelectedCar(int carId,String carName) {
     setState(() {
       // 선택되어 있는 제조사로 변경했을 경우
       if (selectedCar['id'] == carId) {
@@ -107,10 +136,11 @@ class _CarRegisterState extends State<CarRegister> {
           'title': carName,
         };
       }
+      _updateAllRegistered();
     });
   }
 
-  void _updateSelectedFuel(fuelId, fuelName) {
+  void _updateSelectedFuel(int fuelId,String fuelName) {
     setState(() {
       // 선택되어 있는 제조사로 변경했을 경우
       if (selectedFuel['id'] == fuelId) {
@@ -127,175 +157,249 @@ class _CarRegisterState extends State<CarRegister> {
           'title': fuelName,
         };
       }
+      _updateAllRegistered();
     });
   }
 
-
   // 대여기간 업데이트
-  void _updateSelectedDate(seletedDate) {
+  void _updateBorrowingDate(DateTime seletedDate) {
     setState(() {
       // 입력받은 DateTime타입의 값을 입력
       _borrowingDate = seletedDate;
+      _updateAllRegistered();
     });
   }
 
+  void _updateReturnDate(DateTime seletedDate) {
+    setState(() {
+      // 입력받은 DateTime타입의 값을 입력
+      _returnDate = seletedDate;
+      _updateAllRegistered();
+    });
+  }
+
+  void _updateInputRentalCompany(String RentalCompany) {
+    setState(() {
+      _inputedRentalCompany = RentalCompany;
+      _updateAllRegistered();
+    });
+  }
+
+  void _updateInputCarNumber(String carNumber) {
+    setState(() {
+      _inputedCarNumber = carNumber;
+      _updateAllRegistered();
+    });
+  }
+
+  bool isKeyboardVisible(BuildContext context) {
+    return MediaQuery.of(context).viewInsets.bottom != 0;
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            // Header
-            const Header(title: '차량 등록'),
-            // Header와 Footer 사이 공간
-            Expanded(
-              // 공간 전체 Padding
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 14,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // 등록페이지의 제목 Class화
-                    const RegisterTitle(title: '차량 정보'),
-                    // 등록 페이지 목록 형식 Class화
-                    RegisterList(
-                      // 목록의 각각 줄들이 들어가는 paramater
-                      lineList: [
-                        // 모달 오픈하는 Custom Class
-                        ModalNavigator(
-                          // SelectMaker 위젯을 보여줌
-                          showedWidget: SelectMaker(
-                            updateSelectedMaker: _updateSelectedMaker,
-                            manufacturerList : manufacturerList,
-                          ),
-                          disable: false,
-                          // 클릭하는 영역
-                          child: registerLine(
-                            category: '제조사',
-                            content: selectedMaker['title'] ?? '제조사를 선택해주세요',
-                            isLastLine: false,
-                            isSelected: selectedMaker['id'] != null,
-                          ),
-                        ),
-                        ModalNavigator(
-                          showedWidget: SelectCar(
-                            updateSelectedCar: _updateSelectedCar,
-                            carList : carListByMaker,
-                            selectedMaker: selectedMaker,
-                          ),
-                          disable: selectedMaker['id'] == null,
-                          child: registerLine(
-                            category: '차종',
-                            content:
-                              selectedMaker['id'] == null
-                                ? ''
-                                : selectedCar['title'] ?? '차종을 선택해주세요',
-                            isLastLine: false,
-                            isSelected: selectedCar['id'] != null,
-                          ),
-                        ),
-                        ModalNavigator(
-                          // SelectMaker 위젯을 보여줌
-                          showedWidget: SelectFuel(
-                            updateSelectedFuel: _updateSelectedFuel,
-                          ),
-                          disable: false,
-                          // 클릭하는 영역
-                          child: registerLine(
-                            category: '연료 종류',
-                            content: selectedFuel['title'] ?? '연료 종류를 선택해주세요',
-                            isLastLine: false,
-                            isSelected: selectedFuel['id'] != null,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    const RegisterTitle(title: '대여 정보'),
-                    RegisterList(
-                      lineList: [
-                        ModalNavigator(
-                          showedWidget: SelectDate(
-                            updateDate: _updateSelectedDate,
-                          ),
-                          disable: false,
-                          child: registerLine(
-                            category: '대여 일자',
-                            content: DateFormat('yyyy년 MM월 dd일')
-                                .format(_borrowingDate),
-                            isLastLine: false,
-                            isSelected: true,
-                          ),
-                        ),
-                        ModalNavigator(
-                          showedWidget: SelectDate(
-                            updateDate: _updateSelectedDate,
-                          ),
-                          disable: false,
-                          child: registerLine(
-                            category: '대여 일자',
-                            content: DateFormat('yyyy년 MM월 dd일')
-                                .format(_borrowingDate),
-                            isLastLine: false,
-                            isSelected: true,
-                          ),
-                        ),
-                        const registerLine(
-                          category: '렌트카 업체',
-                          content: 'SSAFY',
-                          isLastLine: false,
-                          isSelected: false,
-                        ),
-                        const registerLine(
-                          category: '차량 번호',
-                          content: '00허 2102',
-                          isLastLine: true,
-                          isSelected: false,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 5,
-                          ),
-                          child: ElevatedButton(
-                            onPressed:
-                              _allregistered
-                                ? () {
-                                    //  나중에 등록 메소드 추가
-                                  }
-                                : null,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).primaryColor
-                            ),
-                            child: const SizedBox(
-                                width: 70,
-                                child: Text(
-                                  '등록하기',
-                                  textAlign: TextAlign.center,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Column(
+            children: [
+              // Header
+              const Header(title: '차량 등록'),
+              // Header와 Footer 사이 공간
+              Expanded(
+                // 공간 전체 Padding
+                child: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 14,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          // 등록페이지의 제목 Class화
+                          const RegisterTitle(title: '차량 정보'),
+                          // 등록 페이지 목록 형식 Class화
+                          RegisterList(
+                            // 목록의 각각 줄들이 들어가는 paramater
+                            lineList: [
+                              // 모달 오픈하는 Custom Class
+                              ModalNavigator(
+                                // SelectMaker 위젯을 보여줌
+                                showedWidget: SelectMaker(
+                                  updateSelectedMaker: _updateSelectedMaker,
+                                  manufacturerList : manufacturerList,
                                 ),
-                            ),
+                                disable: false,
+                                // 클릭하는 영역
+                                child: registerLine(
+                                  category: '제조사',
+                                  content: selectedMaker['title'] ?? '제조사를 선택해주세요',
+                                  isLastLine: false,
+                                  isSelected: selectedMaker['id'] != null,
+                                  isInput: false,
+                                ),
+                              ),
+                              ModalNavigator(
+                                showedWidget: SelectCar(
+                                  updateSelectedCar: _updateSelectedCar,
+                                  carList : carListByMaker,
+                                  selectedMaker: selectedMaker,
+                                ),
+                                disable: selectedMaker['id'] == null,
+                                child: registerLine(
+                                  category: '차종',
+                                  content:
+                                    selectedMaker['id'] == null
+                                      ? ''
+                                      : selectedCar['title'] ?? '차종을 선택해주세요',
+                                  isLastLine: false,
+                                  isSelected: selectedCar['id'] != null,
+                                  isInput: false,
+                                ),
+                              ),
+                              ModalNavigator(
+                                // SelectMaker 위젯을 보여줌
+                                showedWidget: SelectFuel(
+                                  updateSelectedFuel: _updateSelectedFuel,
+                                ),
+                                disable: false,
+                                // 클릭하는 영역
+                                child: registerLine(
+                                  category: '연료 종류',
+                                  content: selectedFuel['title'] ?? '연료 종류를 선택해주세요',
+                                  isLastLine: false,
+                                  isSelected: selectedFuel['id'] != null,
+                                  isInput: false,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          const RegisterTitle(title: '대여 정보'),
+                          RegisterList(
+                            lineList: [
+                              ModalNavigator(
+                                showedWidget: SelectDate(
+                                  updateDate: _updateBorrowingDate,
+                                ),
+                                disable: false,
+                                child: registerLine(
+                                  category: '대여 일자',
+                                  content: DateFormat('yyyy년 MM월 dd일')
+                                      .format(_borrowingDate),
+                                  isLastLine: false,
+                                  isSelected: true,
+                                  isInput: false,
+                                ),
+                              ),
+                              ModalNavigator(
+                                showedWidget: SelectDate(
+                                  updateDate: _updateReturnDate,
+                                ),
+                                disable: false,
+                                child: registerLine(
+                                  category: '반납 일자',
+                                  content: DateFormat('yyyy년 MM월 dd일')
+                                      .format(_returnDate),
+                                  isLastLine: false,
+                                  isSelected: true,
+                                  isInput: false,
+                                ),
+                              ),
+                              registerLine(
+                                category: '렌트카 업체',
+                                isLastLine: false,
+                                isSelected: false,
+                                isInput: true,
+                                updateInput : _updateInputRentalCompany,
+                                placeholder: '렌트카 업체를 입력해주세요.',
+                                focusNode: _rentalCompanyFocusNode,
+                                onSubmitted: () {
+                                  _carNumberFocusNode.requestFocus();
+                                },
+                              ),
+                              registerLine(
+                                category: '차량번호',
+                                isLastLine: false,
+                                isSelected: false,
+                                isInput: true,
+                                updateInput : _updateInputCarNumber,
+                                placeholder: '차량번호를 입력해주세요.',
+                                focusNode: _carNumberFocusNode,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                ),
+                                child: ElevatedButton(
+                                  onPressed:
+                                    _allRegistered
+                                      ? () {
+                                          postCarInfo(
+                                            success: (dynamic response) {
+                                              print(response);
+                                            },
+                                            fail: (error) {
+                                              print('차량 리스트 호출 오류: $error');
+                                            },
+                                            body:{
+                                              "userId": 1,
+                                              "carNumber": _inputedCarNumber,
+                                              "carManufacturer": selectedMaker['title'],
+                                              "carModel": selectedCar['title'],
+                                              "carFuel": "식용유",
+                                              "rentalDate": "2023-03-27T05:59:59.625Z",
+                                              "returnDate": "2023-03-27T05:59:59.625Z",
+                                              "rentalCompany": "쏘카",
+                                              "initialVideo": "rental.mp4"
+                                            }
+                                          );
+                                        }
+                                      : null,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Theme.of(context).primaryColor
+                                  ),
+                                  child: const SizedBox(
+                                      width: 70,
+                                      child: Text(
+                                        '등록하기',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-            const Footer()
-          ],
-        ));
+              if (!isKeyboardVisible(context)) Footer()
+            ],
+          )),
+    );
   }
 }
