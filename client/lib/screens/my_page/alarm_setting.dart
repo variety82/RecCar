@@ -10,7 +10,7 @@ class AlarmSetting extends StatefulWidget {
 }
 
 class _AlarmSettingState extends State<AlarmSetting> {
-  void turnSwitch() {}
+  // void turnSwitch() {}
   bool _isChecked1 = false;
   bool _isChecked2 = false;
   bool _isChecked3 = false;
