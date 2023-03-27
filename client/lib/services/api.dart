@@ -8,6 +8,7 @@ Future<dynamic> apiInstance({
   // parameter로 path, method, success 콜백함수, fail 콜백함수, body를 받습니다
   required String path,
   required Method method,
+  String? accessToken,
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
   Map<String, String>? body,
@@ -20,6 +21,7 @@ Future<dynamic> apiInstance({
   // 기본 headers
   Map<String, String> headers = {
     "Content-Type": "application/json;charset=utf-8",
+    "authorization": '$accessToken',
   };
 
   // response 값입니다
