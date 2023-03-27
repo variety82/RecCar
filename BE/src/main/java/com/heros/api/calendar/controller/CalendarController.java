@@ -1,5 +1,6 @@
 package com.heros.api.calendar.controller;
 
+import com.heros.api.calendar.dto.request.CalendarRequest;
 import com.heros.api.calendar.entity.Calendar;
 import com.heros.api.calendar.service.CalendarService;
 import com.heros.api.detectionInfo.dto.response.PartWithDetectionInfoResponse;
@@ -14,11 +15,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -43,5 +42,16 @@ public class CalendarController {
             throw (new BusinessException(ErrorCode.PAGE_NOT_FOUND));
         }
         return ResponseEntity.ok().body(response);
+    }
+
+    @Operation(summary = "캘린더 등록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = PartWithDetectionInfoResponse.class))),
+            @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
+    })
+    @PostMapping(value = "")
+    public ResponseEntity<?> calendarAdd(@Valid @RequestBody CalendarRequest calendarRequest) {
+        calendarService.createCalendar(calendarRequest);
+        return ResponseEntity.status(201).body(null);
     }
 }
