@@ -154,14 +154,16 @@ class CheckCarDamagePart extends StatelessWidget {
                   ),
                   builder: (BuildContext context) {
                     return SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.8,
+                      height: MediaQuery.of(context).size.height,
                       child: Card(
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(25.0),
                           ),
                         ),
-                        child: CheckCarDamageDetailModal(),
+                        child: CheckCarDamageDetailModal(
+                          imageUrl: imageUrl,
+                        ),
                       ),
                     );
                   },

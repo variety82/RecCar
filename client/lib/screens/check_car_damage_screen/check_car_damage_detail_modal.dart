@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:client/widgets/register/category_title.dart';
 import 'package:client/widgets/register/maker_item.dart';
-import 'package:client/screens/check_car_damage_screen/check_car_damage_filter.dart';
+import 'package:client/screens/check_car_damage_screen/check_car_damage_detail.dart';
 
 class CheckCarDamageDetailModal extends StatefulWidget {
   // final void Function(String) addCategories;
   // final void Function(String) removeCategories;
   // final List<String> selected_categories;
+  final String imageUrl;
 
   const CheckCarDamageDetailModal({
     super.key,
+    required this.imageUrl,
     // required this.selected_categories,
     // required this.addCategories,
     // required this.removeCategories,
@@ -17,10 +19,10 @@ class CheckCarDamageDetailModal extends StatefulWidget {
 
   @override
   State<CheckCarDamageDetailModal> createState() =>
-      _CheckCarDamageDetailModal();
+      _CheckCarDamageDetailModalState();
 }
 
-class _CheckCarDamageDetailModal extends State<CheckCarDamageDetailModal> {
+class _CheckCarDamageDetailModalState extends State<CheckCarDamageDetailModal> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,14 +63,15 @@ class _CheckCarDamageDetailModal extends State<CheckCarDamageDetailModal> {
             height: 1,
             color: const Color(0xFFEFEFEF),
           ),
-          // Container(
-          //   width: double.infinity,
-          //   child: CheckCarDamagefilter(
-          //     selected_categories: widget.selected_categories,
-          //     addCategories: widget.addCategories,
-          //     removeCategories: widget.removeCategories,
-          //   ),
-          // ),
+          Container(
+            width: double.infinity,
+            child: CheckCarDamageDetail(
+              imageUrl: widget.imageUrl,
+              // selected_categories: widget.selected_categories,
+              // addCategories: widget.addCategories,
+              // removeCategories: widget.removeCategories,
+            ),
+          ),
         ],
       ),
     );
