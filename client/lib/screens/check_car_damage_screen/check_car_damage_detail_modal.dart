@@ -3,47 +3,28 @@ import 'package:client/widgets/register/category_title.dart';
 import 'package:client/widgets/register/maker_item.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_filter.dart';
 
-class CheckCarDamageModal extends StatefulWidget {
-  final void Function(String) addCategories;
-  final void Function(String) removeCategories;
-  final List<String> selected_categories;
+class CheckCarDamageDetailModal extends StatefulWidget {
+  // final void Function(String) addCategories;
+  // final void Function(String) removeCategories;
+  // final List<String> selected_categories;
 
-  const CheckCarDamageModal({
+  const CheckCarDamageDetailModal({
     super.key,
-    required this.selected_categories,
-    required this.addCategories,
-    required this.removeCategories,
+    // required this.selected_categories,
+    // required this.addCategories,
+    // required this.removeCategories,
   });
 
   @override
-  State<CheckCarDamageModal> createState() => _CheckCarDamageModal();
+  State<CheckCarDamageDetailModal> createState() =>
+      _CheckCarDamageDetailModal();
 }
 
-class _CheckCarDamageModal extends State<CheckCarDamageModal> {
-  /*
-  selectedItem에는 선택되는 제조사의 id가 들어간다
-  isSelected는 만약 makerId가 selectedItem이 같을 때 true가 되도록 한다.
-   */
-
-  // // 선택된 제조사의 ID 값이 들어간다
-  // int? selectedItem;
-  //
-  // void _changeSelectedItem(itemId) {
-  //   setState(() {
-  //     if (selectedItem == itemId) {
-  //       // 선택한 제조사가 현재 선택된 제조사일 경우 null값으로 변경
-  //       selectedItem = null;
-  //     } else {
-  //       // 다를 경우 해당 제조사 ID로 selectedMaker 변경
-  //       selectedItem = itemId;
-  //     }
-  //   });
-  // }
-
+class _CheckCarDamageDetailModal extends State<CheckCarDamageDetailModal> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 500,
+      height: 100,
       child: Column(
         children: [
           // Modal Bar
@@ -63,7 +44,7 @@ class _CheckCarDamageModal extends State<CheckCarDamageModal> {
               children: [
                 // CategoryTitle(title: '필터링 설정', isSelected: true),
                 Text(
-                  '필터링 설정',
+                  '차량 손상 상세 등록',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -80,14 +61,14 @@ class _CheckCarDamageModal extends State<CheckCarDamageModal> {
             height: 1,
             color: const Color(0xFFEFEFEF),
           ),
-          Container(
-            width: double.infinity,
-            child: CheckCarDamagefilter(
-              selected_categories: widget.selected_categories,
-              addCategories: widget.addCategories,
-              removeCategories: widget.removeCategories,
-            ),
-          ),
+          // Container(
+          //   width: double.infinity,
+          //   child: CheckCarDamagefilter(
+          //     selected_categories: widget.selected_categories,
+          //     addCategories: widget.addCategories,
+          //     removeCategories: widget.removeCategories,
+          //   ),
+          // ),
         ],
       ),
     );
