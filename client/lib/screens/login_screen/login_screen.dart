@@ -89,13 +89,17 @@ class _LoginState extends State<Login> {
 
   Future<void> loginWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    // final GoogleSignInAuthentication gAuth = await googleUser!.authentication;
-    // final credential = gAuth.accessToken;
+    final GoogleSignInAuthentication gAuth = await googleUser!.authentication;
+    final credential = gAuth.accessToken;
+    // print("==============이 바로 아래는 idToken===========");
+    // print(gAuth.idToken);
+    // print(googleUser.id);
+    // print(googleUser.photoUrl);
     // // final test = await gAuth.idToken;
     // final test2 = await googleUser.id;
     // // final GoogleSignInAuthentication gAuth = await googleUser!.
-    //
-    // print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+credential.toString());
+    // print("================================");
+    // print(credential.toString());
     // // print(test);
     // print(test2);
     if (googleUser != null) {
@@ -114,6 +118,10 @@ class _LoginState extends State<Login> {
       await storage.write(
         key: 'profileImg',
         value: googleUser.photoUrl,
+      );
+      await storage.write(
+          key: "accessToken",
+          value: credential,
       );
       Navigator.pushNamed(context, '/home');
     }
