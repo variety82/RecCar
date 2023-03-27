@@ -1,7 +1,10 @@
 package com.heros.api.calendar.service;
 
+import com.heros.api.calendar.dto.request.CalendarRequest;
 import com.heros.api.calendar.entity.Calendar;
 import com.heros.api.calendar.repository.CalendarRepository;
+import com.heros.api.user.entity.User;
+import com.heros.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,10 +17,22 @@ import java.util.List;
 public class CalendarService {
 
     private final CalendarRepository calendarRepository;
+    private final UserRepository userRepository;
 
     public List<Calendar> getCalendar(Long userId) {
         List<Calendar> calendars = calendarRepository.getCalendars(userId);
 
         return calendars;
+    }
+
+    public void createCalendar(CalendarRequest calendarRequest) {
+        User user = userRepository.findById(calendarRequest.getUserId()).orElseThrow(IllegalArgumentException::new);
+        Calendar calendar = Calendar.builder()
+                .user(user)
+                .calendarDate(calendarRequest.getCalendarDate())
+                .title(calendarRequest.getTitle())
+                .memo(calendarRequest.getMemo())
+                .build();
+        calendarRepository.save(calendar);
     }
 }
