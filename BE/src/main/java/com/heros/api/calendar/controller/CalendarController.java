@@ -1,5 +1,6 @@
 package com.heros.api.calendar.controller;
 
+import com.heros.api.calendar.dto.request.CalendarModifyRequest;
 import com.heros.api.calendar.dto.request.CalendarRequest;
 import com.heros.api.calendar.entity.Calendar;
 import com.heros.api.calendar.service.CalendarService;
@@ -52,6 +53,17 @@ public class CalendarController {
     @PostMapping(value = "")
     public ResponseEntity<?> calendarAdd(@Valid @RequestBody CalendarRequest calendarRequest) {
         calendarService.createCalendar(calendarRequest);
+        return ResponseEntity.status(201).body(null);
+    }
+
+    @Operation(summary = "캘린더 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = PartWithDetectionInfoResponse.class))),
+            @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
+    })
+    @PutMapping(value = "")
+    public ResponseEntity<?> calendarUpdate(@Valid @RequestBody CalendarModifyRequest calendarModifyRequest) {
+        calendarService.updateCalendar(calendarModifyRequest);
         return ResponseEntity.status(201).body(null);
     }
 }
