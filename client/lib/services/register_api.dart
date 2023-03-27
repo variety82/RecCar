@@ -1,6 +1,6 @@
 import 'package:client/services/api.dart';
 
-void getCarinfo({
+void getCarInfo({
   // success 콜백함수와 fail 콜백함수, body를 받아줍니다
   required dynamic Function(dynamic) success,
   required Function(String error) fail,

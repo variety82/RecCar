@@ -5,10 +5,10 @@ import 'package:client/services/register_api.dart';
 
 class SelectMaker extends StatefulWidget {
   final void Function(int, String) updateSelectedMaker;
-
+  final List manufacturerList;
 
   const SelectMaker({
-    super.key, required this.updateSelectedMaker,
+    super.key, required this.updateSelectedMaker, required this.manufacturerList,
   });
 
   @override
@@ -22,24 +22,6 @@ class _SelectMakerState extends State<SelectMaker> {
    */
   
   // 선택된 제조사의 ID 값이 들어간다
-
-  List<dynamic> carInfo = [];
-
-  @override
-  void initState() {
-    super.initState();
-    getCarinfo(
-      success: (dynamic response) {
-        setState(() {
-          carInfo = response;
-          print(carInfo);
-        });
-      },
-      fail: (error) {
-        print('차량 리스트 호출 오류: $error');
-      },
-    );
-  }
 
   int? selectedMaker;
 
@@ -61,7 +43,10 @@ class _SelectMakerState extends State<SelectMaker> {
       children: [
         // Modal Bar
         Container(
-          margin: const EdgeInsets.only(top: 2),
+          margin: const EdgeInsets.only(
+            top: 7,
+            bottom: 3,
+          ),
           width: 50,
           height: 3,
           decoration: BoxDecoration(
@@ -135,15 +120,15 @@ class _SelectMakerState extends State<SelectMaker> {
               // asmap은 Map에 index 넣는 것이고 entries는 key value값의 맵으로 값 바꿔주는 것
               // 그러면 maker값이 index와 makerInfo로 나누어진다
               // map은 말그대로 map이다 children에는 list가 들어가야 하기 때문에 toList()를 해준다
-              children: carInfo.asMap().entries.map<MakerItem>((MapEntry<int, dynamic> maker) {
-                int index = maker.key;
-                Map<String, dynamic> makerInfo = maker.value;
+              children: widget.manufacturerList.asMap().entries.map<MakerItem>((MapEntry<int, dynamic> makerList) {
+                int index = makerList.key;
+                String makerName = makerList.value;
                 return MakerItem(
                     updateSelectedMaker: widget.updateSelectedMaker,
                     changeSelectedItem: _changeSelectedItem,
                     isSelected: selectedMaker == index ? true : false,
                     makerId: index,
-                    makerTitle: makerInfo['manufacturer'],
+                    makerTitle: makerName,
                     makerImageUrl: 'https://scontent-ssn1-1.xx.fbcdn.net/v/t1.6435-9/71140183_2565406580147654_6224942049100038144_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=rFRCaBYqX_kAX-6Pv-x&_nc_ht=scontent-ssn1-1.xx&oh=00_AfA_fpZatlF37xtx_gAEwJunxUpppE_QUaVmozu5c9EURA&oe=64364939',
                   );
                 },

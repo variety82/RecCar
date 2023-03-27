@@ -3,19 +3,19 @@ import 'package:client/widgets/register/category_title.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 
-class SelectBorrowDate extends StatefulWidget {
-  final void Function(DateTime) updateSelectedDate;
+class SelectDate extends StatefulWidget {
+  final void Function(DateTime) updateDate;
 
-  const SelectBorrowDate({
-    super.key, required this.updateSelectedDate,
+  const SelectDate({
+    super.key, required this.updateDate,
   });
 
 
   @override
-  State<SelectBorrowDate> createState() => _SelectBorrowDateState();
+  State<SelectDate> createState() => _SelectDateState();
 }
 
-class _SelectBorrowDateState extends State<SelectBorrowDate> {
+class _SelectDateState extends State<SelectDate> {
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class _SelectBorrowDateState extends State<SelectBorrowDate> {
             view: DateRangePickerView.month,
             monthViewSettings: const DateRangePickerMonthViewSettings(firstDayOfWeek: 7),
             onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                widget.updateSelectedDate(args.value);
+                widget.updateDate(args.value);
             },
             todayHighlightColor: Theme.of(context).primaryColor,
             selectionColor : Theme.of(context).primaryColor,
