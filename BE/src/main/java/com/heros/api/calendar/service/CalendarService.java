@@ -42,4 +42,8 @@ public class CalendarService {
         Calendar calendar = calendarModifyRequest.toEntity(user);
         calendarRepository.save(calendar);
     }
+
+    public void deleteCalendar(Long calendarId) {
+        calendarRepository.deleteById(calendarId);
+    }
 }
