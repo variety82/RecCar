@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:client/widgets/register/category_title.dart';
 
 class SelectCar extends StatefulWidget {
-
   final void Function(int, String) updateSelectedCar;
   final List<dynamic> carList;
   final Map<dynamic, dynamic> selectedMaker;
 
   const SelectCar({
-    super.key, required this.updateSelectedCar, required this.carList, required this.selectedMaker,
+    super.key,
+    required this.updateSelectedCar,
+    required this.carList,
+    required this.selectedMaker,
   });
 
   @override
@@ -31,11 +33,9 @@ class _SelectCarState extends State<SelectCar> {
       } else {
         // 다를 경우 해당 제조사 ID로 selectedMaker 변경
         selectedCar = carId;
-        print(carId);
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,25 +55,13 @@ class _SelectCarState extends State<SelectCar> {
           ),
         ),
         const Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: 8,
-              horizontal: 20
-          ),
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           // 카테고리 리스트, 현재는 선택해서 이동 불가하고 시간 남으면 클릭시 모달 내용 변경하도록 설정
           child: Row(
             children: [
-              CategoryTitle(
-                  title: '제조사',
-                  isSelected: false
-              ),
-              CategoryTitle(
-                  title: '차종',
-                  isSelected: true
-              ),
-              CategoryTitle(
-                  title: '연료',
-                  isSelected: false
-              ),
+              CategoryTitle(title: '제조사', isSelected: false),
+              CategoryTitle(title: '차종', isSelected: true),
+              CategoryTitle(title: '연료', isSelected: false),
             ],
           ),
         ),
@@ -92,7 +80,7 @@ class _SelectCarState extends State<SelectCar> {
           padding: const EdgeInsets.symmetric(
             vertical: 10,
             horizontal: 30,
-          ) ,
+          ),
           child: Text(
             '차종를 선택해주세요.',
             style: TextStyle(
@@ -103,9 +91,7 @@ class _SelectCarState extends State<SelectCar> {
           ),
         ),
         Row(
-          children: [
-            Text(widget.selectedMaker['title'] ?? '')
-          ],
+          children: [Text(widget.selectedMaker['title'] ?? '')],
         ),
         // 제조사 선택 영역이 나열될 곳
         Padding(
@@ -114,7 +100,10 @@ class _SelectCarState extends State<SelectCar> {
             width: double.infinity,
             child: Wrap(
               alignment: WrapAlignment.start,
-              children: widget.carList.asMap().entries.map<Widget>((MapEntry<int, dynamic> car) {
+              children: widget.carList
+                  .asMap()
+                  .entries
+                  .map<Widget>((MapEntry<int, dynamic> car) {
                 int index = car.key;
                 String carName = car.value;
                 return InkWell(
@@ -123,22 +112,22 @@ class _SelectCarState extends State<SelectCar> {
                       widget.updateSelectedCar(index, carName);
                       _changeSelectedCar(index);
                     });
-                  }
-                  ,
+                  },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     width: 180,
                     height: 30,
                     child: Row(
                       children: [
                         Text(
-                          '$carName',
+                          carName,
                           style: TextStyle(
-                            fontWeight: selectedCar == index ? FontWeight.w600 : FontWeight.w400,
-                            color: selectedCar == index ? Theme.of(context).secondaryHeaderColor : Theme.of(context).disabledColor
-                          ),
+                              fontWeight: selectedCar == index
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
+                              color: selectedCar == index
+                                  ? Theme.of(context).secondaryHeaderColor
+                                  : Theme.of(context).disabledColor),
                         ),
                       ],
                     ),
