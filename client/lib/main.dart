@@ -9,6 +9,7 @@ import 'screens/video_recording_screen/camera_screen.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'screens/detail/car_detail.dart';
+import 'screens/calendar_screen/calendar_screen.dart';
 
 void main() {
   runApp(
@@ -33,6 +34,7 @@ void main() {
         '/login': (context) => const Login(),
         '/before-recording': (context) => const BeforeRecordingScreen(),
         '/recording': (context) => CameraScreen(),
+        '/calendar': (context) => Calendar(),
       },
     ),
   );

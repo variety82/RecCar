@@ -11,7 +11,7 @@ Future<dynamic> apiInstance({
   String? accessToken,
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
-  Map<String, String>? body,
+  Map<String, dynamic>? body,
 }) async {
   // api URL 주소를 넣습니다
   String URL = 'http://j8a102.p.ssafy.io:8080/api/v1$path';

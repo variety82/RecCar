@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_container.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_FAB.dart';
+import 'package:client/services/analysis_car_damage_api.dart';
 
 class CheckCarDamageScreen extends StatefulWidget {
   final String filePath;
@@ -19,7 +20,7 @@ class CheckCarDamageScreen extends StatefulWidget {
 
 class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   late VideoPlayerController _videoPlayerController;
-  bool loading_api = true;
+  bool loading_api = false;
   bool loading_video = false;
 
   bool _isVisible = true;
@@ -31,19 +32,26 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
 
   int skip_counter = 0;
 
+  List<dynamic> carDamageInfo = [];
+
   List<String> selected_categories = [
     '스크래치',
     '찌그러짐',
     '파손',
     '이격',
-    '앞범퍼/앞펜더/전조등',
-    '뒷범퍼/뒷펜더/후미등',
-    '옆면/사이드/스텝',
-    '타이어/휠',
-    '기타',
+  ];
+
+  List<String> damage_categories = [
+    '스크래치',
+    '찌그러짐',
+    '파손',
+    '이격',
   ];
 
   late Timer _timer;
+
+  void turnSwitch() {}
+  bool _isView = false;
 
   @override
   void dispose() {
@@ -172,8 +180,23 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
 
   @override
   void initState() {
-    super.initState();
     _initVideoPlayer();
+
+    analysisCarDamageApi(
+      success: (dynamic response) {
+        setState(() {
+          carDamageInfo = response;
+          print(carDamageInfo);
+        });
+      },
+      fail: (error) {
+        print('차량 손상 분석 오류: error');
+      },
+      filePath: widget.filePath,
+      user_id: 1,
+    );
+    loading_api = true;
+    super.initState();
   }
 
   @override
@@ -197,6 +220,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                   },
                   child: RotatedBox(
                     quarterTurns: 3, // 시계 방향으로 90도 회전시킵니다.
+                    // 수정해야 할 듯 함... 예상되는 비율 받아온 후 AspectRatio 적용
                     child: AspectRatio(
                       aspectRatio: _videoPlayerController.value.aspectRatio,
                       child: Stack(
@@ -421,125 +445,135 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                 ),
                 Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12.0,
-                      ),
-                      child: Container(
-                        width: screenWidth * 0.9,
+                    Container(
+                      color: Colors.white,
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                        ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  '현재 필터링',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  selected_categories.length.toString(),
-                                  style: TextStyle(
-                                    color: Color(0xFFE0426F),
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Wrap(
-                                spacing: 10,
-                                runSpacing: 10,
-                                children: selected_categories.map(
-                                  (category) {
-                                    return Chip(
-                                      onDeleted: () {
-                                        removeCategories(category);
-                                        print(category);
-                                      },
-                                      deleteIcon: const Icon(
-                                        Icons.clear_rounded,
-                                        size: 16,
-                                      ),
-                                      label: Text(
-                                        category,
-                                        style: TextStyle(
-                                          fontSize: 12,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: damage_categories.map(
+                                    (part_category) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 4,
                                         ),
-                                      ),
-                                      labelPadding:
-                                          EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                      backgroundColor: Color(0xFFFBD5DC),
-                                      deleteIconColor: Color(0xFFE0426F),
-                                    );
-                                  },
-                                ).toList(),
-                              ),
-                            ),
-                            if (selected_categories.isEmpty)
-                              Container(
-                                height: screenHeight * 0.07,
-                                child: const Center(
-                                  child: Text('현재 적용된 필터링이 없습니다.'),
+                                        child: InkWell(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          onTap: () {
+                                            if (selected_categories
+                                                .contains(part_category)) {
+                                              setState(() {
+                                                removeCategories(part_category);
+                                              });
+                                            } else {
+                                              setState(
+                                                () {
+                                                  addCategories(part_category);
+                                                },
+                                              );
+                                            }
+                                          },
+                                          child: Chip(
+                                              label: Text(
+                                                part_category,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              labelPadding:
+                                                  EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                              ),
+                                              backgroundColor:
+                                                  selected_categories.contains(
+                                                          part_category)
+                                                      ? Color(0xFFFBD5DC)
+                                                      : Colors.grey
+                                              // deleteIconColor: Color(0xFFE0426F),
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                  ).toList(),
                                 ),
-                              ),
-                            Row(
-                              children: [
-                                Text(
-                                  '현재 손상 수',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  selected_categories.length.toString(),
-                                  style: TextStyle(
-                                    color: Color(0xFFE0426F),
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      _isView
+                                          ? Icon(
+                                              Icons.fact_check,
+                                            )
+                                          : Icon(
+                                              Icons.fact_check_outlined,
+                                            ),
+                                      Switch(
+                                        value: _isView,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _isView = !_isView;
+                                          });
+                                        },
+                                        activeColor: Color(0xFFE0426F),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '현재 손상 수',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    selected_categories.length.toString(),
+                                    style: TextStyle(
+                                      color: Color(0xFFE0426F),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    // InkWell(
-                    //   onTap: () async {
-                    //     await _videoPlayerController.pause();
-                    //     await _videoPlayerController.seekTo(
-                    //       Duration(seconds: 5),
-                    //     );
-                    //     await _videoPlayerController.play();
-                    //   },
-                    //   child: Text(
-                    //     '00:05',
-                    //     style: TextStyle(
-                    //       color: Colors.blueAccent,
-                    //       decoration: TextDecoration.underline,
-                    //       fontWeight: FontWeight.w600,
-                    //       fontSize: 16,
-                    //     ),
-                    //   ),
-                    // ),
-                    CheckCarDamageContainer(),
+                    CheckCarDamageContainer(
+                      videoPlayerController: _videoPlayerController,
+                    ),
                   ],
-                )
+                ),
               ],
             )
           : Center(

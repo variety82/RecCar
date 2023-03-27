@@ -57,6 +57,8 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   dio: ^4.0.6
   flutter_bloc: ^8.1.2
+  flutter_calendar_carousel: ^2.4.2
+  table_calendar: ^3.0.9
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +83,7 @@ flutter:
   assets:
     - .env
     - lib/assets/images/car_damage_img/
+    - lib/assets/car_video/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
