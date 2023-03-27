@@ -1,5 +1,6 @@
 package com.heros.api.calendar.service;
 
+import com.heros.api.calendar.dto.request.CalendarModifyRequest;
 import com.heros.api.calendar.dto.request.CalendarRequest;
 import com.heros.api.calendar.entity.Calendar;
 import com.heros.api.calendar.repository.CalendarRepository;
@@ -33,6 +34,12 @@ public class CalendarService {
                 .title(calendarRequest.getTitle())
                 .memo(calendarRequest.getMemo())
                 .build();
+        calendarRepository.save(calendar);
+    }
+
+    public void updateCalendar(CalendarModifyRequest calendarModifyRequest) {
+        User user = userRepository.findById(calendarModifyRequest.getUserId()).orElseThrow();
+        Calendar calendar = calendarModifyRequest.toEntity(user);
         calendarRepository.save(calendar);
     }
 }
