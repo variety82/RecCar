@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -17,15 +17,15 @@ public class CalendarRequest {
     @Min(1)
     private Long userId;
 
-    @Schema(description = "등록 날짜", example = "2023-03-12T16:34:30.388")
+    @Schema(description = "등록 날짜", example = "2023-03-12")
     @NotNull
-    private LocalDateTime calendarDate;
+    private LocalDate calendarDate;
 
     @Schema(description = "제목", example = "제목입니다.")
     @NotNull
     private String title;
 
-    @Schema(description = "메모", example = "제목입니다.")
+    @Schema(description = "메모", example = "메모입니다.")
     @NotNull
     private String memo;
 
