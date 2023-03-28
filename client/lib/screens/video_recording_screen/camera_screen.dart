@@ -2,10 +2,11 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:client/screens/check_video_screen/check_video_screen.dart';
+
+import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:video_player/video_player.dart';
@@ -65,9 +66,11 @@ class _CameraScreenState extends State<CameraScreen>
 
   // 카메라/녹음 기능 접근 허가
   getPermissionStatus() async {
+    // 카메라&녹음 허가 받았는지 확인하여 돌아온 값을 status에 저장
     await Permission.camera.request();
     var status = await Permission.camera.status;
 
+    // 만약 허가 받은 상태라면, _isCameraPermissionGranted 값을 true로 전환
     if (status.isGranted) {
       log('Camera Permission: GRANTED');
       setState(() {
