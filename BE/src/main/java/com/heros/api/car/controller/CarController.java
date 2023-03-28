@@ -18,7 +18,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -77,6 +80,9 @@ public class CarController {
     })
     @GetMapping(value = "history/{userId}")
     public ResponseEntity<?> carListGet(@Schema(description = "조회할 userId", example = "1") @NotNull @Min(1) @PathVariable Long userId) {
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        System.out.println("request : "+httpServletRequest.toString());
+        System.out.println("request uid: "+httpServletRequest.getAttribute("UID"));
         List<CarResponse> carList = carService.findCarList(userId);
         if (carList.size() == 0) {
             throw (new BusinessException(ErrorCode.PAGE_NOT_FOUND));
