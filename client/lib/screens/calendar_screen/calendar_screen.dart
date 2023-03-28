@@ -3,6 +3,7 @@ import '../../widgets/common/footer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import './calendar_utils.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:client/services/calendar_api.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({Key? key}) : super(key: key);
@@ -20,10 +21,80 @@ class _CalendarState extends State<Calendar> {
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
+  dynamic events = [];
+  Map<DateTime, List<Event>> kEvents = {};
 
   @override
   void initState() {
     super.initState();
+    // 대여 및 반납 일자도 캘린더에 표시
+    getRentInfo(
+      success: (dynamic response) {
+        setState(() {
+          events = response;
+          for (int i = 0; i < events.length; i++) {
+            // print(events[i]['rentalDate']);
+            print(events[i]['rentalDate'].toString().substring(0, 11)+" 00:00:00.000Z");
+            var temp = events[i]['rentalDate'].toString().substring(0, 10)+" 00:00:00.000";
+            var rentalDate = DateTime.parse(temp).toUtc().subtract(const Duration(hours: 15));
+
+            // var temp = DateTime.parse(events[i]['rentalDate'])
+            //     .toUtc()
+            //     .subtract(const Duration(hours: 15));
+            if (kEvents.containsKey(rentalDate)) {
+              kEvents[rentalDate]!.add(Event(i,
+                  '대여', events[i]['carManufacturer']+" "+events[i]['carModel']+" "+events[i]['carNumber']));
+            } else {
+              kEvents.addAll({
+                rentalDate: [
+                  Event(i, '대여', events[i]['carManufacturer']+" "+events[i]['carModel']+" "+events[i]['carNumber']),
+                ]
+              });
+            }
+            temp = events[i]['returnDate'].toString().substring(0, 10)+" 00:00:00.000";
+            var returnDate = DateTime.parse(temp).toUtc().subtract(const Duration(hours: 15));
+            if (kEvents.containsKey(returnDate)) {
+              kEvents[returnDate]!.add(Event(i,
+                  '반납', events[i]['carManufacturer']+" "+events[i]['carModel']+" "+events[i]['carNumber']));
+            } else {
+              kEvents.addAll({
+                returnDate: [
+                  Event(i, '반납', events[i]['carManufacturer']+" "+events[i]['carModel']+" "+events[i]['carNumber']),
+                ]
+              });
+            }
+          }
+        });
+      },
+      fail: (error) {
+        print('렌트 내역 호출 오류: $error');
+      },
+    );
+    // 등록한 일정도 표시
+    getEvents(
+      success: (dynamic response) {
+        setState(() {
+          events = response;
+          for (int i = 0; i < events.length; i++) {
+            var temp = events[i]['calendarDate'];
+            var eventDate = DateTime.parse(temp).toUtc().subtract(const Duration(hours: 15));
+            if (kEvents.containsKey(eventDate)) {
+              kEvents[eventDate]!.add(Event(events[i]['calendarId'],
+                  events[i]['title'], events[i]['memo']));
+            } else {
+              kEvents.addAll({
+                eventDate: [
+                  Event(events[i]['calendarId'], events[i]['title'], events[i]['memo']),
+                ]
+              });
+            }
+          }
+        });
+      },
+      fail: (error) {
+        print('렌트 내역 호출 오류: $error');
+      },
+    );
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
   }
@@ -79,6 +150,7 @@ class _CalendarState extends State<Calendar> {
                       // rangeEndDay: _rangeEnd,
                       // calendarFormat: _calendarFormat,
                       // rangeSelectionMode: _rangeSelectionMode,
+                      // eventLoader: ,
                       eventLoader: _getEventsForDay,
                       startingDayOfWeek: StartingDayOfWeek.sunday,
                       onDaySelected: _onDaySelected,
@@ -152,6 +224,8 @@ class _CalendarState extends State<Calendar> {
                   child: ValueListenableBuilder<List<Event>>(
                     valueListenable: _selectedEvents,
                     builder: (context, value, _) {
+                      if(value.length==0)
+                        return Center(child: Text("일정이 없습니다"));
                       return ListView.builder(
                         itemCount: value.length,
                         itemBuilder: (context, index) {
@@ -227,9 +301,9 @@ class _CalendarState extends State<Calendar> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Center(
-            child: SingleChildScrollView(
-              child: Dialog(
+          return Dialog(
+            child: SafeArea(
+              child: SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: 20,
@@ -239,8 +313,15 @@ class _CalendarState extends State<Calendar> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(child: Text("일정 등록", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),)),
-                      SizedBox(height: 20,),
+                      Center(
+                          child: Text(
+                        "일정 등록",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w500),
+                      )),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Row(
                         children: [
                           Text(
@@ -262,7 +343,11 @@ class _CalendarState extends State<Calendar> {
                                       .requestFocus(_unUsedFocusNode);
                                 },
                                 decoration: InputDecoration(
-                                  border: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).secondaryHeaderColor,)),
+                                  border: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).secondaryHeaderColor,
+                                  )),
                                 ),
                                 style: TextStyle(
                                   fontSize: 12,
@@ -311,8 +396,14 @@ class _CalendarState extends State<Calendar> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text("MEMO", style: TextStyle(fontSize: 12, color: Theme.of(context).secondaryHeaderColor,)),
-                      SizedBox(height: 5,),
+                      Text("MEMO",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).secondaryHeaderColor,
+                          )),
+                      SizedBox(
+                        height: 5,
+                      ),
                       Container(
                         height: 90,
                         child: TextField(
@@ -322,7 +413,10 @@ class _CalendarState extends State<Calendar> {
                                 .requestFocus(_unUsedFocusNode);
                           },
                           decoration: InputDecoration(
-                            border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).secondaryHeaderColor)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .secondaryHeaderColor)),
                             labelText: '',
                           ),
                           style: TextStyle(
@@ -334,7 +428,7 @@ class _CalendarState extends State<Calendar> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           TextButton(
-                            onPressed: () => {},
+                            onPressed: () => {Navigator.pop(context)},
                             child: Container(
                               alignment: Alignment.center,
                               padding: EdgeInsets.symmetric(
