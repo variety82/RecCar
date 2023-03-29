@@ -28,18 +28,24 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   // 현재 상태 알려주는 변수 지정
   // _nowLoading은 처음 화면 시작한 후 카메라 initialized 모두 끝나고 녹화 직전까지 화면 구현 되면 false로 바뀌고, 그 때까지는 true로 유지
   bool _nowLoading = true;
+
   // _nowRecording은 녹화 중일 때는 true, 그렇지 않을 때면 false임
   bool _nowRecording = false;
+
   // 현재 카메라 initailizing이 된 상태인지 여부를 boolean 값으로 구분
   bool _nowcameraInitialized = false;
+
   // 현재 카메라&녹음 허가가 받아진 상태인지 구분
   bool _nowCameraPermissionGranted = false;
+
   // 현재 허가가 어떤 식으로 거부당했는지 구분
   String _nowReasonDeniedCamera = '';
+
   // 현재 녹화 관련 기능에 어떤 오류가 있는지 구분
   // 디렉토리, 카메라 순
   String _nowReasonDirectoryError = '';
   String _nowReasonCameraError = '';
+
   // 현재 앞면 카메라 선택한 상태인지 구분
   bool _nowSelectFrontCamera = false;
 
@@ -56,7 +62,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       final directory = await getApplicationDocumentsDirectory();
       final videoDir = Directory('${directory.path}/video');
       await videoDir.create(recursive: true);
-      final filePath = '${videoDir.path}/REC${DateTime.now().millisecondsSinceEpoch}.mp4';
+      final filePath =
+          '${videoDir.path}/REC${DateTime.now().millisecondsSinceEpoch}.mp4';
       nowFilePath = filePath;
     } catch (err) {
       print('$err로 인해 디렉토리 경로 불러오기 실패');
@@ -69,24 +76,37 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   // 카메라 및 녹음 기능 사용을 위해 permission_handler를 이용함
   void _cameraPermission() async {
     // 권한 부여되지 않았을 시 권한 요청 후 결과 받아와 requestStatus에 저장
-    var requestCameraStatus = await Permission.camera.request();
+    await Permission.camera.request();
     // 현재 권한 부여 상태가 어떤지 nowPermissionStatus로 받아옴
     var cameraPermissionStatus = await Permission.camera.status;
     // 만약 카메라 권한이 허용되었거나(isGranted == true), 제한적 허가 되었다면(isLimited)
     if (cameraPermissionStatus.isGranted || cameraPermissionStatus.isLimited) {
-    // setState로 _nowCameraPermissionGranted 값을 true로 바꿔줌
-      setState(() {
-      _nowCameraPermissionGranted = true;
-      _nowReasonDeniedCamera = '히히히';
-    });
+      // 카메라 권한 허용 시 녹음 권한 요청
+      await Permission.microphone.request();
+      var microphonePermissionStatus = await Permission.microphone.status;
+      // 카메라 및 녹음 권한 요청에 모두 성공했을 시
+      // setState로 _nowCameraPermissionGranted 값을 true로 바꿔줌
+      if (microphonePermissionStatus.isGranted ||
+          microphonePermissionStatus.isLimited) {
+        setState(() {
+          _nowCameraPermissionGranted = true;
+          _nowReasonDeniedCamera = '모든 권한 요청 승인';
+        });
+      } else {
+        setState(() {
+          _nowReasonDeniedCamera = '녹음 권한 요청 거부';
+        });
+      }
+
       // 만약 사용자가 (영구) 권한 요청 거부를 선택했을 시, appsetting에서 직접 변경할 수 있게 함(안드로이드)
-    } else if (requestCameraStatus.isPermanentlyDenied || requestCameraStatus.isDenied) {
+    } else if (cameraPermissionStatus.isPermanentlyDenied ||
+        cameraPermissionStatus.isDenied) {
       setState(() {
-        _nowReasonDeniedCamera = '권한 요청 거부';
+        _nowReasonDeniedCamera = '카메라 권한 요청 거부';
       });
       // openAppSettings();
       // 만약 사용자가 다시는 알람을 표시하지 않게 했을 시(ios), 마찬가지로 appsetting에서 변경할 수 있게 함
-    } else if (requestCameraStatus.isRestricted) {
+    } else if (cameraPermissionStatus.isRestricted) {
       setState(() {
         _nowReasonDeniedCamera = '알람 표시 거부';
       });
@@ -180,8 +200,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   @override
   void initState() {
     // 하단바만 보이게 조절
-    _initCamera();
     _cameraPermission();
+    _initCamera();
     getVideoFilePath();
     super.initState();
   }
@@ -203,9 +223,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       //     (camera) => camera.lensDirection == CameraLensDirection.front);
       // 후면 카메라 선택
       final back = avaliableCameraList.firstWhere(
-              (camera) => camera.lensDirection == CameraLensDirection.back);
+          (camera) => camera.lensDirection == CameraLensDirection.back);
       // 후면 카메라를 선택한 후, 영상 해상도를 최대로 선택함
-      _cameraController = CameraController(back, ResolutionPreset.high, enableAudio: true,);
+      _cameraController = CameraController(
+        back,
+        ResolutionPreset.high,
+        enableAudio: true,
+      );
       // 컨트롤러를 초기화함
       await _cameraController.initialize();
       _nowFlashMode = _cameraController.value.flashMode;
@@ -213,6 +237,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       setState(() {
         _nowLoading = false;
       });
+      print(_nowLoading);
     } catch (err) {
       print('$err로 인해 카메라 initialized 실패');
     }
@@ -224,13 +249,18 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
     // 현재 사용 중인 카메라와 반대 방향의 카메라를 가져옴
     final newController = avaliableCameraList.firstWhere(
-          (description) => description.lensDirection != currentController.lensDirection,
+      (description) =>
+          description.lensDirection != currentController.lensDirection,
       orElse: () => throw Exception('카메라를 찾을 수 없습니다.'),
     );
 
     // 현재 작동 중인 컨트롤러 멈춘 후, 새로운 카메라로 전환시켜 실행
     await _cameraController.dispose();
-    _cameraController = CameraController(newController, ResolutionPreset.high, enableAudio: true,);
+    _cameraController = CameraController(
+      newController,
+      ResolutionPreset.high,
+      enableAudio: true,
+    );
     await _cameraController.initialize();
     // _nowSelecteFrontCamera 변수값 수정
     setState(() {
@@ -249,323 +279,304 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     return SafeArea(
       // 핸드폰 현재 구성에 맞춰 ui 구성할 수 있도록 SafeArea로 감싸줌
       child: Scaffold(
-          body: _nowCameraPermissionGranted ?
-          _nowLoading ?
-          Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
-            ),
-          ) :
-          Stack(
-            children: [
-              Positioned.fill(child: CameraPreview(
-                _cameraController,
-              )),
-              Positioned(
-                top: 16,
-                left: (orientation == Orientation.portrait)
-                    ? MediaQuery.of(context).size.width / 2 - 90
-                    : MediaQuery.of(context).size.height / 2 +
-                    45,
-                child: Container(
-                  height: 32,
-                  width: 180,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "${_durationToString(Duration(seconds: _timeCounter))}",
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.white,
-                      ),
+        body: _nowCameraPermissionGranted
+            ? _nowLoading
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
                     ),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 16,
-                left: 16,
-                right: 16,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: 16.0,
-                    bottom: 16.0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                  )
+                : Stack(
                     children: [
-                      InkWell(
-                        onTap: () async {
-                          if (_nowFlashMode !=
-                              FlashMode.torch) {
-                            setState(() {
-                              _nowFlashMode =
-                                  FlashMode.torch;
-                            });
-                            await _cameraController!.setFlashMode(
-                              FlashMode.torch,
-                            );
-                          } else {
-                            setState(() {
-                              _nowFlashMode = FlashMode.off;
-                            });
-                            await _cameraController!.setFlashMode(
-                              FlashMode.off,
-                            );
-                          }
-                        },
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.circle,
-                              color: Colors.black38,
-                              size: 60,
-                            ),
-                            Icon(
-                              Icons.highlight,
-                              color: _nowFlashMode ==
-                                  FlashMode.torch
-                                  ? Colors.amber
-                                  : Colors.white,
-                              size: 30,
-                            ),
-                          ],
-                        ),
-                      ),
-                      _nowRecording ?
-                      Container(
-                        height: 80,
-                        width: 160,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                          BorderRadius.circular(40),
-                        ),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment
-                              .spaceEvenly,
-                          children: [
-                            InkWell(
-                              onTap: () async {
-                                if (_cameraController.value
-                                    .isRecordingPaused) {
-                                  try {
-                                    await _cameraController.resumeVideoRecording();
-                                    setState(() {
-                                      // _nowRecording = true;
-                                      _resumeTimer();
-                                    });
-                                  } on CameraException catch (err) {
-                                    print('$err로 인해 녹화 재개 불가');
-                                  }
-                                } else {
-                                  try {
-                                    await _cameraController.pauseVideoRecording();
-                                    setState(() {
-                                      // _nowRecording = false;
-                                      _pauseTimer();
-                                    });
-                                  } on CameraException catch (err) {
-                                    print('$err로 인해 녹화 멈춤 불가');
-                                  }
-                                }
-                              },
-                              child: Stack(
-                                alignment:
-                                Alignment.center,
-                                children: [
-                                  _cameraController!.value
-                                      .isRecordingPaused
-                                      ? const Stack(
-                                    alignment:
-                                    Alignment
-                                        .center,
-                                    children: [
-                                      Icon(
-                                        Icons
-                                            .circle,
-                                        color: Colors
-                                            .white,
-                                        size: 42,
-                                      ),
-                                      Icon(
-                                        Icons
-                                            .circle,
-                                        color: Colors
-                                            .red,
-                                        size: 30,
-                                      ),
-                                    ],
-                                  )
-                                      : Icon(
-                                    Icons
-                                        .pause_rounded,
-                                    color: Colors
-                                        .black,
-                                    size: 42,
-                                  ),
-                                ],
+                      Positioned.fill(
+                          child: CameraPreview(
+                        _cameraController,
+                      )),
+                      Positioned(
+                        top: 16,
+                        left: (orientation == Orientation.portrait)
+                            ? MediaQuery.of(context).size.width / 2 - 90
+                            : MediaQuery.of(context).size.height / 2 + 45,
+                        child: Container(
+                          height: 32,
+                          width: 180,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "${_durationToString(Duration(seconds: _timeCounter))}",
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
                               ),
                             ),
-                            InkWell(
-                              onTap: () async {
-                                _stopTimer();
-                                setState(() {
-                                  _nowcameraInitialized =
-                                  false;
-                                  _nowRecording = false;
-                                });
-
-                                String videoFilePath = await stopRecording();
-                                final route =
-                                MaterialPageRoute(
-                                  fullscreenDialog: true,
-                                  builder: (_) =>
-                                      CheckVideoPage(
-                                          filePath:
-                                          videoFilePath),
-                                );
-                                Navigator.pop(context);
-                                Navigator.push(
-                                    context, route);
-                              },
-                              child: Stack(
-                                alignment:
-                                Alignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.square_rounded,
-                                    color: Colors.black,
-                                    size: 30,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                      // 동영상 촬영 시작 시
-                          : InkWell(
-                        onTap: () async {
-                          // await startVideoRecording();
-                          try {
-                            await _cameraController.startVideoRecording();
-                            setState(() {
-                              _nowRecording = true;
-                              _startTimer();
-                            });
-                          } on CameraException catch (err) {
-                            print('$err로 인해 녹화 시작 불가');
-                          }
-                        },
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.circle,
-                              color: Colors.white,
-                              size: 80,
-                            ),
-                            Icon(
-                              Icons.circle,
-                              color: Colors.red,
-                              size: 30,
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                      _nowRecording
-                          ? InkWell(
-                        onTap: () async {
+                      Positioned(
+                        bottom: 16,
+                        left: 16,
+                        right: 16,
+                        child: Container(
+                          margin: EdgeInsets.only(
+                            top: 16.0,
+                            bottom: 16.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InkWell(
+                                onTap: () async {
+                                  if (_nowFlashMode != FlashMode.torch) {
+                                    setState(() {
+                                      _nowFlashMode = FlashMode.torch;
+                                    });
+                                    await _cameraController!.setFlashMode(
+                                      FlashMode.torch,
+                                    );
+                                  } else {
+                                    setState(() {
+                                      _nowFlashMode = FlashMode.off;
+                                    });
+                                    await _cameraController!.setFlashMode(
+                                      FlashMode.off,
+                                    );
+                                  }
+                                },
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.circle,
+                                      color: Colors.black38,
+                                      size: 60,
+                                    ),
+                                    Icon(
+                                      Icons.highlight,
+                                      color: _nowFlashMode == FlashMode.torch
+                                          ? Colors.amber
+                                          : Colors.white,
+                                      size: 30,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              _nowRecording
+                                  ? Container(
+                                      height: 80,
+                                      width: 160,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(40),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          InkWell(
+                                            onTap: () async {
+                                              if (_cameraController
+                                                  .value.isRecordingPaused) {
+                                                try {
+                                                  await _cameraController
+                                                      .resumeVideoRecording();
+                                                  setState(() {
+                                                    // _nowRecording = true;
+                                                    _resumeTimer();
+                                                  });
+                                                } on CameraException catch (err) {
+                                                  print('$err로 인해 녹화 재개 불가');
+                                                }
+                                              } else {
+                                                try {
+                                                  await _cameraController
+                                                      .pauseVideoRecording();
+                                                  setState(() {
+                                                    // _nowRecording = false;
+                                                    _pauseTimer();
+                                                  });
+                                                } on CameraException catch (err) {
+                                                  print('$err로 인해 녹화 멈춤 불가');
+                                                }
+                                              }
+                                            },
+                                            child: Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                _cameraController!
+                                                        .value.isRecordingPaused
+                                                    ? const Stack(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.circle,
+                                                            color: Colors.white,
+                                                            size: 42,
+                                                          ),
+                                                          Icon(
+                                                            Icons.circle,
+                                                            color: Colors.red,
+                                                            size: 30,
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : Icon(
+                                                        Icons.pause_rounded,
+                                                        color: Colors.black,
+                                                        size: 42,
+                                                      ),
+                                              ],
+                                            ),
+                                          ),
+                                          InkWell(
+                                            onTap: () async {
+                                              _stopTimer();
+                                              setState(() {
+                                                _nowcameraInitialized = false;
+                                                _nowRecording = false;
+                                              });
 
-                        },
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.circle,
-                              color: Colors.black38,
-                              size: 60,
-                            ),
-                            // Icon(
-                            //   Icons.circle,
-                            //   color: Colors.white,
-                            //   size: 40,
-                            // ),
-                            Icon(
-                              Icons.camera,
-                              color: Colors.white,
-                              size: 30,
-                            )
-                          ],
-                        ),
-                      )
-                          :
-                      InkWell(
-                        onTap: () {
-                          changeCameraDirection();
-                        },
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.circle,
-                              color: Colors.black38,
-                              size: 60,
-                            ),
-                            Icon(
-                              !_nowSelectFrontCamera
-                                  ? Icons.camera_front
-                                  : Icons.camera_rear,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ],
+                                              String videoFilePath =
+                                                  await stopRecording();
+                                              final route = MaterialPageRoute(
+                                                fullscreenDialog: true,
+                                                builder: (_) => CheckVideoPage(
+                                                    filePath: videoFilePath),
+                                              );
+                                              Navigator.pop(context);
+                                              Navigator.push(context, route);
+                                            },
+                                            child: Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.square_rounded,
+                                                  color: Colors.black,
+                                                  size: 30,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  // 동영상 촬영 시작 시
+                                  : InkWell(
+                                      onTap: () async {
+                                        // await startVideoRecording();
+                                        try {
+                                          await _cameraController
+                                              .startVideoRecording();
+                                          setState(() {
+                                            _nowRecording = true;
+                                            _startTimer();
+                                          });
+                                        } on CameraException catch (err) {
+                                          print('$err로 인해 녹화 시작 불가');
+                                        }
+                                      },
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.circle,
+                                            color: Colors.white,
+                                            size: 80,
+                                          ),
+                                          Icon(
+                                            Icons.circle,
+                                            color: Colors.red,
+                                            size: 30,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                              _nowRecording
+                                  ? InkWell(
+                                      onTap: () async {},
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.circle,
+                                            color: Colors.black38,
+                                            size: 60,
+                                          ),
+                                          // Icon(
+                                          //   Icons.circle,
+                                          //   color: Colors.white,
+                                          //   size: 40,
+                                          // ),
+                                          Icon(
+                                            Icons.camera,
+                                            color: Colors.white,
+                                            size: 30,
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  : InkWell(
+                                      onTap: () {
+                                        changeCameraDirection();
+                                      },
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.circle,
+                                            color: Colors.black38,
+                                            size: 60,
+                                          ),
+                                          Icon(
+                                            !_nowSelectFrontCamera
+                                                ? Icons.camera_front
+                                                : Icons.camera_rear,
+                                            color: Colors.white,
+                                            size: 30,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
-                  ),
+                  )
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('현재 ${_nowReasonDeniedCamera}된 상태입니다.'),
+                    Text('설정에서 권한을 허가해주시기 바랍니다.'),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        fixedSize: Size(200, 40),
+                        backgroundColor: Color(0xFFE0426F),
+                      ),
+                      onPressed: () {
+                        openAppSettings();
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        '설정으로 이동',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ) :
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('현재 ${_nowReasonDeniedCamera}된 상태입니다.'),
-                Text('설정에서 권한을 허가해주시기 바랍니다.'),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    fixedSize: Size(200, 40),
-                    backgroundColor: Color(0xFFE0426F),
-                  ),
-                  onPressed: () {
-                    openAppSettings();
-                  },
-                  child: Text(
-                    '설정으로 이동',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
       ),
     );
-
   }
 }
