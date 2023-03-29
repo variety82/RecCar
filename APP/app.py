@@ -32,7 +32,7 @@ def startup_event():
     bucket = os.getenv("bucket_name")
     models = inference.load_model(labels)
 
-@app.post("/ai-api/v1/damage", response_model=List[schema.Inference_image]) 
+@app.post("/ai-api/v1/damage", response_model=List[schema.InferenceImage]) 
 async def upload_video(file : UploadFile, user_id : str):
     upload_path = "./dataset/video"
     content = await file.read()

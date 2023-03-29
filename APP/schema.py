@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
-class Inference_image(BaseModel):
+class InferenceImage(BaseModel):
     url : str
     damage : str
