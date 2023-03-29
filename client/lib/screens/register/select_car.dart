@@ -90,8 +90,38 @@ class _SelectCarState extends State<SelectCar> {
             ),
           ),
         ),
-        Row(
-          children: [Text(widget.selectedMaker['title'] ?? '')],
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 20,
+            horizontal: 30,
+          ),
+          child: Row(
+            children: [
+              ClipOval(
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  padding: EdgeInsets.all(2.0), // 테두리와 이미지 사이의 간격을 조절합니다.
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Image.network(
+                        widget.selectedMaker['logoUrl'],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Text(
+                widget.selectedMaker['title'] ?? '',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600
+                ),
+              )
+            ],
+          ),
         ),
         // 제조사 선택 영역이 나열될 곳
         Padding(
