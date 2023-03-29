@@ -24,8 +24,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -72,38 +70,66 @@ public class CarController {
         if (carModify.getRentalDate().compareTo(carModify.getReturnDate()) > 0) {
             throw (new CarException(ErrorCode.DATE_INPUT_INVALID));
         }
-        carService.modifyCar(carModify);
-        return ResponseEntity.status(201).body(carModify);
+        return ResponseEntity.status(201).body(carService.modifyCar(carModify));
     }
 
-    @Operation(summary = "차량 리스트 조회", description = "userId의 차량 리스트 조회 메서드입니다.")
+    @Operation(summary = "차량 리스트 조회", description = "현재 로그인된 user의 차량 리스트 조회 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "차량 리스트 조회 성공", content = @Content(schema = @Schema(implementation = CarResponse.class))),
             @ApiResponse(responseCode = "400", description = "bad request operation")
     })
-    @GetMapping(value = "history/{userId}")
-    public ResponseEntity<?> carListGet(@Schema(description = "조회할 userId", example = "1") @NotNull @Min(1) @PathVariable Long userId) {
+    @GetMapping(value = "history")
+    public ResponseEntity<?> carListGet() {
         HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        System.out.println("request : "+httpServletRequest.toString());
-        System.out.println("request uid: "+httpServletRequest.getAttribute("UID"));
-        List<CarResponse> carList = carService.findCarList(userId);
+        User user = (User) httpServletRequest.getAttribute("user");
+        List<CarResponse> carList = carService.findCarList(user);
         if (carList.size() == 0) {
             throw (new BusinessException(ErrorCode.PAGE_NOT_FOUND));
         }
         return ResponseEntity.status(200).body(carList);
     }
 
-    @Operation(summary = "대여중인 차량 조회", description = "userId의 대여중인 차량 조회 메서드입니다.")
+    @Operation(summary = "대여중인 차량 조회", description = "현재 로그인된 user의 대여중인 차량 조회 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "대여중인 차량 조회 성공", content = @Content(schema = @Schema(implementation = CarResponse.class))),
             @ApiResponse(responseCode = "400", description = "bad request operation")
     })
-    @GetMapping(value = "/{userId}")
-    public ResponseEntity<?> carGet(@Schema(description = "조회할 userId", example = "1") @NotNull @Min(1) @PathVariable Long userId) {
-        CarResponse carResponse = carService.findCar(userId);
+    @GetMapping(value = "/")
+    public ResponseEntity<?> carGet() {
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        User user = (User) httpServletRequest.getAttribute("user");
+        CarResponse carResponse = carService.findCar(user);
         if (carResponse == null) {
             throw (new CarException(ErrorCode.PAGE_NOT_FOUND));
         }
         return ResponseEntity.status(200).body(carResponse);
+    }
+
+    @Operation(summary = "대여중인 차량 반납", description = "현재 로그인된 user의 대여중인 차량 반납 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "대여중인 차량 반납 성공"),
+            @ApiResponse(responseCode = "400", description = "bad request operation")
+    })
+    @GetMapping(value = "/return")
+    public ResponseEntity<?> carReturn() {
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        User user = (User) httpServletRequest.getAttribute("user");
+        CarResponse carResponse = carService.returnCar(user);
+        if (carResponse == null) {
+            throw (new CarException(ErrorCode.PAGE_NOT_FOUND));
+        }
+        return ResponseEntity.status(200).body(carResponse);
+    }
+
+    @Operation(summary = "차량 삭제", description = "carId를 이용한 차량 삭제 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "차량 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "bad request operation")
+    })
+    @DeleteMapping(value = "/{carId}")
+    public ResponseEntity<?> carDelete(@PathVariable("carId") Long carId) {
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        carService.deleteCar(carId);
+        return ResponseEntity.status(200).body(null);
     }
 }

@@ -43,13 +43,14 @@ public class CarService {
         return carId;
     }
 
-    public void modifyCar(CarModify carModify) {
-        Car car = new Car(carModify, carRepository.findById(carModify.getCarId()).get());
-        carRepository.save(car);
+    public CarResponse modifyCar(CarModify carModify) {
+        Car car = carRepository.findById(carModify.getCarId()).get();
+        car.ModifyCar(carModify);
+        return new CarResponse(carRepository.save(car));
     }
 
-    public List<CarResponse> findCarList(Long userId) {
-        List<Car> carList = userRepository.findById(userId).get().getCars();
+    public List<CarResponse> findCarList(User user) {
+        List<Car> carList = userRepository.findById(user.getUserId()).get().getCars();
         List<CarResponse> carResponseList = new ArrayList<>();
         for (Car car: carList) {
             carResponseList.add(new CarResponse(car));
@@ -57,8 +58,9 @@ public class CarService {
         return carResponseList;
     }
 
-    public CarResponse findCar(Long userId) {
-        Car car = carRepository.findByUserAndReturned(userRepository.findById(userId).get(), false);
+    public CarResponse findCar(User user) {
+//        Car car = carRepository.findByUserAndReturned(userRepository.findById(userId).get(), false);
+        Car car = carRepository.findById(user.getCurrentCarId()).get();
         if (car == null)
             return null;
         return new CarResponse(car);
@@ -88,5 +90,22 @@ public class CarService {
         }
 
         return result;
+    }
+
+    public void deleteCar(Long carId) {
+        carRepository.customDeleteCar(carId);
+    }
+
+    public CarResponse returnCar(User user) {
+        if (user.getCurrentCarId() == 0)
+            return null;
+        Car car = carRepository.findById(user.getCurrentCarId()).get();
+        if (car == null)
+            return null;
+        car.ReturnCar();
+        carRepository.save(car);
+        user.setCurrentCarId(0L);
+        userRepository.save(user);
+        return new CarResponse(car);
     }
 }
