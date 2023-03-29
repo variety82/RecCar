@@ -10,6 +10,7 @@ import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'screens/detail/car_detail.dart';
 import 'screens/calendar_screen/calendar_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(
@@ -34,7 +35,7 @@ void main() {
         '/login': (context) => const Login(),
         '/before-recording': (context) => const BeforeRecordingScreen(),
         '/recording': (context) => CameraScreen(),
-        '/calendar': (context) => Calendar(),
+        '/calendar': (context) => const Calendar(),
       },
     ),
   );
@@ -91,18 +92,31 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  '대충 차고 이미지',
+                Stack(
+                  children: [
+                    Center(
+                      child: SvgPicture.asset(
+                        'lib/assets/images/empty_garage.svg',
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(
+                        top: 180,
+                      ),
+                      child: Center(
+                        child: IconButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/register');
+                            },
+                            icon: const Icon(Icons.add_box_rounded)),
+                      ),
+                    ),
+                  ]
                 ),
                 const SizedBox(
                   height: 100,
                 ),
-                const Text('차량 등록 아직 안했을 경우'),
-                IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/register');
-                    },
-                    icon: const Icon(Icons.add_box_rounded)),
+
                 const Text(
                   '차량 등록됐을 경우',
                 ),
