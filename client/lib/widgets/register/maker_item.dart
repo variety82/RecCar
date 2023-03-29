@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 class MakerItem extends StatefulWidget {
   final int makerId;
   final String makerTitle;
-  final String makerImageUrl;
+  final String makerLogoUrl;
   final ValueChanged<int> changeSelectedItem;
   final bool isSelected;
-  final void Function(int, String) updateSelectedMaker;
+  final void Function(int, String, String) updateSelectedMaker;
 
 
   const MakerItem({
-    super.key, required this.makerTitle, required this.makerImageUrl, required this.makerId, required this.isSelected, required this.changeSelectedItem, required this.updateSelectedMaker,
+    super.key, required this.makerTitle, required this.makerLogoUrl, required this.makerId, required this.isSelected, required this.changeSelectedItem, required this.updateSelectedMaker,
   });
 
   @override
@@ -30,7 +30,7 @@ class _MakerItemState extends State<MakerItem> {
             onTap: () {
               setState(() {
                 widget.changeSelectedItem(widget.makerId);
-                widget.updateSelectedMaker(widget.makerId, widget.makerTitle);
+                widget.updateSelectedMaker(widget.makerId, widget.makerTitle, widget.makerLogoUrl);
               });
             },
             child: Container(
@@ -42,9 +42,18 @@ class _MakerItemState extends State<MakerItem> {
                   width: 2.0,
                 ),
               ),
-              child: CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(widget.makerImageUrl),
+              child: ClipOval(
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  padding: EdgeInsets.all(8.0), // 테두리와 이미지 사이의 간격을 조절합니다.
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Image.network(
+                      widget.makerLogoUrl,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

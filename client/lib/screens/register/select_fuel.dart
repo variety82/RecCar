@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:client/widgets/register/category_title.dart';
 
 class SelectFuel extends StatefulWidget {
-
   final void Function(int, String) updateSelectedFuel;
 
   const SelectFuel({
-    super.key, required this.updateSelectedFuel,
+    super.key,
+    required this.updateSelectedFuel,
   });
 
   @override
@@ -29,13 +29,11 @@ class _SelectFuelState extends State<SelectFuel> {
       } else {
         // 다를 경우 해당 제조사 ID로 selectedMaker 변경
         selectedFuel = fuelId;
-        print(fuelId);
       }
     });
   }
 
   List<String> fuelList = ['가솔린', '디젤', '전기', '하이브리드'];
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,25 +53,13 @@ class _SelectFuelState extends State<SelectFuel> {
           ),
         ),
         const Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: 8,
-              horizontal: 20
-          ),
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           // 카테고리 리스트, 현재는 선택해서 이동 불가하고 시간 남으면 클릭시 모달 내용 변경하도록 설정
           child: Row(
             children: [
-              CategoryTitle(
-                  title: '제조사',
-                  isSelected: false
-              ),
-              CategoryTitle(
-                  title: '차종',
-                  isSelected: false
-              ),
-              CategoryTitle(
-                  title: '연료',
-                  isSelected: true
-              ),
+              CategoryTitle(title: '제조사', isSelected: false),
+              CategoryTitle(title: '차종', isSelected: false),
+              CategoryTitle(title: '연료', isSelected: true),
             ],
           ),
         ),
@@ -92,7 +78,7 @@ class _SelectFuelState extends State<SelectFuel> {
           padding: const EdgeInsets.symmetric(
             vertical: 10,
             horizontal: 30,
-          ) ,
+          ),
           child: Text(
             '연료 종류를 선택해주세요.',
             style: TextStyle(
@@ -109,7 +95,10 @@ class _SelectFuelState extends State<SelectFuel> {
             width: double.infinity,
             child: Wrap(
               alignment: WrapAlignment.start,
-              children: fuelList.asMap().entries.map<Widget>((MapEntry<int, dynamic> car) {
+              children: fuelList
+                  .asMap()
+                  .entries
+                  .map<Widget>((MapEntry<int, dynamic> car) {
                 int index = car.key;
                 String carName = car.value;
                 return InkWell(
@@ -118,22 +107,22 @@ class _SelectFuelState extends State<SelectFuel> {
                       widget.updateSelectedFuel(index, carName);
                       _changeSelectedFuel(index);
                     });
-                  }
-                  ,
+                  },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     width: 180,
                     height: 30,
                     child: Row(
                       children: [
                         Text(
-                          '$carName',
+                          carName,
                           style: TextStyle(
-                              fontWeight: selectedFuel == index ? FontWeight.w600 : FontWeight.w400,
-                              color: selectedFuel == index ? Theme.of(context).secondaryHeaderColor : Theme.of(context).disabledColor
-                          ),
+                              fontWeight: selectedFuel == index
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
+                              color: selectedFuel == index
+                                  ? Theme.of(context).secondaryHeaderColor
+                                  : Theme.of(context).disabledColor),
                         ),
                       ],
                     ),

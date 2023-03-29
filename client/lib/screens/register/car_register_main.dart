@@ -20,14 +20,13 @@ class CarRegister extends StatefulWidget {
 }
 
 class _CarRegisterState extends State<CarRegister> {
-
   final FocusNode _rentalCompanyFocusNode = FocusNode();
   final FocusNode _carNumberFocusNode = FocusNode();
 
   // 선택한 제조사
   List<dynamic> carInfo = [];
-  List<dynamic> manufacturerList = [];
   bool _allRegistered = false;
+
 
   @override
   void initState() {
@@ -36,7 +35,6 @@ class _CarRegisterState extends State<CarRegister> {
       success: (dynamic response) {
         setState(() {
           carInfo = response;
-          manufacturerList = carInfo.map((maker) => maker['manufacturer']).toList();
         });
       },
       fail: (error) {
@@ -48,16 +46,17 @@ class _CarRegisterState extends State<CarRegister> {
   Map<String, dynamic> selectedMaker = {
     'id': null,
     'title': null,
+    'logoUrl' : null,
   };
 
   Map<String, dynamic> selectedCar = {
-    'id' : null,
-    'title' : null,
+    'id': null,
+    'title': null,
   };
 
   Map<String, dynamic> selectedFuel = {
-    'id' : null,
-    'title' : null,
+    'id': null,
+    'title': null,
   };
 
   // 입력한 대여기간
@@ -65,32 +64,46 @@ class _CarRegisterState extends State<CarRegister> {
 
   DateTime _returnDate = DateTime.now().add(const Duration(hours: 9));
 
+  bool _isValidatedDate = true;
+
   String _inputedRentalCompany = '';
 
   String _inputedCarNumber = '';
 
   List<dynamic> carListByMaker = [];
 
+  Map<String, dynamic> _buildCarInfoBody() {
+    return {
+      "userId": 1,
+      "carNumber": _inputedCarNumber,
+      "carManufacturer": selectedMaker['title'],
+      "carModel": selectedCar['title'],
+      "carFuel": selectedFuel['title'],
+      "rentalDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(_borrowingDate),
+      "returnDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(_returnDate),
+      "rentalCompany": _inputedRentalCompany,
+      "initialVideo": "rental.mp4"
+    };
+  }
+
   void _updateAllRegistered() {
     setState(() {
-      print(selectedMaker);
-      print(selectedCar);
-      print(selectedFuel);
-      print(_inputedRentalCompany);
-      print(_inputedCarNumber);
-      if(selectedMaker['id'] != null && selectedCar['id'] != null && selectedFuel['id'] != null
-          && _inputedRentalCompany.isNotEmpty && _inputedCarNumber.isNotEmpty){
+      if (selectedMaker['id'] != null &&
+          selectedCar['id'] != null &&
+          selectedFuel['id'] != null &&
+          _inputedRentalCompany.isNotEmpty &&
+          _inputedCarNumber.isNotEmpty &&
+          _isValidatedDate) {
         _allRegistered = true;
       } else {
         _allRegistered = false;
       }
     });
-    print(_allRegistered);
   }
 
   // 제조사를 업데이트 해주는 function
   // parameter로 id와 이름을 받음
-  void _updateSelectedMaker(int makerId, String makerTitle) {
+  void _updateSelectedMaker(int makerId, String makerTitle, String makerLogoUrl) {
     setState(() {
       // 선택되어 있는 제조사로 변경했을 경우
       if (selectedMaker['id'] == makerId) {
@@ -98,6 +111,7 @@ class _CarRegisterState extends State<CarRegister> {
         selectedMaker = {
           'id': null,
           'title': null,
+          'logoUrl' : null,
         };
         carListByMaker = [];
         // 선택되어 있는 제조사와 다른 값으로 변경했을 경우
@@ -106,20 +120,21 @@ class _CarRegisterState extends State<CarRegister> {
         selectedMaker = {
           'id': makerId,
           'title': makerTitle,
+          'logoUrl' : makerLogoUrl,
         };
         selectedCar = {
           'id': null,
           'title': null,
+          'logoUrl' : null,
         };
-        carListByMaker = carInfo.firstWhere((maker) => maker['manufacturer']== makerTitle)['model'];
+        carListByMaker = carInfo.firstWhere(
+            (maker) => maker['manufacturer'] == makerTitle)['model'];
       }
       _updateAllRegistered();
     });
   }
 
-
-
-  void _updateSelectedCar(int carId,String carName) {
+  void _updateSelectedCar(int carId, String carName) {
     setState(() {
       // 선택되어 있는 제조사로 변경했을 경우
       if (selectedCar['id'] == carId) {
@@ -140,7 +155,7 @@ class _CarRegisterState extends State<CarRegister> {
     });
   }
 
-  void _updateSelectedFuel(int fuelId,String fuelName) {
+  void _updateSelectedFuel(int fuelId, String fuelName) {
     setState(() {
       // 선택되어 있는 제조사로 변경했을 경우
       if (selectedFuel['id'] == fuelId) {
@@ -161,26 +176,30 @@ class _CarRegisterState extends State<CarRegister> {
     });
   }
 
+
   // 대여기간 업데이트
-  void _updateBorrowingDate(DateTime seletedDate) {
+  void _updateBorrowingDate(DateTime selectedDate) {
     setState(() {
       // 입력받은 DateTime타입의 값을 입력
-      _borrowingDate = seletedDate;
+      _borrowingDate = selectedDate;
+      _isValidatedDate = _returnDate.isAtSameMomentAs(_borrowingDate) || _returnDate.isAfter(_borrowingDate);
       _updateAllRegistered();
     });
   }
 
-  void _updateReturnDate(DateTime seletedDate) {
+  void _updateReturnDate(DateTime selectedDate) {
     setState(() {
       // 입력받은 DateTime타입의 값을 입력
-      _returnDate = seletedDate;
+      _returnDate = selectedDate;
+      _isValidatedDate = _returnDate.isAtSameMomentAs(_borrowingDate) || _returnDate.isAfter(_borrowingDate);
       _updateAllRegistered();
+      print(_isValidatedDate);
     });
   }
 
-  void _updateInputRentalCompany(String RentalCompany) {
+  void _updateInputRentalCompany(String rentalCompany) {
     setState(() {
-      _inputedRentalCompany = RentalCompany;
+      _inputedRentalCompany = rentalCompany;
       _updateAllRegistered();
     });
   }
@@ -196,16 +215,13 @@ class _CarRegisterState extends State<CarRegister> {
     return MediaQuery.of(context).viewInsets.bottom != 0;
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
+          currentFocus.unfocus();
         }
       },
       child: Scaffold(
@@ -238,34 +254,36 @@ class _CarRegisterState extends State<CarRegister> {
                                 // SelectMaker 위젯을 보여줌
                                 showedWidget: SelectMaker(
                                   updateSelectedMaker: _updateSelectedMaker,
-                                  manufacturerList : manufacturerList,
+                                  carInfo: carInfo,
                                 ),
                                 disable: false,
                                 // 클릭하는 영역
                                 child: registerLine(
                                   category: '제조사',
-                                  content: selectedMaker['title'] ?? '제조사를 선택해주세요',
+                                  content:
+                                      selectedMaker['title'] ?? '제조사를 선택해주세요',
                                   isLastLine: false,
                                   isSelected: selectedMaker['id'] != null,
                                   isInput: false,
+                                  isError: false,
                                 ),
                               ),
                               ModalNavigator(
                                 showedWidget: SelectCar(
                                   updateSelectedCar: _updateSelectedCar,
-                                  carList : carListByMaker,
+                                  carList: carListByMaker,
                                   selectedMaker: selectedMaker,
                                 ),
                                 disable: selectedMaker['id'] == null,
                                 child: registerLine(
                                   category: '차종',
-                                  content:
-                                    selectedMaker['id'] == null
+                                  content: selectedMaker['id'] == null
                                       ? ''
                                       : selectedCar['title'] ?? '차종을 선택해주세요',
                                   isLastLine: false,
                                   isSelected: selectedCar['id'] != null,
                                   isInput: false,
+                                  isError: false,
                                 ),
                               ),
                               ModalNavigator(
@@ -277,10 +295,12 @@ class _CarRegisterState extends State<CarRegister> {
                                 // 클릭하는 영역
                                 child: registerLine(
                                   category: '연료 종류',
-                                  content: selectedFuel['title'] ?? '연료 종류를 선택해주세요',
+                                  content:
+                                      selectedFuel['title'] ?? '연료 종류를 선택해주세요',
                                   isLastLine: false,
                                   isSelected: selectedFuel['id'] != null,
                                   isInput: false,
+                                  isError: false,
                                 ),
                               ),
                             ],
@@ -303,6 +323,7 @@ class _CarRegisterState extends State<CarRegister> {
                                   isLastLine: false,
                                   isSelected: true,
                                   isInput: false,
+                                  isError: false,
                                 ),
                               ),
                               ModalNavigator(
@@ -317,6 +338,7 @@ class _CarRegisterState extends State<CarRegister> {
                                   isLastLine: false,
                                   isSelected: true,
                                   isInput: false,
+                                  isError: !_isValidatedDate,
                                 ),
                               ),
                               registerLine(
@@ -324,21 +346,23 @@ class _CarRegisterState extends State<CarRegister> {
                                 isLastLine: false,
                                 isSelected: false,
                                 isInput: true,
-                                updateInput : _updateInputRentalCompany,
+                                updateInput: _updateInputRentalCompany,
                                 placeholder: '렌트카 업체를 입력해주세요.',
                                 focusNode: _rentalCompanyFocusNode,
                                 onSubmitted: () {
                                   _carNumberFocusNode.requestFocus();
                                 },
+                                isError: false,
                               ),
                               registerLine(
                                 category: '차량번호',
                                 isLastLine: false,
                                 isSelected: false,
                                 isInput: true,
-                                updateInput : _updateInputCarNumber,
+                                updateInput: _updateInputCarNumber,
                                 placeholder: '차량번호를 입력해주세요.',
                                 focusNode: _carNumberFocusNode,
+                                isError: false,
                               ),
                             ],
                           ),
@@ -353,39 +377,26 @@ class _CarRegisterState extends State<CarRegister> {
                                   horizontal: 5,
                                 ),
                                 child: ElevatedButton(
-                                  onPressed:
-                                    _allRegistered
+                                  onPressed: _allRegistered
                                       ? () {
                                           postCarInfo(
-                                            success: (dynamic response) {
-                                              print(response);
-                                            },
-                                            fail: (error) {
-                                              print('차량 리스트 호출 오류: $error');
-                                            },
-                                            body:{
-                                              "userId": 1,
-                                              "carNumber": _inputedCarNumber,
-                                              "carManufacturer": selectedMaker['title'],
-                                              "carModel": selectedCar['title'],
-                                              "carFuel": "식용유",
-                                              "rentalDate": "2023-03-27T05:59:59.625Z",
-                                              "returnDate": "2023-03-27T05:59:59.625Z",
-                                              "rentalCompany": "쏘카",
-                                              "initialVideo": "rental.mp4"
-                                            }
-                                          );
+                                              success: (dynamic response) {},
+                                              fail: (error) {
+                                                print('차량 리스트 호출 오류: $error');
+                                              },
+                                              body: _buildCarInfoBody());
+                                          Navigator.pushNamed(context, '/home');
                                         }
                                       : null,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context).primaryColor
-                                  ),
+                                      backgroundColor:
+                                          Theme.of(context).primaryColor),
                                   child: const SizedBox(
-                                      width: 70,
-                                      child: Text(
-                                        '등록하기',
-                                        textAlign: TextAlign.center,
-                                      ),
+                                    width: 70,
+                                    child: Text(
+                                      '등록하기',
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -397,7 +408,7 @@ class _CarRegisterState extends State<CarRegister> {
                   ),
                 ),
               ),
-              if (!isKeyboardVisible(context)) Footer()
+              if (!isKeyboardVisible(context)) const Footer()
             ],
           )),
     );
