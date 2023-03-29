@@ -14,21 +14,24 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_classes = 2
 
 
-def load_model():
-    #Scratch만 
-    weight_path = './models/[DAMAGE][Scratch_0]Unet.pt'
-    #Load pretrained model
-    model = Unet(encoder='resnet34', pre_weight='imagenet', num_classes=n_classes).to(device)
+def load_model(labels):
+    models = []
+    for label in labels:
 
-    loaded_state_dict = torch.load(weight_path, map_location=torch.device(device))
-    new_state_dict = OrderedDict()
-    for n, v in loaded_state_dict.items():
-        name = n.replace("module.","") # .module이 중간에 포함된 형태라면 (".module","")로 치환
-        new_state_dict[name] = v
-    model.model.load_state_dict(new_state_dict)
-    model.eval()
+        weight_path = f'./models/[DAMAGE][{label}]Unet.pt'
+        #Load pretrained model
+        model = Unet(encoder='resnet34', pre_weight='imagenet', num_classes=n_classes).to(device)
 
-    return model
+        loaded_state_dict = torch.load(weight_path, map_location=torch.device(device))
+        new_state_dict = OrderedDict()
+        for n, v in loaded_state_dict.items():
+            name = n.replace("module.","") # .module이 중간에 포함된 형태라면 (".module","")로 치환
+            new_state_dict[name] = v
+        model.model.load_state_dict(new_state_dict)
+        model.eval()
+        models.append(model)
+    print(f"models loaded")
+    return models
 
 def load_img(img_name):
     # load img
@@ -71,24 +74,18 @@ def inference_img(model, org_img, img_input, output_name):
             os.makedirs("./dataset/output_images")
 
     image_save_after = time.time()
-    print(f"image_save_time : {image_save_after - image_save_before}")
+    # print(f"image_save_time : {image_save_after - image_save_before}")
 
-    # 얘가 오래걸림 ;
     plt.savefig(f'./dataset/output_images/{output_name}', dpi=50)
-    print(f"인퍼런스 이미지 끝 : {output_name}")
     return output_name
 
-def create_images(model, images):
-
+def create_images(models, images):
+    labels = ['Scratch', 'Breakage', 'Crushed']
     created_images = []
     for img in images:
         org_img, img_input = load_img(img)
-
-        inference_before = time.time()
-        output_img = inference_img(model, org_img, img_input, f"damage_{img}")
-        inference_after = time.time()
-
-        print(f"inference time : {inference_after -inference_before}")
-        created_images.append(output_img)
+        for idx, model in enumerate(models):
+            output_img = inference_img(model, org_img, img_input, f"{labels[idx % 3]}_{img}")
+            created_images.append(output_img)
 
     return created_images
