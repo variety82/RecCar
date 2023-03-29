@@ -6,6 +6,10 @@ import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+String TmapApiKey = dotenv.env['TMAP_API_KEY']!;
+
 
 class NaverMapTest extends StatefulWidget {
   @override
@@ -388,7 +392,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
 
   Future<void> search(keyword) async {
     Map<String, String> headers = {
-      "appkey": "l7xxe210feb29ba24deda6a06b0d0e88366a",
+      "appkey": TmapApiKey,
     };
     Response response = await get(
       Uri.parse(
@@ -407,7 +411,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
 
   Future<void> searchSocar() async {
     Map<String, String> headers = {
-      "appkey": "l7xxe210feb29ba24deda6a06b0d0e88366a",
+      "appkey": TmapApiKey,
     };
     marker = List<naver.Marker>.filled(
         2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
@@ -455,7 +459,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
 
   Future<void> searchGreencar() async {
     Map<String, String> headers = {
-      "appkey": "l7xxe210feb29ba24deda6a06b0d0e88366a",
+      "appkey": TmapApiKey,
     };
     marker = List<naver.Marker>.filled(
         2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),

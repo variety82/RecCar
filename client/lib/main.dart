@@ -10,8 +10,10 @@ import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'screens/detail/car_detail.dart';
 import 'screens/calendar_screen/calendar_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: '.env');
   runApp(
     MaterialApp(
       title: 'cilent',
