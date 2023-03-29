@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // flutter_secure_storage 패키지
+import '../../services/login_api.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -12,24 +13,13 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   static final storage =
       FlutterSecureStorage(); // FlutterSecureStorage를 storage로 저장
-  dynamic userId = ''; // storage에 있는 유저 정보를 저장
+  // dynamic userName = ''; // storage에 있는 유저 정보를 저장
+  Map<String, dynamic> userInfo = {};
 
   //flutter_secure_storage 사용을 위한 초기화 작업
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _asyncMethod();
-    });
-  }
-
-  _asyncMethod() async {
-    userId = await storage.read(key: 'id');
-    if (userId != null) {
-      Navigator.pushNamed(context, '/home');
-    } else {
-    }
   }
 
   @override
@@ -91,39 +81,28 @@ class _LoginState extends State<Login> {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication gAuth = await googleUser!.authentication;
     final credential = gAuth.accessToken;
-    // print("==============이 바로 아래는 idToken===========");
-    // print(gAuth.idToken);
-    // print(googleUser.id);
-    // print(googleUser.photoUrl);
-    // // final test = await gAuth.idToken;
-    // final test2 = await googleUser.id;
-    // // final GoogleSignInAuthentication gAuth = await googleUser!.
-    // print("================================");
-    // print(credential.toString());
-    // // print(test);
-    // print(test2);
+    print("================================");
+    print(credential.toString());
+
     if (googleUser != null) {
       await storage.write(
-        key: 'name',
-        value: googleUser.displayName,
+        key: "accessToken",
+        value: credential,
       );
-      await storage.write(
-        key: 'email',
-        value: googleUser.email,
+      login(
+        success: (dynamic response) {
+          setState(() async {
+            userInfo = response;
+            await storage.write(key: "nickName", value: userInfo['nickName']);
+            await storage.write(key: "picture", value: userInfo['picture']);
+            await storage.write(key: "carId", value: userInfo['currentCarId'].toString());
+            Navigator.pushNamed(context, '/home');
+          });
+        },
+        fail: (error) {
+          print('로그인 호출 오류: $error');
+        },
       );
-      await storage.write(
-        key: 'id',
-        value: googleUser.id,
-      );
-      await storage.write(
-        key: 'profileImg',
-        value: googleUser.photoUrl,
-      );
-      await storage.write(
-          key: "accessToken",
-          value: credential,
-      );
-      Navigator.pushNamed(context, '/home');
     }
   }
 }
