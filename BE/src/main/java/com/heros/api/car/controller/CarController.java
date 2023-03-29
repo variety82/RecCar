@@ -5,6 +5,7 @@ import com.heros.api.car.dto.request.CarModify;
 import com.heros.api.car.dto.response.CarCatalogResponse;
 import com.heros.api.car.dto.response.CarResponse;
 import com.heros.api.car.service.CarService;
+import com.heros.api.user.entity.User;
 import com.heros.exception.ErrorCode;
 import com.heros.exception.customException.BusinessException;
 import com.heros.exception.customException.CarException;
@@ -18,7 +19,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -41,8 +45,10 @@ public class CarController {
         if (carCreate.getRentalDate().compareTo(carCreate.getReturnDate()) > 0) {
             throw (new CarException(ErrorCode.DATE_INPUT_INVALID));
         }
-        carService.createCar(carCreate);
-        return ResponseEntity.status(201).body(null);
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        User user = (User) httpServletRequest.getAttribute("user");
+        Long carId = carService.createCar(carCreate, user);
+        return ResponseEntity.status(201).body(carId);
     }
 
     @Operation(summary = "차량 제조사 및 모델 조회", description = "제조사 및 모델 조회 메서드입니다.")
@@ -77,6 +83,9 @@ public class CarController {
     })
     @GetMapping(value = "history/{userId}")
     public ResponseEntity<?> carListGet(@Schema(description = "조회할 userId", example = "1") @NotNull @Min(1) @PathVariable Long userId) {
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        System.out.println("request : "+httpServletRequest.toString());
+        System.out.println("request uid: "+httpServletRequest.getAttribute("UID"));
         List<CarResponse> carList = carService.findCarList(userId);
         if (carList.size() == 0) {
             throw (new BusinessException(ErrorCode.PAGE_NOT_FOUND));
