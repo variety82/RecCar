@@ -17,11 +17,6 @@ public class CarModify {
     @Min(1)
     private long carId;
 
-    @Schema(description = "userId", example = "1", required = true)
-    @NotNull
-    @Min(1)
-    private long userId;
-
     @Schema(description = "자동차 번호", example = "12삼 4567")
     @NotBlank
     private String carNumber;
@@ -50,11 +45,4 @@ public class CarModify {
     @NotBlank
     private String rentalCompany;
 
-    @Schema(description = "대여 영상 주소", example = "rental.mp4")
-    @NotBlank
-    private String initialVideo;
-
-    @Schema(description = "반납 영상 주소", example = "return.mp4")
-    @NotBlank
-    private String latterVideo;
 }
