@@ -7,6 +7,7 @@ import com.heros.api.car.dto.response.CarResponse;
 import com.heros.api.car.entity.Car;
 import com.heros.api.car.entity.CarCatalog;
 import com.heros.api.car.repository.CarRepository;
+import com.heros.api.user.entity.User;
 import com.heros.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,9 +25,9 @@ public class CarService {
     private final CarRepository carRepository;
     private final UserRepository userRepository;
 
-    public void createCar(CarCreate carCreate) {
+    public Long createCar(CarCreate carCreate, User user) {
         Car car = Car.builder()
-                .user(userRepository.findById(carCreate.getUserId()).get())
+                .user(user)
                 .carNumber(carCreate.getCarNumber())
                 .carManufacturer(carCreate.getCarManufacturer())
                 .carModel(carCreate.getCarModel())
@@ -35,9 +36,11 @@ public class CarService {
                 .returnDate(carCreate.getReturnDate())
                 .rentalCompany(carCreate.getRentalCompany())
                 .returned(false)
-                .initialVideo(carCreate.getInitialVideo())
                 .build();
-        carRepository.save(car);
+        Long carId = carRepository.save(car).getCarId();
+        user.setCurrentCarId(carId);
+        userRepository.save(user);
+        return carId;
     }
 
     public void modifyCar(CarModify carModify) {

@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -12,11 +11,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class CarCreate {
-    @Schema(description = "userId", example = "1", required = true)
-    @NotNull
-    @Min(1)
-    private Long userId;
-
     @Schema(description = "자동차 번호", example = "12삼 4567")
     @NotBlank
     private String carNumber;
@@ -44,9 +38,5 @@ public class CarCreate {
     @Schema(description = "렌탈 회사", example = "쏘카")
     @NotBlank
     private String rentalCompany;
-
-    @Schema(description = "대여시 영상 주소", example = "rental.mp4")
-    @NotBlank
-    private String initialVideo;
 
 }
