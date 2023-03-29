@@ -15,7 +15,7 @@ Future<dynamic> apiInstance({
   Map<String, dynamic>? body,
 }) async {
   // api URL 주소를 넣습니다
-  String URL = 'http://10.0.2.2:8080/api/v1$path';
+  String URL = 'http://j8a102.p.ssafy.io:8080//api/v1$path';
   // uri 형식으로 변경합니다
   final url = Uri.parse(URL);
   Future<String?> futureString = storage.read(key: "accessToken");
