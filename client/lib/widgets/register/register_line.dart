@@ -10,6 +10,7 @@ class registerLine extends StatefulWidget {
   final String? placeholder;
   final FocusNode? focusNode;
   final VoidCallback? onSubmitted;
+  final bool isError;
 
 
   const registerLine({
@@ -21,11 +22,14 @@ class registerLine extends StatefulWidget {
     required this.isInput,
     this.updateInput,
     this.placeholder,
-    this.focusNode, this.onSubmitted,
+    this.focusNode,
+    this.onSubmitted,
+    required this.isError,
   }) : super(key: key);
 
   @override
   State<registerLine> createState() => _registerLineState();
+
 }
 
 class _registerLineState extends State<registerLine> {
@@ -52,60 +56,75 @@ class _registerLineState extends State<registerLine> {
               ),
               widget.isInput
                   ? Expanded(
-                child: Center(
-                  child: Container(
-                    height: 20,
-                    child: TextField(
-                      focusNode: widget.focusNode,
-                      onSubmitted: (_) {
-                        if (widget.onSubmitted != null) {
-                          widget.onSubmitted!();
-                        }
-                      },
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                        hintText: widget.placeholder,
-                        hintStyle: TextStyle(
-                          color: Theme.of(context).disabledColor,
-                          fontSize: 14
-                        ),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 2
+                              ),
+                              child: TextField(
+                                focusNode: widget.focusNode,
+                                onSubmitted: (_) {
+                                  if (widget.onSubmitted != null) {
+                                    widget.onSubmitted!();
+                                  }
+                                },
+                                textAlignVertical: TextAlignVertical.center,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  hintText: widget.placeholder,
+                                  hintStyle: TextStyle(
+                                    color: Theme.of(context).disabledColor,
+                                    fontSize: 14
+                                  ),
+                                ),
+                                style: TextStyle(
+                                    color: Theme.of(context).secondaryHeaderColor,
+                                    fontSize: 14,
+                                ),
+                                onChanged: (String text) {
+                                  if (widget.updateInput != null) {
+                                    widget.updateInput!(text);
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      style: TextStyle(
-                          color: Theme.of(context).secondaryHeaderColor,
-                          fontSize: 14,
-                      ),
-                      onChanged: (String text) {
-                        if (widget.updateInput != null) {
-                          widget.updateInput!(text);
-                        }
-                      },
                     ),
+                  )
+                  : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          widget.content ?? '',
+                          style: TextStyle(
+                              color: widget.isSelected
+                                  ? Theme.of(context).secondaryHeaderColor
+                                  : Theme.of(context).disabledColor
+                          ),
+                      ),
+                      widget.isError
+                          ? Text(
+                              '* 반납 일자는 대여 일자보다 앞에 올 수 없습니다',
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600
+                              ),
+                            )
+                          : const SizedBox(width: 10),
+                    ],
                   ),
-                ),
-              )
-                  : Text(
-                widget.content ?? '',
-                style: TextStyle(
-                    color: widget.isSelected
-                        ? Theme.of(context).secondaryHeaderColor
-                        : Theme.of(context).disabledColor
-                ),
-              ),
-              // Text(
-              //   widget.content,
-              //   style: TextStyle(
-              //       color: widget.isSelected
-              //           ? Theme.of(context).secondaryHeaderColor
-              //           : Theme.of(context).disabledColor
-              //   ),
-              // ),
             ],
           ),
         ),
-
         Offstage(
           offstage: widget.isLastLine,
           child: Container(

@@ -5,9 +5,11 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class SelectDate extends StatefulWidget {
   final void Function(DateTime) updateDate;
+  final DateTime? minDate;
+  final DateTime? maxDate;
 
   const SelectDate({
-    super.key, required this.updateDate,
+    super.key, required this.updateDate, this.minDate, this.maxDate,
   });
 
 
@@ -103,6 +105,8 @@ class _SelectDateState extends State<SelectDate> {
           padding: const EdgeInsets.all(20.0),
           child: SfDateRangePicker(
             view: DateRangePickerView.month,
+            minDate: widget.minDate,
+            maxDate: widget.maxDate,
             monthViewSettings: const DateRangePickerMonthViewSettings(firstDayOfWeek: 7),
             onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                 widget.updateDate(args.value);
