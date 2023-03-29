@@ -32,8 +32,8 @@ def startup_event():
     bucket = os.getenv("bucket_name")
     models = inference.load_model(labels)
 
-@app.post("/ai-api/v1/damage") 
-async def upload_video(file : UploadFile, user_id : str, response_model=schema.Inference_image):
+@app.post("/ai-api/v1/damage", response_model=schema.Inference_image) 
+async def upload_video(file : UploadFile, user_id : str):
     upload_path = "./dataset/video"
     content = await file.read()
     now = str(datetime.datetime.now()).replace(" ", "_").replace(":", "-")[:-7]
@@ -53,7 +53,7 @@ async def upload_video(file : UploadFile, user_id : str, response_model=schema.I
 
     for idx, image in enumerate(images_list):
         images[idx]['url'] = image
-        images[idx]['damage'] = labels[idx % 3]
+        images[idx]['damage'] = labels[idx % 3][:-2]
 
     return images
 
