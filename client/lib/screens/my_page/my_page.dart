@@ -32,17 +32,13 @@ class _MyPageState extends State<MyPage> {
   }
 
   checkUserState() async {
-    var id = await storage.read(key: 'id');
-    var name = await storage.read(key: 'name');
-    var email = await storage.read(key: 'email');
-    var img = await storage.read(key: 'profileImg');
+    var name = await storage.read(key: 'nickName');
+    var img = await storage.read(key: 'picture');
     setState(() {
-      userId = id;
       userName = name;
-      userEmail = email;
       userProfileImg = img;
     });
-    if (userId == null) {
+    if (userName == null) {
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
     }
   }
