@@ -25,8 +25,8 @@ class _CarRegisterState extends State<CarRegister> {
 
   // 선택한 제조사
   List<dynamic> carInfo = [];
-  List<dynamic> manufacturerList = [];
   bool _allRegistered = false;
+
 
   @override
   void initState() {
@@ -35,8 +35,6 @@ class _CarRegisterState extends State<CarRegister> {
       success: (dynamic response) {
         setState(() {
           carInfo = response;
-          manufacturerList =
-              carInfo.map((maker) => maker['manufacturer']).toList();
         });
       },
       fail: (error) {
@@ -48,6 +46,7 @@ class _CarRegisterState extends State<CarRegister> {
   Map<String, dynamic> selectedMaker = {
     'id': null,
     'title': null,
+    'logoUrl' : null,
   };
 
   Map<String, dynamic> selectedCar = {
@@ -65,11 +64,27 @@ class _CarRegisterState extends State<CarRegister> {
 
   DateTime _returnDate = DateTime.now().add(const Duration(hours: 9));
 
+  bool _isValidatedDate = true;
+
   String _inputedRentalCompany = '';
 
   String _inputedCarNumber = '';
 
   List<dynamic> carListByMaker = [];
+
+  Map<String, dynamic> _buildCarInfoBody() {
+    return {
+      "userId": 1,
+      "carNumber": _inputedCarNumber,
+      "carManufacturer": selectedMaker['title'],
+      "carModel": selectedCar['title'],
+      "carFuel": selectedFuel['title'],
+      "rentalDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(_borrowingDate),
+      "returnDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(_returnDate),
+      "rentalCompany": _inputedRentalCompany,
+      "initialVideo": "rental.mp4"
+    };
+  }
 
   void _updateAllRegistered() {
     setState(() {
@@ -77,7 +92,8 @@ class _CarRegisterState extends State<CarRegister> {
           selectedCar['id'] != null &&
           selectedFuel['id'] != null &&
           _inputedRentalCompany.isNotEmpty &&
-          _inputedCarNumber.isNotEmpty) {
+          _inputedCarNumber.isNotEmpty &&
+          _isValidatedDate) {
         _allRegistered = true;
       } else {
         _allRegistered = false;
@@ -87,7 +103,7 @@ class _CarRegisterState extends State<CarRegister> {
 
   // 제조사를 업데이트 해주는 function
   // parameter로 id와 이름을 받음
-  void _updateSelectedMaker(int makerId, String makerTitle) {
+  void _updateSelectedMaker(int makerId, String makerTitle, String makerLogoUrl) {
     setState(() {
       // 선택되어 있는 제조사로 변경했을 경우
       if (selectedMaker['id'] == makerId) {
@@ -95,6 +111,7 @@ class _CarRegisterState extends State<CarRegister> {
         selectedMaker = {
           'id': null,
           'title': null,
+          'logoUrl' : null,
         };
         carListByMaker = [];
         // 선택되어 있는 제조사와 다른 값으로 변경했을 경우
@@ -103,10 +120,12 @@ class _CarRegisterState extends State<CarRegister> {
         selectedMaker = {
           'id': makerId,
           'title': makerTitle,
+          'logoUrl' : makerLogoUrl,
         };
         selectedCar = {
           'id': null,
           'title': null,
+          'logoUrl' : null,
         };
         carListByMaker = carInfo.firstWhere(
             (maker) => maker['manufacturer'] == makerTitle)['model'];
@@ -157,26 +176,30 @@ class _CarRegisterState extends State<CarRegister> {
     });
   }
 
+
   // 대여기간 업데이트
-  void _updateBorrowingDate(DateTime seletedDate) {
+  void _updateBorrowingDate(DateTime selectedDate) {
     setState(() {
       // 입력받은 DateTime타입의 값을 입력
-      _borrowingDate = seletedDate;
+      _borrowingDate = selectedDate;
+      _isValidatedDate = _returnDate.isAtSameMomentAs(_borrowingDate) || _returnDate.isAfter(_borrowingDate);
       _updateAllRegistered();
     });
   }
 
-  void _updateReturnDate(DateTime seletedDate) {
+  void _updateReturnDate(DateTime selectedDate) {
     setState(() {
       // 입력받은 DateTime타입의 값을 입력
-      _returnDate = seletedDate;
+      _returnDate = selectedDate;
+      _isValidatedDate = _returnDate.isAtSameMomentAs(_borrowingDate) || _returnDate.isAfter(_borrowingDate);
       _updateAllRegistered();
+      print(_isValidatedDate);
     });
   }
 
-  void _updateInputRentalCompany(String RentalCompany) {
+  void _updateInputRentalCompany(String rentalCompany) {
     setState(() {
-      _inputedRentalCompany = RentalCompany;
+      _inputedRentalCompany = rentalCompany;
       _updateAllRegistered();
     });
   }
@@ -231,7 +254,7 @@ class _CarRegisterState extends State<CarRegister> {
                                 // SelectMaker 위젯을 보여줌
                                 showedWidget: SelectMaker(
                                   updateSelectedMaker: _updateSelectedMaker,
-                                  manufacturerList: manufacturerList,
+                                  carInfo: carInfo,
                                 ),
                                 disable: false,
                                 // 클릭하는 영역
@@ -242,6 +265,7 @@ class _CarRegisterState extends State<CarRegister> {
                                   isLastLine: false,
                                   isSelected: selectedMaker['id'] != null,
                                   isInput: false,
+                                  isError: false,
                                 ),
                               ),
                               ModalNavigator(
@@ -259,6 +283,7 @@ class _CarRegisterState extends State<CarRegister> {
                                   isLastLine: false,
                                   isSelected: selectedCar['id'] != null,
                                   isInput: false,
+                                  isError: false,
                                 ),
                               ),
                               ModalNavigator(
@@ -275,6 +300,7 @@ class _CarRegisterState extends State<CarRegister> {
                                   isLastLine: false,
                                   isSelected: selectedFuel['id'] != null,
                                   isInput: false,
+                                  isError: false,
                                 ),
                               ),
                             ],
@@ -297,6 +323,7 @@ class _CarRegisterState extends State<CarRegister> {
                                   isLastLine: false,
                                   isSelected: true,
                                   isInput: false,
+                                  isError: false,
                                 ),
                               ),
                               ModalNavigator(
@@ -311,6 +338,7 @@ class _CarRegisterState extends State<CarRegister> {
                                   isLastLine: false,
                                   isSelected: true,
                                   isInput: false,
+                                  isError: !_isValidatedDate,
                                 ),
                               ),
                               registerLine(
@@ -324,6 +352,7 @@ class _CarRegisterState extends State<CarRegister> {
                                 onSubmitted: () {
                                   _carNumberFocusNode.requestFocus();
                                 },
+                                isError: false,
                               ),
                               registerLine(
                                 category: '차량번호',
@@ -333,6 +362,7 @@ class _CarRegisterState extends State<CarRegister> {
                                 updateInput: _updateInputCarNumber,
                                 placeholder: '차량번호를 입력해주세요.',
                                 focusNode: _carNumberFocusNode,
+                                isError: false,
                               ),
                             ],
                           ),
@@ -354,17 +384,8 @@ class _CarRegisterState extends State<CarRegister> {
                                               fail: (error) {
                                                 print('차량 리스트 호출 오류: $error');
                                               },
-                                              body: {
-                                                "userId": 1,
-                                                "carNumber": _inputedCarNumber,
-                                                "carManufacturer": selectedMaker['title'],
-                                                "carModel": selectedCar['title'],
-                                                "carFuel": selectedFuel['title'],
-                                                "rentalDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(_borrowingDate),
-                                                "returnDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(_returnDate),
-                                                "rentalCompany":_inputedRentalCompany,
-                                                "initialVideo": "rental.mp4"
-                                              });
+                                              body: _buildCarInfoBody());
+                                          Navigator.pushNamed(context, '/home');
                                         }
                                       : null,
                                   style: ElevatedButton.styleFrom(
