@@ -25,10 +25,13 @@ public class LoginIntercepter implements HandlerInterceptor {
             return true;
         }
         // 유저 토큰 발급용
-        if (url.equals("/api/v1/user/token"))
+        if (url.equals("/api/login/callback"))
             return true;
 
-        String accessToken = request.getHeader("access-token");
+        String accessToken = request.getHeader("accessToken");
+        // swagger header 토큰 받기
+        if (accessToken == null)
+            accessToken = request.getHeader("Authorization").replaceAll("Bearer ", "");
         System.out.println("token : "+accessToken);
 
         User user = userService.loginUser(accessToken);
