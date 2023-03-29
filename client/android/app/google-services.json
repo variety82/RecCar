@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "370038842555-ktfps7tfoodltpof0m3973a1c1t2u9tf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hero.client",
+            "certificate_hash": "768bcf27db9ad4ea1ab2f14a3b748c2813dfac81"
+          }
+        },
+        {
           "client_id": "370038842555-gocfd55nupopaalibbapu1538n60c7af.apps.googleusercontent.com",
           "client_type": 3
         }
