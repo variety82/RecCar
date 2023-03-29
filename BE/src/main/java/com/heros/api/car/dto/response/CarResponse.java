@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 public class CarResponse {
     @Schema(description = "carId", example = "1", required = true)
     private long carId;
-    @Schema(description = "userId", example = "1", required = true)
-    private long userId;
     @Schema(description = "자동차 번호", example = "12삼 4567")
     private String carNumber;
     @Schema(description = "자동차 제조사", example = "현대")
@@ -32,14 +30,28 @@ public class CarResponse {
     private boolean returned;
     @Schema(description = "대여 영상 주소", example = "rental.mp4")
     private String initialVideo;
+    @Schema(description = "대여시 앞부분 파손", example = "3")
+    private int initialFrontDamageCount;
+    @Schema(description = "대여시 중간 파손", example = "2")
+    private int initialMidDamageCount;
+    @Schema(description = "대여시 뒷부분 파손", example = "1")
+    private int initialBackDamageCount;
+    @Schema(description = "대여시 바퀴 파손", example = "0")
+    private int initialWheelDamageCount;
     @Schema(description = "반납 영상 주소", example = "return.mp4")
     private String latterVideo;
-    @Schema(description = "손상 개수", example = "4")
-    private int newDamageCount;
+    @Schema(description = "반납시 앞부분 파손", example = "3")
+    private int latterFrontDamageCount;
+    @Schema(description = "반납시 중간 파손", example = "2")
+    private int latterMidDamageCount;
+    @Schema(description = "반납시 뒷부분 파손", example = "1")
+    private int latterBackDamageCount;
+    @Schema(description = "반납시 바퀴 파손", example = "0")
+    private int latterWheelDamageCount;
+
 
     public CarResponse(Car car) {
         this.carId = car.getCarId();
-        this.userId = car.getUser().getUserId();
         this.carNumber = car.getCarNumber();
         this.carManufacturer = car.getCarManufacturer();
         this.carModel = car.getCarModel();
@@ -49,7 +61,14 @@ public class CarResponse {
         this.rentalCompany = car.getRentalCompany();
         this.returned = car.isReturned();
         this.initialVideo = car.getInitialVideo();
+        this.initialFrontDamageCount = car.getInitialFrontDamageCount();
+        this.initialMidDamageCount = car.getInitialMidDamageCount();
+        this.initialBackDamageCount = car.getInitialBackDamageCount();
+        this.initialWheelDamageCount = car.getInitialWheelDamageCount();
         this.latterVideo = car.getLatterVideo();
-        this.newDamageCount = car.getNewDamageCount();
+        this.latterFrontDamageCount = car.getLatterFrontDamageCount();
+        this.latterMidDamageCount = car.getLatterMidDamageCount();
+        this.latterBackDamageCount = car.getLatterBackDamageCount();
+        this.latterWheelDamageCount = car.getLatterWheelDamageCount();
     }
 }
