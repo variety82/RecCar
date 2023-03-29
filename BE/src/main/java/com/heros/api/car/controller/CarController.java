@@ -105,6 +105,22 @@ public class CarController {
         return ResponseEntity.status(200).body(carResponse);
     }
 
+    @Operation(summary = "대여중인 차량 반납", description = "현재 로그인된 user의 대여중인 차량 반납 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "대여중인 차량 반납 성공"),
+            @ApiResponse(responseCode = "400", description = "bad request operation")
+    })
+    @GetMapping(value = "/return")
+    public ResponseEntity<?> carReturn() {
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        User user = (User) httpServletRequest.getAttribute("user");
+        CarResponse carResponse = carService.returnCar(user);
+        if (carResponse == null) {
+            throw (new CarException(ErrorCode.PAGE_NOT_FOUND));
+        }
+        return ResponseEntity.status(200).body(carResponse);
+    }
+
     @Operation(summary = "차량 삭제", description = "carId를 이용한 차량 삭제 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "차량 삭제 성공"),

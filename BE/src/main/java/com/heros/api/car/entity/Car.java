@@ -111,4 +111,8 @@ public class Car {
         this.returnDate = carModify.getReturnDate();
         this.rentalCompany = carModify.getRentalCompany();
     }
+
+    public void ReturnCar() {
+        this.returned = true;
+    }
 }

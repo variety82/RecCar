@@ -95,4 +95,17 @@ public class CarService {
     public void deleteCar(Long carId) {
         carRepository.customDeleteCar(carId);
     }
+
+    public CarResponse returnCar(User user) {
+        if (user.getCurrentCarId() == 0)
+            return null;
+        Car car = carRepository.findById(user.getCurrentCarId()).get();
+        if (car == null)
+            return null;
+        car.ReturnCar();
+        carRepository.save(car);
+        user.setCurrentCarId(0L);
+        userRepository.save(user);
+        return new CarResponse(car);
+    }
 }
