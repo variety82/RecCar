@@ -49,9 +49,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   static const storage = FlutterSecureStorage();
-  dynamic userId = '';
   dynamic userName = '';
-  dynamic userEmail = '';
+  dynamic userProfileImg = '';
+  dynamic userCarId = '';
+
+  // dynamic userName = '';
+  // dynamic userEmail = '';
 
   @override
   void initState() {
@@ -64,16 +67,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   checkUserState() async {
-    var id = await storage.read(key: 'id');
-    var name = await storage.read(key: 'name');
-    var email = await storage.read(key: 'email');
+    var name = await storage.read(key: 'nickName');
+    var img = await storage.read(key: 'picture ');
+    var carId = await storage.read(key: 'carId');
     setState(() {
-      userId = id;
       userName = name;
-      userEmail = email;
+      userProfileImg = img;
+      userCarId = carId;
     });
-
-    if (userId == null) {
+    if (userName == null) {
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
     }
   }
@@ -111,8 +113,7 @@ class _MyAppState extends State<MyApp> {
                       Navigator.pushNamed(context, '/detail');
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor
-                    ),
+                        backgroundColor: Theme.of(context).primaryColor),
                     child: const Text('차량 상세 페이지'))
               ],
             ),
