@@ -25,7 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
         // 유저 토큰 발급용
-        if (url.equals("/api/login/callback"))
+        if (url.equals("/api/v1/user/login"))
             return true;
 
         String accessToken = request.getHeader("accessToken");
