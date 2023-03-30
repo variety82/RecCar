@@ -21,6 +21,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
   late Position _position;
   bool isSocarTouched = false;
   bool isGreencarTouched = false;
+  late dynamic walkTime;
   List<Map<String, dynamic>> result =
       List<Map<String, dynamic>>.filled(2000, {});
   bool beforeSearch = true;
@@ -171,6 +172,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
                   child: naver.NaverMap(
                     onMapCreated: onMapCreated,
                     markers: marker,
+
                     // mapType: _mapType,
                     // onMapTap: onMapTap,
                   ),
@@ -374,10 +376,15 @@ class _NaverMapTestState extends State<NaverMapTest> {
     _controller.moveCamera(naver.CameraUpdate.toCameraPosition(
         naver.CameraPosition(target: latLng)));
     setState(() {
-      marker[0] = naver.Marker(
-          markerId: "${result[i]["name"]}",
-          position: latLng,
-          infoWindow: "${result[i]["name"]}");
+      walkTime = howToGo(latLng).then((walkTime) => {
+            marker[0] = naver.Marker(
+              markerId: "${result[i]["name"]}",
+              position: latLng,
+              infoWindow: "${result[i]["name"]}",
+              captionText: walkTime,
+              captionTextSize: 12,
+            )
+          });
     });
 
     // if(result[i]["name"].toString().contains("주유소")) { // 주유소의 경우 유가 정보 출력해주려했는데
@@ -423,14 +430,15 @@ class _NaverMapTestState extends State<NaverMapTest> {
     setState(() {
       isSocarTouched = !isSocarTouched;
       isGreencarTouched = false;
+      marker = List<naver.Marker>.filled(
+          2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+          growable: true);
     });
     if (isSocarTouched) {
       Map<String, String> headers = {
         "appkey": TmapApiKey,
       };
-      marker = List<naver.Marker>.filled(
-          2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
-          growable: true);
+
       for (int i = 1; i <= 20; i++) {
         Response response = await get(
           Uri.parse(
@@ -444,26 +452,49 @@ class _NaverMapTestState extends State<NaverMapTest> {
             result[100 * (i - 1) + j] = ret[j];
           }
         });
+
         setState(
           () {
             for (int j = 0; j < ret.length; j++) {
               var lat = double.parse(ret[j]["frontLat"]);
               var lng = double.parse(ret[j]["frontLon"]);
               var latLng = naver.LatLng(lat, lng);
-              marker[100 * (i - 1) + j + 1] = (naver.Marker(
-                markerId: "${ret[j]['name']}",
-                position: latLng,
-                infoWindow: "${ret[j]['name']}",
-              ));
+              setState(() {
+                for (int j = 0; j < ret.length; j++) {
+                  var lat = double.parse(ret[j]["frontLat"]);
+                  var lng = double.parse(ret[j]["frontLon"]);
+                  var latLng = naver.LatLng(lat, lng);
+                    marker[100 * (i - 1) + j + 1] = (naver.Marker(
+                      markerId: "${ret[j]['name']}",
+                      position: latLng,
+                      infoWindow: "${ret[j]['name']}",
+                      captionText: "HI",
+                    ));
+                }
+              });
+
+              // walkTime = howToGo(latLng).then((walkTime) => {
+              //       marker[100 * (i - 1) + j + 1] = naver.Marker(
+              //         markerId: "${result[i]["name"]}",
+              //         position: latLng,
+              //         infoWindow: "${result[i]["name"]}",
+              //         captionText: walkTime,
+              //         captionTextSize: 12,
+              //       )
+              //     });
+              // marker[100 * (i - 1) + j + 1] = (naver.Marker(
+              //   markerId: "${ret[j]['name']}",
+              //   position: latLng,
+              //   infoWindow: "${ret[j]['name']}\n${howToGo(latLng)}",
+              //   onMarkerTab: (marker, iconSize) => howToGo(latLng),
+              // ));
             }
           },
         );
       }
     } else {
       setState(() {
-        marker = List<naver.Marker>.filled(2001,
-            naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
-            growable: true);
+        marker.clear();
       });
     }
     print(marker);
@@ -494,6 +525,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
       marker = List<naver.Marker>.filled(
           2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
           growable: true);
+      LocationPermission permission = LocationPermission.always;
       for (int i = 1; i <= 20; i++) {
         Response response = await get(
           Uri.parse(
@@ -507,25 +539,38 @@ class _NaverMapTestState extends State<NaverMapTest> {
             result[100 * (i - 1) + j] = ret[j];
           }
         });
-        setState(
-          () {
-            for (int j = 0; j < ret.length; j++) {
-              var lat = double.parse(ret[j]["frontLat"]);
-              var lng = double.parse(ret[j]["frontLon"]);
-              var latLng = naver.LatLng(lat, lng);
-              marker[100 * (i - 1) + j + 1] = (naver.Marker(
+        setState(() {
+          for (int j = 0; j < ret.length; j++) {
+            var lat = double.parse(ret[j]["frontLat"]);
+            var lng = double.parse(ret[j]["frontLon"]);
+            var latLng = naver.LatLng(lat, lng);
+            setState(() {
+              for (int j = 0; j < ret.length; j++) {
+                var lat = double.parse(ret[j]["frontLat"]);
+                var lng = double.parse(ret[j]["frontLon"]);
+                var latLng = naver.LatLng(lat, lng);
+                marker[100 * (i - 1) + j + 1] = (naver.Marker(
                   markerId: "${ret[j]['name']}",
                   position: latLng,
-                  infoWindow: "${ret[j]['name']}"));
-            }
-          },
-        );
+                  infoWindow: "${ret[j]['name']}",
+                  captionText: "HI",
+                ));
+              }
+            });
+
+            // marker[100 * (i - 1) + j + 1] = (naver.Marker(
+            //   markerId: "${ret[j]['name']}",
+            //   position: latLng,
+            //   infoWindow: "${ret[j]['name']}",
+            //   captionText: walkTime,
+            // ));
+          }
+        });
+        print(marker);
       }
     } else {
       setState(() {
-        marker = List<naver.Marker>.filled(2001,
-            naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
-            growable: true);
+        marker.clear();
       });
     }
     // Response response = await get(
@@ -543,7 +588,58 @@ class _NaverMapTestState extends State<NaverMapTest> {
     // });
   }
 
-  void moveToCurLoc() {
-    // 현재위치로 이동하는 함수
+  Future<String> howToGo(dynamic latLng) async {
+    // 네비게이션 함수
+    // LocationPermission permission = LocationPermission.always;
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    var curLat = double.parse(position.latitude.toString());
+    var curLng = double.parse(position.longitude.toString());
+
+    Map<String, String> headers = {
+      "appkey": TmapApiKey,
+    };
+    var jsonResponse;
+    Response response = await post(
+        Uri.parse(
+            "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1"),
+        headers: headers,
+        body: {
+          'startX': "${curLng}",
+          'startY': "${curLat}",
+          'endX': "${latLng.longitude}",
+          'endY': "${latLng.latitude}",
+          "reqCoordType": "WGS84GEO",
+          "resCoordType": "WGS84GEO",
+          "startName": "출발지",
+          "endName": "도착지"
+        });
+    if (response.body.isNotEmpty) {
+      jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    } else {
+      jsonResponse = {};
+    }
+    var minute = await int.parse(
+        (jsonResponse['features'][0]['properties']['totalTime'] / 60)
+            .toString()
+            .split(".")[0]);
+
+    if (minute >= 60) {
+      setState(() {
+        walkTime = "도보 약 ${minute ~/ 60}시간 ${minute % 60}분 ";
+      });
+    } else {
+      setState(() {
+        walkTime = "도보 약 ${minute}분";
+      });
+    }
+    return walkTime;
+    // if (minute >= 60) {
+    //   print("도보로 약 ${minute ~/ 60}시간 ${minute % 60}분 소요");
+    //   return await "도보 약 ${minute ~/ 60}시간 ${minute % 60}분 ";
+    // } else {
+    //   print("도보로 약 ${minute}분 소요");
+    //   return await "도보 약 ${minute}분";
+    // }
   }
 }
