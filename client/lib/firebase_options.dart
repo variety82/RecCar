@@ -29,12 +29,12 @@ class DefaultFirebaseOptions {
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
         throw UnsupportedError(
@@ -67,7 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '370038842555',
     projectId: 'flutter-auth-381504',
     storageBucket: 'flutter-auth-381504.appspot.com',
-    androidClientId: '370038842555-ntj3lg9j7aanac47316ers88uft2jqdv.apps.googleusercontent.com',
+    androidClientId: '370038842555-g6hta0b3a9e43pm5n3q00vo0jqc2400j.apps.googleusercontent.com',
     iosClientId: '370038842555-9t02dvg4jfll3bp7a2fipu9tlhv7jn9k.apps.googleusercontent.com',
     iosBundleId: 'com.example.client',
   );
@@ -78,8 +78,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '370038842555',
     projectId: 'flutter-auth-381504',
     storageBucket: 'flutter-auth-381504.appspot.com',
-    androidClientId: '370038842555-ntj3lg9j7aanac47316ers88uft2jqdv.apps.googleusercontent.com',
+    androidClientId: '370038842555-g6hta0b3a9e43pm5n3q00vo0jqc2400j.apps.googleusercontent.com',
     iosClientId: '370038842555-0i4qkbmdnrk9eipu2498kk2v01fouuql.apps.googleusercontent.com',
     iosBundleId: 'com.example.client.RunnerTests',
   );
 }
+

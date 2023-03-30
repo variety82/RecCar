@@ -6,6 +6,9 @@ import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+String TmapApiKey = dotenv.env['TMAP_API_KEY']!;
 
 class NaverMapTest extends StatefulWidget {
   @override
@@ -16,11 +19,14 @@ class _NaverMapTestState extends State<NaverMapTest> {
   // naver.MapType _mapType = naver.MapType.Basic;
   late naver.NaverMapController _controller;
   late Position _position;
+  bool isSocarTouched = false;
+  bool isGreencarTouched = false;
   List<Map<String, dynamic>> result =
-      List<Map<String, dynamic>>.filled(100, {});
+      List<Map<String, dynamic>>.filled(2000, {});
   bool beforeSearch = true;
   List<naver.Marker> marker = List<naver.Marker>.filled(
-      1, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)));
+      2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+      growable: true);
 
   Widget _previewWidget() {
     return Container(
@@ -46,7 +52,6 @@ class _NaverMapTestState extends State<NaverMapTest> {
       ),
     );
   }
-
 
   // 늘렸을 때 보이는 형태
   Widget _expandedWidget() {
@@ -86,7 +91,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
                         ),
                       ),
                     if (!result[0].isEmpty)
-                      for (int i = 0; i < 100; i++)
+                      for (int i = 0; i < result.length; i++)
                         if (!result[i].isEmpty)
                           TextButton(
                             onPressed: () => move(i),
@@ -114,7 +119,8 @@ class _NaverMapTestState extends State<NaverMapTest> {
                                       child: Text(
                                         "${result[i]['name']}",
                                         style: TextStyle(
-                                          color: Theme.of(context).secondaryHeaderColor,
+                                          color: Theme.of(context)
+                                              .secondaryHeaderColor,
                                           decoration: TextDecoration.none,
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500,
@@ -190,6 +196,89 @@ class _NaverMapTestState extends State<NaverMapTest> {
                 top: 40,
                 left: 50,
                 right: 50,
+              ),
+              Positioned(
+                child: Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 2.5,
+                      ),
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: isSocarTouched
+                            ? Theme.of(context).primaryColor
+                            : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            blurRadius: 2.0,
+                            spreadRadius: 0.0,
+                          )
+                        ],
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      // decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.transparent),
+                          // fixedSize: MaterialStatePropertyAll(
+                          //   Size(80, 6),
+                          // ),
+                        ),
+                        onPressed: () => searchSocar(),
+                        child: Text(
+                          "쏘카존보기",
+                          style: TextStyle(
+                            color: isSocarTouched
+                                ? Colors.white
+                                : Theme.of(context).secondaryHeaderColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 2.5,
+                      ),
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: isGreencarTouched
+                            ? Theme.of(context).primaryColor
+                            : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            blurRadius: 2.0,
+                            spreadRadius: 0.0,
+                          )
+                        ],
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      // decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.transparent),
+                        ),
+                        onPressed: () => searchGreencar(),
+                        child: Text(
+                          "그린존보기",
+                          style: TextStyle(
+                            color: isGreencarTouched
+                                ? Colors.white
+                                : Theme.of(context).secondaryHeaderColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                bottom: 70,
+                left: 75,
               ),
               Positioned(
                 child: TextButton(
@@ -286,12 +375,9 @@ class _NaverMapTestState extends State<NaverMapTest> {
         naver.CameraPosition(target: latLng)));
     setState(() {
       marker[0] = naver.Marker(
-        markerId: "${result[i]["name"]}",
-        position: latLng,
-        infoWindow: result[i]["telNo"] == ""
-            ? "${result[i]["name"]}\n전화번호없음"
-            : "${result[i]["name"]}\n${result[i]["telNo"]}",
-      );
+          markerId: "${result[i]["name"]}",
+          position: latLng,
+          infoWindow: "${result[i]["name"]}");
     });
 
     // if(result[i]["name"].toString().contains("주유소")) { // 주유소의 경우 유가 정보 출력해주려했는데
@@ -316,7 +402,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
 
   Future<void> search(keyword) async {
     Map<String, String> headers = {
-      "appkey": "l7xxe210feb29ba24deda6a06b0d0e88366a",
+      "appkey": TmapApiKey,
     };
     Response response = await get(
       Uri.parse(
@@ -331,6 +417,130 @@ class _NaverMapTestState extends State<NaverMapTest> {
         result[i] = ret[i];
       }
     });
+  }
+
+  Future<void> searchSocar() async {
+    setState(() {
+      isSocarTouched = !isSocarTouched;
+      isGreencarTouched = false;
+    });
+    if (isSocarTouched) {
+      Map<String, String> headers = {
+        "appkey": TmapApiKey,
+      };
+      marker = List<naver.Marker>.filled(
+          2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+          growable: true);
+      for (int i = 1; i <= 20; i++) {
+        Response response = await get(
+          Uri.parse(
+              "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=쏘카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=${i}"),
+          headers: headers,
+        );
+        var jsonData = response.body;
+        var ret = jsonDecode(jsonData)["searchPoiInfo"]['pois']['poi'];
+        setState(() {
+          for (int j = 0; j < ret.length; j++) {
+            result[100 * (i - 1) + j] = ret[j];
+          }
+        });
+        setState(
+          () {
+            for (int j = 0; j < ret.length; j++) {
+              var lat = double.parse(ret[j]["frontLat"]);
+              var lng = double.parse(ret[j]["frontLon"]);
+              var latLng = naver.LatLng(lat, lng);
+              marker[100 * (i - 1) + j + 1] = (naver.Marker(
+                markerId: "${ret[j]['name']}",
+                position: latLng,
+                infoWindow: "${ret[j]['name']}",
+              ));
+            }
+          },
+        );
+      }
+    } else {
+      setState(() {
+        marker = List<naver.Marker>.filled(2001,
+            naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+            growable: true);
+      });
+    }
+    print(marker);
+    // Response response = await get(
+    //   Uri.parse(
+    //       "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=쏘카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=20"),
+    //   headers: headers,
+    // );
+    // var jsonData = response.body;
+    // var ret = jsonDecode(jsonData)["searchPoiInfo"]['pois']['poi'];
+    //
+    // setState(() {
+    //   for (int i = 0; i < ret.length; i++) {
+    //     result[i] = ret[i];
+    //   }
+    // });
+  }
+
+  Future<void> searchGreencar() async {
+    setState(() {
+      isSocarTouched = false;
+      isGreencarTouched = !isGreencarTouched;
+    });
+    if (isGreencarTouched) {
+      Map<String, String> headers = {
+        "appkey": TmapApiKey,
+      };
+      marker = List<naver.Marker>.filled(
+          2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+          growable: true);
+      for (int i = 1; i <= 20; i++) {
+        Response response = await get(
+          Uri.parse(
+              "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=그린카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=${i}"),
+          headers: headers,
+        );
+        var jsonData = response.body;
+        var ret = jsonDecode(jsonData)["searchPoiInfo"]['pois']['poi'];
+        setState(() {
+          for (int j = 0; j < ret.length; j++) {
+            result[100 * (i - 1) + j] = ret[j];
+          }
+        });
+        setState(
+          () {
+            for (int j = 0; j < ret.length; j++) {
+              var lat = double.parse(ret[j]["frontLat"]);
+              var lng = double.parse(ret[j]["frontLon"]);
+              var latLng = naver.LatLng(lat, lng);
+              marker[100 * (i - 1) + j + 1] = (naver.Marker(
+                  markerId: "${ret[j]['name']}",
+                  position: latLng,
+                  infoWindow: "${ret[j]['name']}"));
+            }
+          },
+        );
+      }
+    } else {
+      setState(() {
+        marker = List<naver.Marker>.filled(2001,
+            naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+            growable: true);
+      });
+    }
+    // Response response = await get(
+    //   Uri.parse(
+    //       "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=쏘카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=20"),
+    //   headers: headers,
+    // );
+    // var jsonData = response.body;
+    // var ret = jsonDecode(jsonData)["searchPoiInfo"]['pois']['poi'];
+    //
+    // setState(() {
+    //   for (int i = 0; i < ret.length; i++) {
+    //     result[i] = ret[i];
+    //   }
+    // });
   }
 
   void moveToCurLoc() {
