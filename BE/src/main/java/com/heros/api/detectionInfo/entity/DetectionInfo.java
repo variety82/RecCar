@@ -6,7 +6,6 @@ import com.heros.api.car.entity.Car;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
 @Entity
@@ -22,9 +21,6 @@ public class DetectionInfo {
 
     @Column(name = "PART", length = 50)
     private String part;
-
-    @Column(name = "DAMAGE", length = 50)
-    private String damage;
 
     @Column(name = "DAMAGE_DATE")
     private Date damageDate;
@@ -43,24 +39,30 @@ public class DetectionInfo {
     @JsonIgnore
     private Car car;
 
+    @Column(name = "scratch")
+    private int scratch;
+
+    @Column(name = "breakage")
+    private int breakage;
+
+    @Column(name = "crushed")
+    private int crushed;
+
+    @Column(name = "separated")
+    private int separated;
+
     @Builder
-    public DetectionInfo(
-            @NotNull Long detectionInfoId,
-            String part,
-            String damage,
-            Date damageDate,
-            String memo,
-            String damageImageUrl,
-            boolean former,
-            Car car
-    ){
+    public DetectionInfo(Long detectionInfoId, String part, Date damageDate, String memo, String damageImageUrl, boolean former, Car car, int scratch, int breakage, int crushed, int separated) {
         this.detectionInfoId = detectionInfoId;
         this.part = part;
-        this.damage = damage;
         this.damageDate = damageDate;
         this.memo = memo;
         this.damageImageUrl = damageImageUrl;
         this.former = former;
         this.car = car;
+        this.scratch = scratch;
+        this.breakage = breakage;
+        this.crushed = crushed;
+        this.separated = separated;
     }
 }

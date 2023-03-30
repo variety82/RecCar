@@ -36,18 +36,39 @@ public class DetectionInfoService {
     }
 
     @Transactional
-    public void createDamageInfo(DetectionInfoCreate detectionInfoCreate){
-        Car car = carRepository.findById(detectionInfoCreate.getCarId()).orElseThrow(IllegalArgumentException::new);
-        DetectionInfo detectionInfo =  DetectionInfo.builder()
-                .car(car)
-                .former(detectionInfoCreate.isFormer())
-                .damageImageUrl(detectionInfoCreate.getPictureUrl())
-                .part(detectionInfoCreate.getPart())
-                .damage(detectionInfoCreate.getDamage())
-                .memo(detectionInfoCreate.getMemo())
-                .damageDate(detectionInfoCreate.getDamageDate())
-                .build();
-        detectionInfoRepository.save(detectionInfo);
+    public void createDamageInfo(List<DetectionInfoCreate> detectionInfoCreates){
+        Car car = carRepository.findById(detectionInfoCreates.get(0).getCarId()).orElseThrow(IllegalArgumentException::new);
+        Boolean former = detectionInfoCreates.get(0).isFormer();
+        int[] damages = new int[4];
+        for (DetectionInfoCreate detectionInfoCreate : detectionInfoCreates) {
+            int damage = detectionInfoCreate.getScratch() + detectionInfoCreate.getBreakage() +detectionInfoCreate.getCrushed() + detectionInfoCreate.getSeparated();
+            if (detectionInfoCreate.getPart().equals("front")) {
+                damages[0] += damage;
+            }
+            else if (detectionInfoCreate.getPart().equals("side")) {
+                damages[1] += damage;
+            }
+            else if (detectionInfoCreate.getPart().equals("back")) {
+                damages[2] += damage;
+            }
+            else if (detectionInfoCreate.getPart().equals("wheel")) {
+                damages[3] += damage;
+            }
+            DetectionInfo detectionInfo =  DetectionInfo.builder()
+                    .car(car)
+                    .former(detectionInfoCreate.isFormer())
+                    .damageImageUrl(detectionInfoCreate.getPictureUrl())
+                    .part(detectionInfoCreate.getPart())
+                    .scratch(detectionInfoCreate.getScratch())
+                    .crushed(detectionInfoCreate.getCrushed())
+                    .breakage(detectionInfoCreate.getBreakage())
+                    .separated(detectionInfoCreate.getSeparated())
+                    .memo(detectionInfoCreate.getMemo())
+                    .damageDate(detectionInfoCreate.getDamageDate())
+                    .build();
+            detectionInfoRepository.save(detectionInfo);
+        }
+        car.setDamageCount(former, damages);
     }
 
     public Optional<DetectionInfo> getDetectionInfoDetail(Long detectionInfoId) {
