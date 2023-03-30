@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
 @Component
-public class LoginIntercepter implements HandlerInterceptor {
+public class LoginInterceptor implements HandlerInterceptor {
     private final UserService userService;
 
     @Override
