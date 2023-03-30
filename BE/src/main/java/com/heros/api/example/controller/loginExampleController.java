@@ -46,8 +46,8 @@ public class loginExampleController {
     @GetMapping(value = "/callback")
     public ResponseEntity<?> callback(@RequestParam(name = "code") String code) throws IOException {
         System.out.println(code);
-        oAuthLogin(code);
-        return null;
+        String accessToken = oAuthLogin(code);
+        return ResponseEntity.ok().body(accessToken);
     }
 
     @Operation(summary = "예시 메서드", description = "예시 메서드입니다.")
@@ -85,7 +85,8 @@ public class loginExampleController {
         params.put("scope","https://www.googleapis.com/auth/userinfo.email");
         params.put("response_type","code");
         params.put("client_id","993410709622-geh083urrsjc4en7oajal6ugv39njo36.apps.googleusercontent.com");
-        params.put("redirect_uri","http://localhost:8080/api/login/callback");
+//        params.put("redirect_uri","http://localhost:8080/api/login/callback");
+        params.put("redirect_uri","http://j8a102.p.ssafy.io:8080/api/login/callback");
 
         //parameter를 형식에 맞춰 구성해주는 함수
         String parameterString=params.entrySet().stream()
@@ -102,7 +103,7 @@ public class loginExampleController {
          * */
     }
 
-    public Boolean oAuthLogin(String code) throws IOException {
+    public String oAuthLogin(String code) throws IOException {
         //구글로 일회성 코드를 보내 액세스 토큰이 담긴 응답객체를 받아옴
         ResponseEntity<String> accessTokenResponse= requestAccessToken(code);
         System.out.println("1111111111111111111111111111111111");
@@ -116,7 +117,7 @@ public class loginExampleController {
 //        //다시 JSON 형식의 응답 객체를 자바 객체로 역직렬화한다.
 //        GoogleUser googleUser= getUserInfo(userInfoResponse);
 //        System.out.println(googleUser);
-        return null;
+        return oAuthToken.getAccess_token();
     }
 
     public ResponseEntity<String> requestAccessToken(String code) {
