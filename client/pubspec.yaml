@@ -85,6 +85,9 @@ flutter:
     - .env
     - lib/assets/images/car_damage_img/
     - lib/assets/car_video/
+    - lib/assets/images/loading_img/
+    - lib/assets/images/empty_garage.svg
+    - lib/assets/images/car_garage.svg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
