@@ -45,7 +45,7 @@ public class UserController {
         params.put("client_id", "993410709622-geh083urrsjc4en7oajal6ugv39njo36.apps.googleusercontent.com");
         params.put("client_secret", "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");
 //        params.put("redirect_uri", "http://localhost:8080/api/v1/user/login");
-        params.put("redirect_uri","http://j8a102.p.ssafy.io:8080/api/login/callback");
+        params.put("redirect_uri","http://j8a102.p.ssafy.io:8080/api/v1/user/login");
         params.put("grant_type", "authorization_code");
         ResponseEntity<String> responseEntity=restTemplate.postForEntity(GOOGLE_TOKEN_REQUEST_URL, params, String.class);
         String accessToken = objectMapper.readValue(responseEntity.getBody(),GoogleOAuthToken.class).getAccess_token();
