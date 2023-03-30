@@ -5,50 +5,63 @@ import 'package:client/screens/check_car_damage_screen/check_car_damage_part.dar
 
 class CheckCarDamageContainer extends StatelessWidget {
   final VideoPlayerController videoPlayerController;
+  final List<Map<String, dynamic>> carDamageList;
+  final void Function(int, String, int, int, int, int, String)
+      changeDamageValue;
 
-  const CheckCarDamageContainer({required this.videoPlayerController});
-
+  const CheckCarDamageContainer({
+    required this.videoPlayerController,
+    required this.carDamageList,
+    required this.changeDamageValue,
+  });
+  // Widget buildItem(Map<String, dynamic> carDamage) {
+  //   return ListTile(
+  //     "Damage_Image_URL": carDamage,
+  //     "part": "",
+  //     "damage": {},
+  //     "memo": "",
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-      ),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.5, // Container 높이 설정
-        child: RawScrollbar(
-          thumbVisibility: true,
-          radius: Radius.circular(10),
-          thumbColor: Color(0xFF453F52).withOpacity(0.5),
-          thickness: 5,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: CheckCarDamagePart(
-                      imageUrl:
-                          'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_user_50_2023-03-23_14-24-26_3.jpg',
-                      videoPlayerController: videoPlayerController,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: CheckCarDamagePart(
-                      imageUrl:
-                          'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_user_50_2023-03-23_14-24-26_3.jpg',
-                      videoPlayerController: videoPlayerController,
-                    ),
-                  ),
-                ],
+    return RawScrollbar(
+      thumbVisibility: true,
+      radius: Radius.circular(10),
+      thumbColor: Color(0xFF453F52).withOpacity(0.5),
+      thickness: 5,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+        ),
+        child: ListView(children: [
+          for (int i = 0; i < carDamageList.length; i++)
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: CheckCarDamagePart(
+                imageUrl: carDamageList[i]["Damage_Image_URL"],
+                videoPlayerController: videoPlayerController,
+                carDamage: carDamageList[i],
+                changeDamageValue: changeDamageValue,
               ),
             ),
-          ),
-        ),
+          // Text(carDamageList[i]["Damage_Image_URL"]),
+        ]),
       ),
     );
   }
 }
+
+//carDamageList
+//               .map((carDamage) {
+//             Padding(
+//               padding: const EdgeInsets.all(12),
+//               child: CheckCarDamagePart(
+//                 imageUrl:
+//                 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_user_50_2023-03-23_14-24-26_3.jpg',
+//                 videoPlayerController: videoPlayerController,
+//               ),
+//             ),
+//           },
+//
+//               )
+//               .toList(),

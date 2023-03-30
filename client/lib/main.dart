@@ -5,6 +5,7 @@ import 'screens/my_page/my_page.dart';
 import 'screens/map_screen/map_screen.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
 import 'screens/video_recording_screen/camera_screen.dart';
+import 'package:client/screens/video_recording_screen/video_recording_screen.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'screens/detail/car_detail.dart';
@@ -12,8 +13,12 @@ import 'screens/calendar_screen/calendar_screen.dart';
 import 'widgets/main_page/Main_Page_Body.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+
 void main() async {
   await dotenv.load(fileName: '.env');
+  // 앱 처음 실행 시 flutter 엔진 초기화 메소드 호출
+  // flutter 자체의 렌더링 엔진을 사용할 때 필요한 기본적인 설정들을 수행하는 메소드라고 생각하면 됨
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
       title: 'cilent',
@@ -35,7 +40,7 @@ void main() async {
         '/station': (context) => NaverMapTest(),
         '/login': (context) => const Login(),
         '/before-recording': (context) => const BeforeRecordingScreen(),
-        '/recording': (context) => CameraScreen(),
+        '/recording': (context) => VideoRecordingScreen(),
         '/calendar': (context) => const Calendar(),
       },
     ),

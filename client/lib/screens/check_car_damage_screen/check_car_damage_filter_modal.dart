@@ -17,10 +17,10 @@ class CheckCarDamageFilterModal extends StatefulWidget {
 
   @override
   State<CheckCarDamageFilterModal> createState() =>
-      _CheckCarDamageFilterModal();
+      _CheckCarDamageFilterModalState();
 }
 
-class _CheckCarDamageFilterModal extends State<CheckCarDamageFilterModal> {
+class _CheckCarDamageFilterModalState extends State<CheckCarDamageFilterModal> {
   @override
   Widget build(BuildContext context) {
     return Container(
