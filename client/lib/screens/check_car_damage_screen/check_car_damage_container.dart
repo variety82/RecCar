@@ -6,14 +6,19 @@ import 'package:client/screens/check_car_damage_screen/check_car_damage_part.dar
 class CheckCarDamageContainer extends StatelessWidget {
   final VideoPlayerController videoPlayerController;
   final List<Map<String, dynamic>> carDamageList;
+  final List<int> selectedIndexList;
   final void Function(int, String, int, int, int, int, String)
       changeDamageValue;
+  final bool isSelectedView;
 
   const CheckCarDamageContainer({
     required this.videoPlayerController,
     required this.carDamageList,
+    required this.selectedIndexList,
     required this.changeDamageValue,
+    required this.isSelectedView,
   });
+
   // Widget buildItem(Map<String, dynamic> carDamage) {
   //   return ListTile(
   //     "Damage_Image_URL": carDamage,
@@ -33,19 +38,39 @@ class CheckCarDamageContainer extends StatelessWidget {
         padding: const EdgeInsets.symmetric(
           horizontal: 8,
         ),
-        child: ListView(children: [
-          for (int i = 0; i < carDamageList.length; i++)
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: CheckCarDamagePart(
-                imageUrl: carDamageList[i]["Damage_Image_URL"],
-                videoPlayerController: videoPlayerController,
-                carDamage: carDamageList[i],
-                changeDamageValue: changeDamageValue,
+        child: isSelectedView
+            ? ListView(
+                children: [
+                  for (int i = 0; i < selectedIndexList.length; i++)
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: CheckCarDamagePart(
+                        imageUrl: carDamageList[selectedIndexList[i]]
+                            ["Damage_Image_URL"],
+                        videoPlayerController: videoPlayerController,
+                        carDamage: carDamageList[selectedIndexList[i]],
+                        changeDamageValue: changeDamageValue,
+                      ),
+                    ),
+                  // Text(carDamageList[i]["Damage_Image_URL"]),
+                ],
+              )
+            : ListView(
+                children: [
+                  for (int i = 0; i < carDamageList.length; i++)
+                    if (!selectedIndexList.contains(i))
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: CheckCarDamagePart(
+                          imageUrl: carDamageList[i]["Damage_Image_URL"],
+                          videoPlayerController: videoPlayerController,
+                          carDamage: carDamageList[i],
+                          changeDamageValue: changeDamageValue,
+                        ),
+                      ),
+                  // Text(carDamageList[i]["Damage_Image_URL"]),
+                ],
               ),
-            ),
-          // Text(carDamageList[i]["Damage_Image_URL"]),
-        ]),
       ),
     );
   }

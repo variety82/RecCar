@@ -55,11 +55,12 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   ];
 
   List<Map<String, dynamic>> selectedCarDamagesList = [];
+  List<int> selectedIndexList = [];
 
   late Timer _timer;
 
   void turnSwitch() {}
-  bool _isView = false;
+  bool isSelectedView = false;
 
   @override
   void dispose() {
@@ -195,21 +196,24 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     int separated_count,
     String memoValue,
   ) {
-    setState(() {
-      // print(indexValue);
-      widget.carDamagesAllList[indexValue - 1]["part"] = partValue;
-      widget.carDamagesAllList[indexValue - 1]["damage"]["scratch"] =
-          scratch_count;
-      widget.carDamagesAllList[indexValue - 1]["damage"]["crushed"] =
-          crushed_count;
-      widget.carDamagesAllList[indexValue - 1]["damage"]["breakage"] =
-          breakage_count;
-      widget.carDamagesAllList[indexValue - 1]["damage"]["separated"] =
-          separated_count;
-      widget.carDamagesAllList[indexValue - 1]["memo"] = memoValue;
-      widget.carDamagesAllList[indexValue - 1]["selected"] = true;
-      selectedCarDamagesList.add(widget.carDamagesAllList[indexValue - 1]);
-    });
+    if (!selectedIndexList.contains(indexValue - 1)) {
+      setState(() {
+        // print(indexValue);
+        widget.carDamagesAllList[indexValue - 1]["part"] = partValue;
+        widget.carDamagesAllList[indexValue - 1]["damage"]["scratch"] =
+            scratch_count;
+        widget.carDamagesAllList[indexValue - 1]["damage"]["crushed"] =
+            crushed_count;
+        widget.carDamagesAllList[indexValue - 1]["damage"]["breakage"] =
+            breakage_count;
+        widget.carDamagesAllList[indexValue - 1]["damage"]["separated"] =
+            separated_count;
+        widget.carDamagesAllList[indexValue - 1]["memo"] = memoValue;
+        widget.carDamagesAllList[indexValue - 1]["selected"] = true;
+        selectedIndexList.add(indexValue - 1);
+        selectedIndexList.sort((a, b) => a.compareTo(b));
+      });
+    }
   }
 
   @override
@@ -552,7 +556,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        _isView
+                                        isSelectedView
                                             ? Icon(
                                                 Icons.fact_check,
                                               )
@@ -560,10 +564,10 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                                 Icons.fact_check_outlined,
                                               ),
                                         Switch(
-                                          value: _isView,
+                                          value: isSelectedView,
                                           onChanged: (value) {
                                             setState(() {
-                                              _isView = !_isView;
+                                              isSelectedView = !isSelectedView;
                                             });
                                           },
                                           activeColor: Color(0xFFE0426F),
@@ -591,10 +595,10 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                       width: 5,
                                     ),
                                     Text(
-                                      _isView
-                                          ? selectedCarDamagesList.length
-                                              .toString()
-                                          : widget.carDamagesAllList.length
+                                      isSelectedView
+                                          ? selectedIndexList.length.toString()
+                                          : (widget.carDamagesAllList.length -
+                                                  selectedIndexList.length)
                                               .toString(),
                                       style: TextStyle(
                                         color: Color(0xFFE0426F),
@@ -613,11 +617,11 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                     Expanded(
                       child: loading_api
                           ? CheckCarDamageContainer(
-                              carDamageList: _isView
-                                  ? selectedCarDamagesList
-                                  : widget.carDamagesAllList,
+                              carDamageList: widget.carDamagesAllList,
                               videoPlayerController: _videoPlayerController,
                               changeDamageValue: changeDamageValue,
+                              selectedIndexList: selectedIndexList,
+                              isSelectedView: isSelectedView,
                             )
                           : Container(
                               child: Center(

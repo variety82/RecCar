@@ -5,13 +5,11 @@ import 'package:client/screens/check_car_damage_screen/check_car_damage_screen.d
 class MoveableButton extends StatelessWidget {
   final String text;
   final String routing;
-  final List<Map<String, dynamic>>? carDamagesAllList;
 
   const MoveableButton({
     Key? key,
     required this.text,
     required this.routing,
-    this.carDamagesAllList,
   }) : super(key: key);
 
   @override
@@ -25,19 +23,6 @@ class MoveableButton extends StatelessWidget {
         backgroundColor: Color(0xFFE0426F),
       ),
       onPressed: () {
-        if (routing.length > 3) {
-          if (routing.substring(routing.length - 3, routing.length) == 'mp4') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CheckCarDamageScreen(
-                  filePath: routing,
-                  carDamagesAllList: carDamagesAllList!,
-                ),
-              ),
-            );
-          }
-        }
         Navigator.pushNamed(context, routing);
       },
       child: Text(
