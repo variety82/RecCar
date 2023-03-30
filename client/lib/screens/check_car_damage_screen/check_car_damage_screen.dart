@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_container.dart';
@@ -10,9 +12,13 @@ import 'package:client/services/analysis_car_damage_api.dart';
 
 class CheckCarDamageScreen extends StatefulWidget {
   final String filePath;
+  final List<Map<String, dynamic>> carDamagesAllList;
 
-  const CheckCarDamageScreen({Key? key, required this.filePath})
-      : super(key: key);
+  const CheckCarDamageScreen({
+    Key? key,
+    required this.filePath,
+    required this.carDamagesAllList,
+  }) : super(key: key);
 
   @override
   State<CheckCarDamageScreen> createState() => _CheckCarDamageScreenState();
@@ -20,7 +26,7 @@ class CheckCarDamageScreen extends StatefulWidget {
 
 class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   late VideoPlayerController _videoPlayerController;
-  bool loading_api = false;
+  bool loading_api = true;
   bool loading_video = false;
 
   bool _isVisible = true;
@@ -47,6 +53,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     '파손',
     '이격',
   ];
+
+  List<Map<String, dynamic>> selectedCarDamagesList = [];
 
   late Timer _timer;
 
@@ -178,24 +186,35 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     // 두번 탭을 했을 때 실행할 동작
   }
 
+  void changeDamageValue(
+    int indexValue,
+    String partValue,
+    int scratch_count,
+    int crushed_count,
+    int breakage_count,
+    int separated_count,
+    String memoValue,
+  ) {
+    setState(() {
+      // print(indexValue);
+      widget.carDamagesAllList[indexValue - 1]["part"] = partValue;
+      widget.carDamagesAllList[indexValue - 1]["damage"]["scratch"] =
+          scratch_count;
+      widget.carDamagesAllList[indexValue - 1]["damage"]["crushed"] =
+          crushed_count;
+      widget.carDamagesAllList[indexValue - 1]["damage"]["breakage"] =
+          breakage_count;
+      widget.carDamagesAllList[indexValue - 1]["damage"]["separated"] =
+          separated_count;
+      widget.carDamagesAllList[indexValue - 1]["memo"] = memoValue;
+      widget.carDamagesAllList[indexValue - 1]["selected"] = true;
+      selectedCarDamagesList.add(widget.carDamagesAllList[indexValue - 1]);
+    });
+  }
+
   @override
   void initState() {
     _initVideoPlayer();
-
-    analysisCarDamageApi(
-      success: (dynamic response) {
-        setState(() {
-          carDamageInfo = response;
-          print(carDamageInfo);
-        });
-      },
-      fail: (error) {
-        print('차량 손상 분석 오류: error');
-      },
-      filePath: widget.filePath,
-      user_id: 1,
-    );
-    loading_api = true;
     super.initState();
   }
 
@@ -204,383 +223,422 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      floatingActionButton: MyFABMenu(
-        selected_categories: selected_categories,
-        addCategories: addCategories,
-        removeCategories: removeCategories,
-      ),
-      body: loading_video
-          ? Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    _watchVideoMenu();
-                  },
-                  child: RotatedBox(
-                    quarterTurns: 3, // 시계 방향으로 90도 회전시킵니다.
-                    // 수정해야 할 듯 함... 예상되는 비율 받아온 후 AspectRatio 적용
-                    child: AspectRatio(
-                      aspectRatio: _videoPlayerController.value.aspectRatio,
-                      child: Stack(
-                        children: [
-                          VideoPlayer(_videoPlayerController),
-                          Container(
-                            height: double.infinity,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: _isVisible
-                                  ? Colors.black54
-                                  : Colors.black.withOpacity(0.0),
-                            ),
-                            child: RotatedBox(
-                              quarterTurns: 1,
-                              child: OverflowBox(
-                                maxWidth: double.infinity,
-                                maxHeight: double.infinity,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        _watchVideoMenu();
-                                      },
-                                      onDoubleTap: () {
-                                        setState(() {
-                                          _isVisibleSPBTN = false;
-                                          _isVisible = true;
-                                          _isbackTimeSkip = true;
-                                        });
-                                        _videoPlayerController.seekTo(
-                                          Duration(
-                                              seconds: _videoPlayerController
-                                                      .value
-                                                      .position
-                                                      .inSeconds -
-                                                  10),
-                                        );
-                                        Future.delayed(
-                                          Duration(milliseconds: 200),
-                                          () {
-                                            setState(() {
-                                              _isVisible = false;
-                                              _isbackTimeSkip = false;
-                                            });
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        floatingActionButton: MyFABMenu(
+          selected_categories: selected_categories,
+          addCategories: addCategories,
+          removeCategories: removeCategories,
+        ),
+        body: loading_video
+            ? Container(
+                height: screenHeight,
+                width: screenWidth,
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _watchVideoMenu();
+                      },
+                      child: RotatedBox(
+                        quarterTurns: 3, // 시계 방향으로 90도 회전시킵니다.
+                        // 수정해야 할 듯 함... 예상되는 비율 받아온 후 AspectRatio 적용
+                        child: AspectRatio(
+                          aspectRatio: _videoPlayerController.value.aspectRatio,
+                          child: Stack(
+                            children: [
+                              VideoPlayer(_videoPlayerController),
+                              Container(
+                                height: screenHeight,
+                                width: screenWidth,
+                                decoration: BoxDecoration(
+                                  color: _isVisible
+                                      ? Colors.black54
+                                      : Colors.black.withOpacity(0.0),
+                                ),
+                                child: RotatedBox(
+                                  quarterTurns: 1,
+                                  child: OverflowBox(
+                                    maxWidth: double.infinity,
+                                    maxHeight: double.infinity,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          splashColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          onTap: () {
+                                            _watchVideoMenu();
                                           },
-                                        );
-                                      },
-                                      child: AnimatedOpacity(
-                                        opacity: _isbackTimeSkip ? 1.0 : 0.0,
-                                        duration: Duration(milliseconds: 200),
-                                        child: Stack(
-                                          children: [
-                                            Icon(
-                                              Icons.circle,
-                                              color: Colors.black38,
-                                              size: 300,
-                                            ),
-                                            Positioned(
-                                              right: 120,
-                                              top: 130,
-                                              child: Column(
-                                                children: [
-                                                  Icon(
-                                                    Icons.fast_rewind,
-                                                    color: Colors.white,
-                                                    size: 20,
-                                                  ),
-                                                  Text(
-                                                    '10초',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        if (_isVisible) {
-                                          if (video_pause) {
-                                            _videoPlayerController.play();
+                                          onDoubleTap: () {
                                             setState(() {
-                                              video_pause = false;
+                                              _isVisibleSPBTN = false;
+                                              _isVisible = true;
+                                              _isbackTimeSkip = true;
                                             });
-                                            _timeChecker();
-                                          } else {
-                                            _videoPlayerController.pause();
-                                            setState(() {
-                                              video_pause = true;
-                                            });
-                                          }
-                                        } else {
-                                          setState(() {
-                                            _isVisible = true;
-                                            _timeChecker();
-                                          });
-                                        }
-                                      },
-                                      child: _isVisibleSPBTN
-                                          ? Stack(
-                                              alignment: Alignment.center,
+                                            _videoPlayerController.seekTo(
+                                              Duration(
+                                                  seconds:
+                                                      _videoPlayerController
+                                                              .value
+                                                              .position
+                                                              .inSeconds -
+                                                          10),
+                                            );
+                                            Future.delayed(
+                                              Duration(milliseconds: 200),
+                                              () {
+                                                setState(() {
+                                                  _isVisible = false;
+                                                  _isbackTimeSkip = false;
+                                                });
+                                              },
+                                            );
+                                          },
+                                          child: AnimatedOpacity(
+                                            opacity:
+                                                _isbackTimeSkip ? 1.0 : 0.0,
+                                            duration:
+                                                Duration(milliseconds: 200),
+                                            child: Stack(
                                               children: [
                                                 Icon(
                                                   Icons.circle,
                                                   color: Colors.black38,
-                                                  size: 80,
+                                                  size: 300,
                                                 ),
-                                                _videoPlayerController
-                                                        .value.isPlaying
-                                                    ? Icon(
-                                                        Icons.pause,
+                                                Positioned(
+                                                  right: 120,
+                                                  top: 130,
+                                                  child: Column(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.fast_rewind,
                                                         color: Colors.white,
-                                                        size: 40,
-                                                      )
-                                                    : Icon(
-                                                        Icons.play_arrow,
-                                                        color: Colors.white,
-                                                        size: 40,
+                                                        size: 20,
                                                       ),
+                                                      Text(
+                                                        '10초',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
                                               ],
-                                            )
-                                          : Container(),
-                                    ),
-                                    AnimatedOpacity(
-                                      opacity: _isforwardTimeSkip ? 1.0 : 0.0,
-                                      duration: Duration(milliseconds: 200),
-                                      child: InkWell(
-                                        onTap: () {
-                                          _watchVideoMenu();
-                                        },
-                                        onDoubleTap: () {
-                                          setState(() {
-                                            _isVisibleSPBTN = false;
-                                            _isVisible = true;
-                                            _isforwardTimeSkip = true;
-                                          });
-                                          _videoPlayerController.seekTo(
-                                            Duration(
-                                                seconds: _videoPlayerController
-                                                        .value
-                                                        .position
-                                                        .inSeconds +
-                                                    10),
-                                          );
-                                          Future.delayed(
-                                            Duration(milliseconds: 200),
-                                            () {
-                                              setState(() {
-                                                _isVisible = false;
-                                                _isforwardTimeSkip = false;
-                                              });
-                                            },
-                                          );
-                                        },
-                                        child: const Stack(
-                                          children: [
-                                            Icon(
-                                              Icons.circle,
-                                              color: Colors.black38,
-                                              size: 300,
                                             ),
-                                            Positioned(
-                                              left: 130,
-                                              top: 130,
-                                              child: Column(
-                                                children: [
-                                                  Icon(
-                                                    Icons.fast_forward,
-                                                    color: Colors.white,
-                                                    size: 20,
-                                                  ),
-                                                  Text(
-                                                    '10초',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
+                                        InkWell(
+                                          onTap: () {
+                                            if (_isVisible) {
+                                              if (video_pause) {
+                                                _videoPlayerController.play();
+                                                setState(() {
+                                                  video_pause = false;
+                                                });
+                                                _timeChecker();
+                                              } else {
+                                                _videoPlayerController.pause();
+                                                setState(() {
+                                                  video_pause = true;
+                                                });
+                                              }
+                                            } else {
+                                              setState(() {
+                                                _isVisible = true;
+                                                _timeChecker();
+                                              });
+                                            }
+                                          },
+                                          child: _isVisibleSPBTN
+                                              ? Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.circle,
+                                                      color: Colors.black38,
+                                                      size: 80,
+                                                    ),
+                                                    _videoPlayerController
+                                                            .value.isPlaying
+                                                        ? Icon(
+                                                            Icons.pause,
+                                                            color: Colors.white,
+                                                            size: 40,
+                                                          )
+                                                        : Icon(
+                                                            Icons.play_arrow,
+                                                            color: Colors.white,
+                                                            size: 40,
+                                                          ),
+                                                  ],
+                                                )
+                                              : Container(),
+                                        ),
+                                        AnimatedOpacity(
+                                          opacity:
+                                              _isforwardTimeSkip ? 1.0 : 0.0,
+                                          duration: Duration(milliseconds: 200),
+                                          child: InkWell(
+                                            onTap: () {
+                                              _watchVideoMenu();
+                                            },
+                                            onDoubleTap: () {
+                                              setState(() {
+                                                _isVisibleSPBTN = false;
+                                                _isVisible = true;
+                                                _isforwardTimeSkip = true;
+                                              });
+                                              _videoPlayerController.seekTo(
+                                                Duration(
+                                                    seconds:
+                                                        _videoPlayerController
+                                                                .value
+                                                                .position
+                                                                .inSeconds +
+                                                            10),
+                                              );
+                                              Future.delayed(
+                                                Duration(milliseconds: 200),
+                                                () {
+                                                  setState(() {
+                                                    _isVisible = false;
+                                                    _isforwardTimeSkip = false;
+                                                  });
+                                                },
+                                              );
+                                            },
+                                            child: const Stack(
+                                              children: [
+                                                Icon(
+                                                  Icons.circle,
+                                                  color: Colors.black38,
+                                                  size: 300,
+                                                ),
+                                                Positioned(
+                                                  left: 130,
+                                                  top: 130,
+                                                  child: Column(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.fast_forward,
+                                                        color: Colors.white,
+                                                        size: 20,
+                                                      ),
+                                                      Text(
+                                                        '10초',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 16,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                      ),
+                      child: VideoProgressIndicator(
+                        _videoPlayerController,
+                        allowScrubbing: true,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5,
+                        ),
+                        colors: VideoProgressColors(
+                          backgroundColor: Color(0xFF453F52),
+                          bufferedColor: Color(0xFFEFEFEF),
+                          playedColor: Color(0xFFE0426F),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      width: screenWidth,
+                      height: 80,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: damage_categories.map(
+                                      (part_category) {
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 4,
+                                          ),
+                                          child: InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            onTap: () {
+                                              if (selected_categories
+                                                  .contains(part_category)) {
+                                                setState(() {
+                                                  removeCategories(
+                                                      part_category);
+                                                });
+                                              } else {
+                                                setState(
+                                                  () {
+                                                    addCategories(
+                                                        part_category);
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            child: Chip(
+                                                label: Text(
+                                                  part_category,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                labelPadding:
+                                                    EdgeInsets.symmetric(
+                                                  horizontal: 8,
+                                                ),
+                                                backgroundColor:
+                                                    selected_categories
+                                                            .contains(
+                                                                part_category)
+                                                        ? Color(0xFFFBD5DC)
+                                                        : Colors.grey
+                                                // deleteIconColor: Color(0xFFE0426F),
+                                                ),
+                                          ),
+                                        );
+                                      },
+                                    ).toList(),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        _isView
+                                            ? Icon(
+                                                Icons.fact_check,
+                                              )
+                                            : Icon(
+                                                Icons.fact_check_outlined,
+                                              ),
+                                        Switch(
+                                          value: _isView,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isView = !_isView;
+                                            });
+                                          },
+                                          activeColor: Color(0xFFE0426F),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '현재 손상 수',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      _isView
+                                          ? selectedCarDamagesList.length
+                                              .toString()
+                                          : widget.carDamagesAllList.length
+                                              .toString(),
+                                      style: TextStyle(
+                                        color: Color(0xFFE0426F),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 16,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                  ),
-                  child: VideoProgressIndicator(
-                    _videoPlayerController,
-                    allowScrubbing: true,
-                    padding: EdgeInsets.symmetric(
-                      vertical: 5,
-                    ),
-                    colors: VideoProgressColors(
-                      backgroundColor: Color(0xFF453F52),
-                      bufferedColor: Color(0xFFEFEFEF),
-                      playedColor: Color(0xFFE0426F),
-                    ),
-                  ),
-                ),
-                Column(
-                  children: [
-                    Container(
-                      color: Colors.white,
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: damage_categories.map(
-                                    (part_category) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 4,
-                                        ),
-                                        child: InkWell(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          onTap: () {
-                                            if (selected_categories
-                                                .contains(part_category)) {
-                                              setState(() {
-                                                removeCategories(part_category);
-                                              });
-                                            } else {
-                                              setState(
-                                                () {
-                                                  addCategories(part_category);
-                                                },
-                                              );
-                                            }
-                                          },
-                                          child: Chip(
-                                              label: Text(
-                                                part_category,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                              labelPadding:
-                                                  EdgeInsets.symmetric(
-                                                horizontal: 8,
-                                              ),
-                                              backgroundColor:
-                                                  selected_categories.contains(
-                                                          part_category)
-                                                      ? Color(0xFFFBD5DC)
-                                                      : Colors.grey
-                                              // deleteIconColor: Color(0xFFE0426F),
-                                              ),
-                                        ),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 4,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      _isView
-                                          ? Icon(
-                                              Icons.fact_check,
-                                            )
-                                          : Icon(
-                                              Icons.fact_check_outlined,
-                                            ),
-                                      Switch(
-                                        value: _isView,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _isView = !_isView;
-                                          });
-                                        },
-                                        activeColor: Color(0xFFE0426F),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    '현재 손상 수',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    selected_categories.length.toString(),
-                                    style: TextStyle(
-                                      color: Color(0xFFE0426F),
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                     ),
-                    CheckCarDamageContainer(
-                      videoPlayerController: _videoPlayerController,
+                    Expanded(
+                      child: loading_api
+                          ? CheckCarDamageContainer(
+                              carDamageList: _isView
+                                  ? selectedCarDamagesList
+                                  : widget.carDamagesAllList,
+                              videoPlayerController: _videoPlayerController,
+                              changeDamageValue: changeDamageValue,
+                            )
+                          : Container(
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Color(0xFFE0426F),
+                                ),
+                              ),
+                            ),
                     ),
+                    SizedBox(
+                      height: 20,
+                    )
                   ],
                 ),
-              ],
-            )
-          : Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFFE0426F),
+              )
+            : Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xFFE0426F),
+                ),
               ),
-            ),
+      ),
     );
   }
 }

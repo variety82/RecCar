@@ -1,10 +1,19 @@
+import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ImageDetailScreen extends StatelessWidget {
-  final String imageUrl;
+  final String imagePath;
+  final String imageCase;
 
-  const ImageDetailScreen({required this.imageUrl});
+  const ImageDetailScreen({
+    required this.imagePath,
+    required this.imageCase,
+  });
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,10 +38,15 @@ class ImageDetailScreen extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: InteractiveViewer(
             // 감싸는 자식 위젯 넣어줌
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.contain,
-            ),
+            child: imageCase == 'url'
+                ? Image.network(
+                    imagePath,
+                    fit: BoxFit.contain,
+                  )
+                : Image.file(
+                    File(imagePath),
+                    fit: BoxFit.contain,
+                  ),
             // 최대 확대, 최소 축소 비율을 각각 지정
             maxScale: 5.0,
             minScale: 0.1,
