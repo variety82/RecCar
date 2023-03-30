@@ -28,8 +28,6 @@ public class CarResponse {
     private String rentalCompany;
     @Schema(description = "반납 여부", example = "true")
     private boolean returned;
-    @Schema(description = "대여 영상 주소", example = "rental.mp4")
-    private String initialVideo;
     @Schema(description = "대여시 앞부분 파손", example = "3")
     private int initialFrontDamageCount;
     @Schema(description = "대여시 중간 파손", example = "2")
@@ -38,8 +36,6 @@ public class CarResponse {
     private int initialBackDamageCount;
     @Schema(description = "대여시 바퀴 파손", example = "0")
     private int initialWheelDamageCount;
-    @Schema(description = "반납 영상 주소", example = "return.mp4")
-    private String latterVideo;
     @Schema(description = "반납시 앞부분 파손", example = "3")
     private int latterFrontDamageCount;
     @Schema(description = "반납시 중간 파손", example = "2")
@@ -60,12 +56,10 @@ public class CarResponse {
         this.returnDate = car.getReturnDate();
         this.rentalCompany = car.getRentalCompany();
         this.returned = car.isReturned();
-        this.initialVideo = car.getInitialVideo();
         this.initialFrontDamageCount = car.getInitialFrontDamageCount();
         this.initialMidDamageCount = car.getInitialMidDamageCount();
         this.initialBackDamageCount = car.getInitialBackDamageCount();
         this.initialWheelDamageCount = car.getInitialWheelDamageCount();
-        this.latterVideo = car.getLatterVideo();
         this.latterFrontDamageCount = car.getLatterFrontDamageCount();
         this.latterMidDamageCount = car.getLatterMidDamageCount();
         this.latterBackDamageCount = car.getLatterBackDamageCount();

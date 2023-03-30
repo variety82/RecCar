@@ -22,7 +22,6 @@ public class DetectionInfoRepositoryImpl implements DetectionInfoRepositorySuppo
                 .select(Projections.constructor(PartWithDetectionInfoResponse.class,
                         detectionInfo.detectionInfoId,
                         detectionInfo.part,
-                        detectionInfo.damage,
                         detectionInfo.damageDate,
                         detectionInfo.damageImageUrl,
                         detectionInfo.former,
@@ -48,7 +47,6 @@ public class DetectionInfoRepositoryImpl implements DetectionInfoRepositorySuppo
                         car.returnDate,
                         car.rentalCompany,
                         detectionInfo.part,
-                        detectionInfo.damage,
                         detectionInfo.damageDate,
                         detectionInfo.damageImageUrl,
                         detectionInfo.memo))

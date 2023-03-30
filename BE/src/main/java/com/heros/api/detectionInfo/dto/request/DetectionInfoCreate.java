@@ -24,13 +24,9 @@ public class DetectionInfoCreate {
     @NotBlank
     String pictureUrl;
 
-    @Schema(description = "파손 부위", example = "Front Door(R)")
+    @Schema(description = "파손 부위", example = "front")
     @NotBlank
     String part;
-
-    @Schema(description = "파손 종류", example = "SCRATCHED")
-    @NotBlank
-    String damage;
 
     @Schema(description = "파손 메모", example = "아이고 여기 상처가..!")
     String memo;
@@ -39,5 +35,15 @@ public class DetectionInfoCreate {
     @NotNull
     Date damageDate;
 
+    @Schema(description = "scratch 개수", example = "3")
+    int scratch;
 
+    @Schema(description = "breakage 개수", example = "3")
+    int breakage;
+
+    @Schema(description = "crushed 개수", example = "3")
+    int crushed;
+
+    @Schema(description = "separated 개수", example = "3")
+    int separated;
 }
