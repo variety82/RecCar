@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:client/widgets/common/moveable_button.dart';
+import 'package:client/services/analysis_car_damage_api.dart';
 
 // 만약 애니메이션 효과 추가 시, 수정 필요
 class AfterRecordingScreen extends StatefulWidget {
@@ -14,10 +15,30 @@ class AfterRecordingScreen extends StatefulWidget {
 }
 
 class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
-  bool _loarding = false;
+  bool loading_api = true;
+
+  List<Map<String, dynamic>> carDamagesAllList = [];
 
   @override
   void initState() {
+    analysisCarDamageApi(
+      success: (dynamic response) {
+        setState(() {
+          carDamagesAllList = response;
+          loading_api = false;
+        });
+      },
+      fail: (error) {
+        print('차량 손상 분석 오류: $error');
+        setState(
+          () {
+            loading_api = false;
+          },
+        );
+      },
+      filePath: widget.filePath,
+      user_id: 1,
+    );
     super.initState();
   }
 
@@ -34,8 +55,8 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
               padding: EdgeInsets.symmetric(
                 horizontal: 30,
               ),
-              child: _loarding
-                  ? const Center(
+              child: loading_api
+                  ? Center(
                       // 상하 간격
                       child: Wrap(
                         // 세로로 나열
@@ -56,7 +77,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.w900,
-                                  color: Color(0xFF453F52),
+                                  color: Theme.of(context).secondaryHeaderColor,
                                 ),
                               ),
                               Text(
@@ -79,7 +100,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFFFF3F3F),
+                                  color: Theme.of(context).primaryColor,
                                 ),
                                 softWrap: true,
                               ),
@@ -95,13 +116,9 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(
-                            width: 120,
-                            height: 120,
-                            child: CircularProgressIndicator(
-                              color: Color(0xFFE0426F),
-                              strokeWidth: 8,
-                            ),
+                          CircularProgressIndicator(
+                            color: Color(0xFFE0426F),
+                            // strokeWidth: 8,
                           ),
                         ],
                       ),
@@ -118,7 +135,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                         // 좌우 간격
                         runSpacing: 10,
                         children: [
-                          const Column(
+                          Column(
                             children: [
                               Text(
                                 '분석이',

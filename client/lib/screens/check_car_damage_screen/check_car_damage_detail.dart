@@ -9,9 +9,6 @@ import 'package:client/widgets/common/image_go_detail.dart';
 import 'package:client/widgets/check_car_damage/count_widget.dart';
 
 class CheckCarDamageDetail extends StatefulWidget {
-  // final void Function(String) addCategories;
-  // final void Function(String) removeCategories;
-  // final List<String> selected_categories;
   final String imageUrl;
   final Map<String, dynamic> carDamage;
   final void Function(int, String, int, int, int, int, String)
@@ -22,9 +19,6 @@ class CheckCarDamageDetail extends StatefulWidget {
     required this.imageUrl,
     required this.carDamage,
     required this.changeDamageValue,
-    // required this.selected_categories,
-    // required this.addCategories,
-    // required this.removeCategories,
   });
 
   @override
@@ -33,9 +27,10 @@ class CheckCarDamageDetail extends StatefulWidget {
 
 class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
   String memoInput = '';
-  String part = '';
+  String partInput = '';
   String imageFilePath = '';
   File? imageFile;
+  late TextEditingController memoController;
 
   // 각 부위 별 파손 개수 변수로 지정
   int scratch_count = 0;
@@ -57,6 +52,22 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
     '타이어/휠',
     '기타',
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      memoInput = widget.carDamage["memo"];
+      print(memoInput);
+      partInput = widget.carDamage["part"];
+      scratch_count = widget.carDamage["damage"]["scratch"];
+      crushed_count = widget.carDamage["damage"]["crushed"];
+      breakage_count = widget.carDamage["damage"]["breakage"];
+      separated_count = widget.carDamage["damage"]["separated"];
+    });
+    memoController = TextEditingController(text: memoInput);
+    super.initState();
+  }
 
   // count_widget에서 변경된 값을 damage_name에 따라 알맞는 변수에 반영함
   void checkChangeCount(String damage_name, int change_num) {
@@ -263,13 +274,13 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 onTap: () {
-                                  if (part == part_category) {
+                                  if (partInput == part_category) {
                                     setState(() {
-                                      part = '';
+                                      partInput = '';
                                     });
                                   } else {
                                     setState(() {
-                                      part = part_category;
+                                      partInput = part_category;
                                     });
                                   }
                                 },
@@ -283,9 +294,10 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                     labelPadding: EdgeInsets.symmetric(
                                       horizontal: 8,
                                     ),
-                                    backgroundColor: (part == part_category)
-                                        ? Color(0xFFFBD5DC)
-                                        : Colors.grey
+                                    backgroundColor:
+                                        (partInput == part_category)
+                                            ? Color(0xFFFBD5DC)
+                                            : Colors.grey
                                     // deleteIconColor: Color(0xFFE0426F),
                                     ),
                               );
@@ -314,6 +326,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                       Container(
                         height: 90,
                         child: TextField(
+                          controller: memoController,
                           maxLines: 3,
                           onTapOutside: (PointerDownEvent event) {
                             FocusScope.of(context)
@@ -376,6 +389,15 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                     ),
                     TextButton(
                       onPressed: () => {
+                        widget.changeDamageValue(
+                          widget.carDamage["index"],
+                          partInput,
+                          scratch_count,
+                          crushed_count,
+                          breakage_count,
+                          separated_count,
+                          memoInput,
+                        ),
                         Navigator.of(context).pop(),
                       },
                       child: Container(

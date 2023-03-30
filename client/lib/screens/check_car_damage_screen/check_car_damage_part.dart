@@ -46,22 +46,27 @@ class CheckCarDamagePart extends StatelessWidget {
                 maxWidth: 300,
                 maxHeight: 200,
               ),
+              child: FadeInImage(
+                placeholder:
+                    AssetImage('lib/assets/images/loading_img/loading_gif.gif'),
+                image: NetworkImage(imageUrl),
+              ),
               // 사진 존재 여부에 따라 사진 표시될 지 아닐지 여부 결정됨
-              child: imageUrl != ''
-                  ? ImageGoDetail(
-                      imagePath: imageUrl,
-                      imageCase: 'url',
-                    )
-                  : Container(
-                      width: 300,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).disabledColor,
-                      ),
-                      child: Center(
-                        child: Text('사진이 없습니다'),
-                      ),
-                    ),
+              // child: imageUrl != ''
+              //     ? ImageGoDetail(
+              //         imagePath: imageUrl,
+              //         imageCase: 'url',
+              //       )
+              //     : Container(
+              //         width: 300,
+              //         height: 200,
+              //         decoration: BoxDecoration(
+              //           color: Theme.of(context).disabledColor,
+              //         ),
+              //         child: Center(
+              //           child: Text('사진이 없습니다'),
+              //         ),
+              //       ),
             ),
           ),
           Padding(
@@ -131,7 +136,8 @@ class CheckCarDamagePart extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      carDamage["damage"],
+                      // carDamage["damage"],
+                      '말 안해줄래',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
@@ -157,7 +163,7 @@ class CheckCarDamagePart extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      carDamage["part"] != "" ? '앞범퍼/앞펜더/전조등' : '미정',
+                      carDamage["part"] != "" ? carDamage["part"] : '미정',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],

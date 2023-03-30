@@ -12,9 +12,13 @@ import 'package:client/services/analysis_car_damage_api.dart';
 
 class CheckCarDamageScreen extends StatefulWidget {
   final String filePath;
+  final List<Map<String, dynamic>> carDamagesAllList;
 
-  const CheckCarDamageScreen({Key? key, required this.filePath})
-      : super(key: key);
+  const CheckCarDamageScreen({
+    Key? key,
+    required this.filePath,
+    required this.carDamagesAllList,
+  }) : super(key: key);
 
   @override
   State<CheckCarDamageScreen> createState() => _CheckCarDamageScreenState();
@@ -22,7 +26,7 @@ class CheckCarDamageScreen extends StatefulWidget {
 
 class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   late VideoPlayerController _videoPlayerController;
-  bool loading_api = false;
+  bool loading_api = true;
   bool loading_video = false;
 
   bool _isVisible = true;
@@ -50,7 +54,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     '이격',
   ];
 
-  List<Map<String, dynamic>> carDamagesAllList = [];
   List<Map<String, dynamic>> selectedCarDamagesList = [];
 
   late Timer _timer;
@@ -62,13 +65,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   void dispose() {
     _timer?.cancel();
     _videoPlayerController.dispose();
-    // SystemChrome.setEnabledSystemUIMode(
-    //   SystemUiMode.manual,
-    //   overlays: [
-    //     SystemUiOverlay.top,
-    //     SystemUiOverlay.bottom,
-    //   ],
-    // );
     super.dispose();
   }
 
@@ -200,92 +196,25 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     String memoValue,
   ) {
     setState(() {
-      carDamageInfo[indexValue - 1]["part"] = partValue;
-      carDamageInfo[indexValue - 1]["damage"]["scratch"] = scratch_count;
-      carDamageInfo[indexValue - 1]["damage"]["crushed"] = crushed_count;
-      carDamageInfo[indexValue - 1]["damage"]["breakage"] = breakage_count;
-      carDamageInfo[indexValue - 1]["damage"]["separated"] = separated_count;
-      carDamageInfo[indexValue - 1]["memo"] = memoValue;
-      carDamageInfo[indexValue - 1]["selected"] = true;
-      selectedCarDamagesList.add(carDamageInfo[indexValue - 1]);
+      // print(indexValue);
+      widget.carDamagesAllList[indexValue - 1]["part"] = partValue;
+      widget.carDamagesAllList[indexValue - 1]["damage"]["scratch"] =
+          scratch_count;
+      widget.carDamagesAllList[indexValue - 1]["damage"]["crushed"] =
+          crushed_count;
+      widget.carDamagesAllList[indexValue - 1]["damage"]["breakage"] =
+          breakage_count;
+      widget.carDamagesAllList[indexValue - 1]["damage"]["separated"] =
+          separated_count;
+      widget.carDamagesAllList[indexValue - 1]["memo"] = memoValue;
+      widget.carDamagesAllList[indexValue - 1]["selected"] = true;
+      selectedCarDamagesList.add(widget.carDamagesAllList[indexValue - 1]);
     });
   }
 
   @override
   void initState() {
     _initVideoPlayer();
-
-    analysisCarDamageApi(
-      success: (dynamic response) {
-        print(response[0]);
-        int time_cnt = 0;
-        int index_cnt = 0;
-        for (int i = 0; i < response.length; i++) {
-          index_cnt += 1;
-          print(response[i]['url']);
-          Map<String, dynamic> carDamageState = {
-            "index": index_cnt,
-            "Damage_Image_URL": response[i]['url'],
-            "part": "",
-            "damage": {
-              "scratch": 0,
-              "crushed": 0,
-              "breakage": 0,
-              "separated": 0,
-            },
-            "timeStamp": time_cnt,
-            "memo": "",
-            "selected": false,
-          };
-          carDamageState["damage"][carDamageState["damage"]] += 1;
-          carDamagesAllList.add(carDamageState);
-          if (index_cnt % 3 == 0) {
-            time_cnt += 1;
-          }
-        }
-        // List<Map<String, dynamic>> carDamagesList = [];
-        // carDamagesList = response.map((Map<String, dynamic> carDamage) {
-        //   print('carDamage');
-        //   print(carDamage['url']);
-        //   String url = carDamage["url"];
-        //   String damage_sort = carDamage["damage"];
-        //   index_cnt += 1;
-        //   Map<String, dynamic> carDamageState = {
-        //     "Damage_Image_URL": url,
-        //     "part": "",
-        //     "damage": damage_sort,
-        //     "timeStamp": time_cnt,
-        //     "memo": "",
-        //   };
-        //   if (index_cnt % 3 == 0) {
-        //     time_cnt += 1;
-        //   }
-        //   print(carDamage);
-        //   return carDamageState;
-        // }).toList();
-        setState(() {
-          // carDamagesAllList = carDamagesList;
-          carDamageInfo = response;
-          loading_api = true;
-        });
-      },
-      fail: (error) {
-        print(error);
-        print('차량 손상 분석 오류: $error');
-        setState(
-          () {
-            loading_api = true;
-          },
-        );
-      },
-      filePath: widget.filePath,
-      user_id: 1,
-    );
-    // setState(
-    //   () {
-    //     loading_api = true;
-    //   },
-    // );
     super.initState();
   }
 
@@ -665,7 +594,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                       _isView
                                           ? selectedCarDamagesList.length
                                               .toString()
-                                          : carDamagesAllList.length.toString(),
+                                          : widget.carDamagesAllList.length
+                                              .toString(),
                                       style: TextStyle(
                                         color: Color(0xFFE0426F),
                                         fontWeight: FontWeight.w700,
@@ -685,7 +615,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                           ? CheckCarDamageContainer(
                               carDamageList: _isView
                                   ? selectedCarDamagesList
-                                  : carDamagesAllList,
+                                  : widget.carDamagesAllList,
                               videoPlayerController: _videoPlayerController,
                               changeDamageValue: changeDamageValue,
                             )

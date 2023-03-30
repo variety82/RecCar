@@ -67,15 +67,37 @@ Future<dynamic> analysisCarDamageApi({
     // statuse가 200대이면 성공으로 해서 jsonResponse를 쓰는 콜백함수로 보내줍니다
     String responseBody = await response.stream.transform(utf8.decoder).join();
     dynamic jsonResponse = jsonDecode(responseBody);
-    Iterable jsonList = jsonResponse;
+    dynamic jsonList = jsonResponse;
 
-    print(jsonList);
-    print('jsonList');
-    return success(jsonList);
-    // dynamic jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    // // Iterable list = jsonResponse;
-    // // return list.toList(growable: true);
-    // return success(jsonResponse);
+    List<Map<String, dynamic>> carDamagesAllList = [];
+
+    int time_cnt = 0;
+    int index_cnt = 0;
+    for (int i = 0; i < jsonList.length; i++) {
+      index_cnt += 1;
+      print(jsonList[i]['url']);
+      Map<String, dynamic> carDamageState = {
+        "index": index_cnt,
+        "Damage_Image_URL": jsonList[i]['url'],
+        "part": "",
+        "damage": {
+          "scratch": 0,
+          "crushed": 0,
+          "breakage": 0,
+          "separated": 0,
+        },
+        "timeStamp": time_cnt,
+        "memo": "",
+        "selected": false,
+      };
+      // carDamageState["damage"][carDamageState["damage"]] += 1;
+      carDamagesAllList.add(carDamageState);
+      if (index_cnt % 3 == 0) {
+        time_cnt += 1;
+      }
+    }
+
+    return success(carDamagesAllList);
   } else {
     // 200대가 아니면 에러 코드를 보내줍니다
     print(response.statusCode);

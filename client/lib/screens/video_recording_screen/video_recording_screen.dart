@@ -434,11 +434,12 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                           InkWell(
                                             onTap: () async {
                                               _stopTimer();
-                                              setState(() {
-                                                _nowcameraInitialized = false;
-                                                _nowRecording = false;
-                                              });
-
+                                              setState(
+                                                () {
+                                                  _nowcameraInitialized = false;
+                                                  _nowRecording = false;
+                                                },
+                                              );
                                               String videoFilePath =
                                                   await stopRecording();
                                               final route = MaterialPageRoute(
