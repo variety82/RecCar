@@ -3,15 +3,17 @@ import 'widgets/common/header.dart';
 import 'widgets/common/footer.dart';
 import 'screens/register/car_register_main.dart';
 import 'screens/my_page/my_page.dart';
-import 'screens/gas_station_search_page/gas_station_search.dart';
+import 'screens/map_screen/map_screen.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
 import 'screens/video_recording_screen/camera_screen.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'screens/detail/car_detail.dart';
 import 'screens/calendar_screen/calendar_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: '.env');
   runApp(
     MaterialApp(
       title: 'cilent',
