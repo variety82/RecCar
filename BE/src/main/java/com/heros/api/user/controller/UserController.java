@@ -56,7 +56,20 @@ public class UserController {
         return ResponseEntity.status(200).body(new UserLoginResponse(user, accessToken));
     }
 
-//    @Operation(summary = "access-token 받기", description = "access-token 메서드입니다.")
+    @Operation(summary = "유저 로그인", description = "유저 로그인 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 로그인 성공"),
+            @ApiResponse(responseCode = "400", description = "bad request operation")
+    })
+    @PostMapping(value = "/tokenLogin")
+    public ResponseEntity<?> login() {
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        User user = (User) httpServletRequest.getAttribute("user");
+        return ResponseEntity.status(200).body(new UserResponse(user));
+    }
+
+
+    //    @Operation(summary = "access-token 받기", description = "access-token 메서드입니다.")
 //    @ApiResponses(value = {
 //            @ApiResponse(responseCode = "201", description = "access-token 발급 성공"),
 //            @ApiResponse(responseCode = "400", description = "bad request operation")

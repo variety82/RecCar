@@ -84,8 +84,8 @@ public class DetectionInfoController {
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
     @PostMapping(value = "/api/v1/detection")
-    public ResponseEntity<?> addDetectionInfo(@Valid @RequestBody DetectionInfoCreate detectionInfoCreate) {
-        detectionInfoService.createDamageInfo(detectionInfoCreate);
+    public ResponseEntity<?> addDetectionInfo(@Valid @RequestBody List<DetectionInfoCreate> detectionInfoCreates) {
+        detectionInfoService.createDamageInfo(detectionInfoCreates);
         return ResponseEntity.status(201).body(null);
     }
 }
