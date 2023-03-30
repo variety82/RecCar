@@ -86,7 +86,7 @@ public class loginExampleController {
         params.put("response_type","code");
         params.put("client_id","993410709622-geh083urrsjc4en7oajal6ugv39njo36.apps.googleusercontent.com");
 //        params.put("redirect_uri","http://localhost:8080/api/login/callback");
-        params.put("redirect_uri","http://j8a102.p.ssafy.io:8080/api/login/callback");
+        params.put("redirect_uri","https://j8a102.p.ssafy.io:8080/api/login/callback");
 
         //parameter를 형식에 맞춰 구성해주는 함수
         String parameterString=params.entrySet().stream()
@@ -127,7 +127,8 @@ public class loginExampleController {
         params.put("code", code);
         params.put("client_id", "993410709622-geh083urrsjc4en7oajal6ugv39njo36.apps.googleusercontent.com");
         params.put("client_secret", "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");
-        params.put("redirect_uri", "http://localhost:8080/api/login/callback");
+//        params.put("redirect_uri", "http://localhost:8080/api/login/callback");
+        params.put("redirect_uri","https://j8a102.p.ssafy.io:8080/api/login/callback");
         params.put("grant_type", "authorization_code");
 
         ResponseEntity<String> responseEntity=restTemplate.postForEntity(GOOGLE_TOKEN_REQUEST_URL,
