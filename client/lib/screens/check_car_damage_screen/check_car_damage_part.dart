@@ -21,8 +21,17 @@ class CheckCarDamagePart extends StatelessWidget {
     required this.changeDamageValue,
   });
 
+  // timer 시, 분, 초 단위로 표시 전환해줌
+  String _durationToString(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Container(
       height: 300,
       decoration: BoxDecoration(
@@ -104,7 +113,7 @@ class CheckCarDamagePart extends StatelessWidget {
                         await videoPlayerController.play();
                       },
                       child: Text(
-                        '00:05',
+                        "${_durationToString(Duration(seconds: carDamage["timeStamp"]))}",
                         style: TextStyle(
                           color: Colors.blueAccent,
                           decoration: TextDecoration.underline,

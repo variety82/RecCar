@@ -78,7 +78,7 @@ Future<dynamic> analysisCarDamageApi({
           "memo": "",
           "selected": false,
         };
-        carDamageState[carDamageState["damage"]] += 1;
+        // carDamageState[carDamageState["damage"]] += 1;
         carDamagesAllList.add(carDamageState);
         if (index_cnt % 3 == 0) {
           time_cnt += 1;
