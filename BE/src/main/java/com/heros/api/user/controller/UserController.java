@@ -1,6 +1,9 @@
 package com.heros.api.user.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.heros.api.example.model.GoogleOAuthToken;
 import com.heros.api.user.dto.request.UserRequest;
+import com.heros.api.user.dto.response.UserLoginResponse;
 import com.heros.api.user.dto.response.UserResponse;
 import com.heros.api.user.entity.User;
 import com.heros.api.user.service.UserService;
@@ -27,16 +30,30 @@ import java.util.Map;
 @Tag(name = "User-Api", description = "User-Api 입니다.")
 public class UserController {
     private final UserService userService;
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Operation(summary = "유저 로그인", description = "유저 로그인 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "유저 로그인 성공"),
             @ApiResponse(responseCode = "400", description = "bad request operation")
     })
-    @PostMapping(value = "/tokenLogin")
-    public ResponseEntity<?> login() {
-        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        User user = (User) httpServletRequest.getAttribute("user");
-        return ResponseEntity.status(200).body(new UserResponse(user));
+    @GetMapping(value = "/login")
+    public ResponseEntity<?> login(@RequestParam(name = "code") String code) throws Exception {
+        String GOOGLE_TOKEN_REQUEST_URL="https://oauth2.googleapis.com/token";
+        RestTemplate restTemplate=new RestTemplate();
+        Map<String, Object> params = new HashMap<>();
+        params.put("code", code);
+        params.put("client_id", "993410709622-geh083urrsjc4en7oajal6ugv39njo36.apps.googleusercontent.com");
+        params.put("client_secret", "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");
+//        params.put("redirect_uri", "http://localhost:8080/api/v1/user/login");
+        params.put("redirect_uri","http://j8a102.p.ssafy.io:8080/api/login/callback");
+        params.put("grant_type", "authorization_code");
+        ResponseEntity<String> responseEntity=restTemplate.postForEntity(GOOGLE_TOKEN_REQUEST_URL, params, String.class);
+        String accessToken = objectMapper.readValue(responseEntity.getBody(),GoogleOAuthToken.class).getAccess_token();
+        System.out.println(accessToken);
+
+        User user = userService.loginUser(accessToken);
+        System.out.println(user);
+        return ResponseEntity.status(200).body(new UserLoginResponse(user, accessToken));
     }
 
 //    @Operation(summary = "access-token 받기", description = "access-token 메서드입니다.")

@@ -7,17 +7,20 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class UserResponse {
+public class UserLoginResponse {
     @Schema(description = "nickName", example = "taekun")
     private String nickName;
     @Schema(description = "picture", example = "profile.jpg")
     private String picture;
     @Schema(description = "currentCarId", example = "1")
     private Long currentCarId;
-    public UserResponse(User user) {
+    @Schema(description = "accessToken", example = "ya29.a0Ael9sCPo1lWNn")
+    private String accessToken;
+    public UserLoginResponse(User user, String accessToken) {
         this.nickName = user.getNickName();
         this.picture = user.getPicture();
         this.currentCarId = user.getCurrentCarId();
+        this.accessToken = accessToken;
     }
 
     @Override
