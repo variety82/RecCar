@@ -7,7 +7,7 @@ void getSimpleRentInfo({
   Map<String, String>? body,
 }) {
   apiInstance(
-    path : '/car/history/1',
+    path : '/car/history',
     method : Method.get,
     body: body,
     success: success,

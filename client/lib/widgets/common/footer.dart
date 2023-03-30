@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../screens/gas_station_search_page/gas_station_search.dart';
+import '../../screens/map_screen/map_screen.dart';
 import '../../screens/my_page/my_page.dart';
 import '../../main.dart';
 

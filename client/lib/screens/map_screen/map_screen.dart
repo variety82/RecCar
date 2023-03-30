@@ -10,7 +10,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 String TmapApiKey = dotenv.env['TMAP_API_KEY']!;
 
-
 class NaverMapTest extends StatefulWidget {
   @override
   _NaverMapTestState createState() => _NaverMapTestState();
@@ -20,17 +19,14 @@ class _NaverMapTestState extends State<NaverMapTest> {
   // naver.MapType _mapType = naver.MapType.Basic;
   late naver.NaverMapController _controller;
   late Position _position;
+  bool isSocarTouched = false;
+  bool isGreencarTouched = false;
   List<Map<String, dynamic>> result =
       List<Map<String, dynamic>>.filled(2000, {});
   bool beforeSearch = true;
   List<naver.Marker> marker = List<naver.Marker>.filled(
       2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
       growable: true);
-
-  // @override
-  // void initState() {
-  //   searchSocar();
-  // }
 
   Widget _previewWidget() {
     return Container(
@@ -211,7 +207,9 @@ class _NaverMapTestState extends State<NaverMapTest> {
                       ),
                       height: 30,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isSocarTouched
+                            ? Theme.of(context).primaryColor
+                            : Colors.white,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.7),
@@ -223,18 +221,23 @@ class _NaverMapTestState extends State<NaverMapTest> {
                       ),
                       // decoration: BoxDecoration(color: Theme.of(context).primaryColor),
                       child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll(Colors.transparent),
-                            // fixedSize: MaterialStatePropertyAll(
-                            //   Size(80, 6),
-                            // ),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.transparent),
+                          // fixedSize: MaterialStatePropertyAll(
+                          //   Size(80, 6),
+                          // ),
+                        ),
+                        onPressed: () => searchSocar(),
+                        child: Text(
+                          "쏘카존보기",
+                          style: TextStyle(
+                            color: isSocarTouched
+                                ? Colors.white
+                                : Theme.of(context).secondaryHeaderColor,
                           ),
-                          onPressed: () => searchSocar(),
-                          child: Text("쏘카존보기",
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).secondaryHeaderColor))),
+                        ),
+                      ),
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(
@@ -243,7 +246,9 @@ class _NaverMapTestState extends State<NaverMapTest> {
                       ),
                       height: 30,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isGreencarTouched
+                            ? Theme.of(context).primaryColor
+                            : Colors.white,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.7),
@@ -255,20 +260,25 @@ class _NaverMapTestState extends State<NaverMapTest> {
                       ),
                       // decoration: BoxDecoration(color: Theme.of(context).primaryColor),
                       child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(
-                                Colors.transparent),
-
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.transparent),
+                        ),
+                        onPressed: () => searchGreencar(),
+                        child: Text(
+                          "그린존보기",
+                          style: TextStyle(
+                            color: isGreencarTouched
+                                ? Colors.white
+                                : Theme.of(context).secondaryHeaderColor,
                           ),
-                          onPressed: () => searchGreencar(),
-                          child: Text("그린존보기",
-                              style: TextStyle(color: Theme.of(context).secondaryHeaderColor))),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                top: 70,
-                left: 50,
-                right: 50,
+                bottom: 70,
+                left: 75,
               ),
               Positioned(
                 child: TextButton(
@@ -410,35 +420,50 @@ class _NaverMapTestState extends State<NaverMapTest> {
   }
 
   Future<void> searchSocar() async {
-    Map<String, String> headers = {
-      "appkey": TmapApiKey,
-    };
-    marker = List<naver.Marker>.filled(
-        2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
-        growable: true);
-    for (int i = 1; i <= 20; i++) {
-      Response response = await get(
-        Uri.parse(
-            "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=쏘카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=${i}"),
-        headers: headers,
-      );
-      var jsonData = response.body;
-      var ret = jsonDecode(jsonData)["searchPoiInfo"]['pois']['poi'];
+    setState(() {
+      isSocarTouched = !isSocarTouched;
+      isGreencarTouched = false;
+    });
+    if (isSocarTouched) {
+      Map<String, String> headers = {
+        "appkey": TmapApiKey,
+      };
+      marker = List<naver.Marker>.filled(
+          2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+          growable: true);
+      for (int i = 1; i <= 20; i++) {
+        Response response = await get(
+          Uri.parse(
+              "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=쏘카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=${i}"),
+          headers: headers,
+        );
+        var jsonData = response.body;
+        var ret = jsonDecode(jsonData)["searchPoiInfo"]['pois']['poi'];
+        setState(() {
+          for (int j = 0; j < ret.length; j++) {
+            result[100 * (i - 1) + j] = ret[j];
+          }
+        });
+        setState(
+          () {
+            for (int j = 0; j < ret.length; j++) {
+              var lat = double.parse(ret[j]["frontLat"]);
+              var lng = double.parse(ret[j]["frontLon"]);
+              var latLng = naver.LatLng(lat, lng);
+              marker[100 * (i - 1) + j + 1] = (naver.Marker(
+                markerId: "${ret[j]['name']}",
+                position: latLng,
+                infoWindow: "${ret[j]['name']}",
+              ));
+            }
+          },
+        );
+      }
+    } else {
       setState(() {
-        for (int j = 0; j < ret.length; j++) {
-          result[100 * (i - 1) + j] = ret[j];
-        }
-      });
-      setState(() {
-        for (int j = 0; j < ret.length; j++) {
-          var lat = double.parse(ret[j]["frontLat"]);
-          var lng = double.parse(ret[j]["frontLon"]);
-          var latLng = naver.LatLng(lat, lng);
-          marker[100 * (i - 1) + j + 1] = (naver.Marker(
-              markerId: "${ret[j]['name']}",
-              position: latLng,
-              infoWindow: "${ret[j]['name']}"));
-        }
+        marker = List<naver.Marker>.filled(2001,
+            naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+            growable: true);
       });
     }
     print(marker);
@@ -458,35 +483,49 @@ class _NaverMapTestState extends State<NaverMapTest> {
   }
 
   Future<void> searchGreencar() async {
-    Map<String, String> headers = {
-      "appkey": TmapApiKey,
-    };
-    marker = List<naver.Marker>.filled(
-        2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
-        growable: true);
-    for (int i = 1; i <= 20; i++) {
-      Response response = await get(
-        Uri.parse(
-            "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=그린카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=${i}"),
-        headers: headers,
-      );
-      var jsonData = response.body;
-      var ret = jsonDecode(jsonData)["searchPoiInfo"]['pois']['poi'];
+    setState(() {
+      isSocarTouched = false;
+      isGreencarTouched = !isGreencarTouched;
+    });
+    if (isGreencarTouched) {
+      Map<String, String> headers = {
+        "appkey": TmapApiKey,
+      };
+      marker = List<naver.Marker>.filled(
+          2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+          growable: true);
+      for (int i = 1; i <= 20; i++) {
+        Response response = await get(
+          Uri.parse(
+              "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=그린카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=${i}"),
+          headers: headers,
+        );
+        var jsonData = response.body;
+        var ret = jsonDecode(jsonData)["searchPoiInfo"]['pois']['poi'];
+        setState(() {
+          for (int j = 0; j < ret.length; j++) {
+            result[100 * (i - 1) + j] = ret[j];
+          }
+        });
+        setState(
+          () {
+            for (int j = 0; j < ret.length; j++) {
+              var lat = double.parse(ret[j]["frontLat"]);
+              var lng = double.parse(ret[j]["frontLon"]);
+              var latLng = naver.LatLng(lat, lng);
+              marker[100 * (i - 1) + j + 1] = (naver.Marker(
+                  markerId: "${ret[j]['name']}",
+                  position: latLng,
+                  infoWindow: "${ret[j]['name']}"));
+            }
+          },
+        );
+      }
+    } else {
       setState(() {
-        for (int j = 0; j < ret.length; j++) {
-          result[100 * (i - 1) + j] = ret[j];
-        }
-      });
-      setState(() {
-        for (int j = 0; j < ret.length; j++) {
-          var lat = double.parse(ret[j]["frontLat"]);
-          var lng = double.parse(ret[j]["frontLon"]);
-          var latLng = naver.LatLng(lat, lng);
-          marker[100 * (i - 1) + j + 1] = (naver.Marker(
-              markerId: "${ret[j]['name']}",
-              position: latLng,
-              infoWindow: "${ret[j]['name']}"));
-        }
+        marker = List<naver.Marker>.filled(2001,
+            naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+            growable: true);
       });
     }
     // Response response = await get(
