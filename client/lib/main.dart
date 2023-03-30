@@ -3,7 +3,7 @@ import 'widgets/common/header.dart';
 import 'widgets/common/footer.dart';
 import 'screens/register/car_register_main.dart';
 import 'screens/my_page/my_page.dart';
-import 'screens/gas_station_search_page/gas_station_search.dart';
+import 'screens/map_screen/map_screen.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
 import 'screens/video_recording_screen/camera_screen.dart';
 import 'package:client/screens/video_recording_screen/video_recording_screen.dart';
@@ -11,8 +11,11 @@ import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'screens/detail/car_detail.dart';
 import 'screens/calendar_screen/calendar_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+
+void main() async {
+  await dotenv.load(fileName: '.env');
   // 앱 처음 실행 시 flutter 엔진 초기화 메소드 호출
   // flutter 자체의 렌더링 엔진을 사용할 때 필요한 기본적인 설정들을 수행하는 메소드라고 생각하면 됨
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,9 +57,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   static const storage = FlutterSecureStorage();
-  dynamic userId = '';
   dynamic userName = '';
-  dynamic userEmail = '';
+  dynamic userProfileImg = '';
+  dynamic userCarId = '';
+
+  // dynamic userName = '';
+  // dynamic userEmail = '';
 
   @override
   void initState() {
@@ -69,16 +75,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   checkUserState() async {
-    var id = await storage.read(key: 'id');
-    var name = await storage.read(key: 'name');
-    var email = await storage.read(key: 'email');
+    var name = await storage.read(key: 'nickName');
+    var img = await storage.read(key: 'picture ');
+    var carId = await storage.read(key: 'carId');
     setState(() {
-      userId = id;
       userName = name;
-      userEmail = email;
+      userProfileImg = img;
+      userCarId = carId;
     });
-
-    if (userId == null) {
+    if (userName == null) {
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
     }
   }
@@ -116,8 +121,7 @@ class _MyAppState extends State<MyApp> {
                       Navigator.pushNamed(context, '/detail');
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor
-                    ),
+                        backgroundColor: Theme.of(context).primaryColor),
                     child: const Text('차량 상세 페이지'))
               ],
             ),

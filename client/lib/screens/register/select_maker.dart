@@ -4,11 +4,11 @@ import 'package:client/widgets/register/maker_item.dart';
 import 'package:client/services/register_api.dart';
 
 class SelectMaker extends StatefulWidget {
-  final void Function(int, String) updateSelectedMaker;
-  final List manufacturerList;
+  final void Function(int, String, String) updateSelectedMaker;
+  final List<dynamic> carInfo;
 
   const SelectMaker({
-    super.key, required this.updateSelectedMaker, required this.manufacturerList,
+    super.key, required this.updateSelectedMaker, required this.carInfo,
   });
 
   @override
@@ -120,16 +120,16 @@ class _SelectMakerState extends State<SelectMaker> {
               // asmap은 Map에 index 넣는 것이고 entries는 key value값의 맵으로 값 바꿔주는 것
               // 그러면 maker값이 index와 makerInfo로 나누어진다
               // map은 말그대로 map이다 children에는 list가 들어가야 하기 때문에 toList()를 해준다
-              children: widget.manufacturerList.asMap().entries.map<MakerItem>((MapEntry<int, dynamic> makerList) {
+              children: widget.carInfo.asMap().entries.map<MakerItem>((MapEntry<int, dynamic> makerList) {
                 int index = makerList.key;
-                String makerName = makerList.value;
+                Map<String, dynamic> maker = makerList.value;
                 return MakerItem(
                     updateSelectedMaker: widget.updateSelectedMaker,
                     changeSelectedItem: _changeSelectedItem,
                     isSelected: selectedMaker == index ? true : false,
                     makerId: index,
-                    makerTitle: makerName,
-                    makerImageUrl: 'https://scontent-ssn1-1.xx.fbcdn.net/v/t1.6435-9/71140183_2565406580147654_6224942049100038144_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=rFRCaBYqX_kAX-6Pv-x&_nc_ht=scontent-ssn1-1.xx&oh=00_AfA_fpZatlF37xtx_gAEwJunxUpppE_QUaVmozu5c9EURA&oe=64364939',
+                    makerTitle: maker['manufacturer'],
+                    makerLogoUrl: maker['logoUrl'],
                   );
                 },
               ).toList(),

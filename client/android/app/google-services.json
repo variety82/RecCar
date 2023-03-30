@@ -1,1 +1,62 @@
-{"installed":{"client_id":"370038842555-ntj3lg9j7aanac47316ers88uft2jqdv.apps.googleusercontent.com","project_id":"flutter-auth-381504","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs"}}
+{
+  "project_info": {
+    "project_number": "370038842555",
+    "project_id": "flutter-auth-381504",
+    "storage_bucket": "flutter-auth-381504.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370038842555:android:eb85a8b609b49a6836b59e",
+        "android_client_info": {
+          "package_name": "com.hero.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "370038842555-g6hta0b3a9e43pm5n3q00vo0jqc2400j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hero.client",
+            "certificate_hash": "833cfbd34c86b68d76bd0953e0b2fd08eb02de2d"
+          }
+        },
+        {
+          "client_id": "370038842555-ktfps7tfoodltpof0m3973a1c1t2u9tf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hero.client",
+            "certificate_hash": "768bcf27db9ad4ea1ab2f14a3b748c2813dfac81"
+          }
+        },
+        {
+          "client_id": "370038842555-gocfd55nupopaalibbapu1538n60c7af.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5uekp-Sic77GdPGbpj619bcmQq4UyS-8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "370038842555-gocfd55nupopaalibbapu1538n60c7af.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "370038842555-0i4qkbmdnrk9eipu2498kk2v01fouuql.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.client.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

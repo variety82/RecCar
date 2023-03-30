@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+final storage = FlutterSecureStorage();
 enum Method { get, post }
 
 // apiInstance를 만듭니다
@@ -16,10 +18,13 @@ Future<dynamic> apiInstance({
   String URL = 'http://j8a102.p.ssafy.io:8080/api/v1$path';
   // uri 형식으로 변경합니다
   final url = Uri.parse(URL);
+  Future<String?> futureString = storage.read(key: "accessToken");
+  String? accessToken = await futureString;
 
   // 기본 headers
   Map<String, String> headers = {
     "Content-Type": "application/json;charset=utf-8",
+    "accessToken": "$accessToken",
   };
 
   // response 값입니다
@@ -28,25 +33,30 @@ Future<dynamic> apiInstance({
   // method에 따라 다르게 요청하고 response값을 받습니다
   switch (method) {
     case Method.get:
-      response = await http.get(
-          url,
-          headers: headers
-      );
+      try {
+        response = await http.get(url, headers: headers);
+      } catch (error) {
+        fail('HTTP 요청 처리 중 오류 발생: $error');
+      }
       break;
     case Method.post:
-      response = await http.post(
-          url,
-          headers: headers,
-          body: body
-      );
+      try {
+        response =
+            await http.post(url, headers: headers, body: json.encode(body));
+      } catch (error) {
+        fail('HTTP 요청 처리 중 오류 발생: $error');
+      }
       break;
   }
 
   if (200 <= response.statusCode && response.statusCode < 300) {
     // statuse가 200대이면 성공으로 해서 jsonResponse를 쓰는 콜백함수로 보내줍니다
-    dynamic jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    // Iterable list = jsonResponse;
-    // return list.toList(growable: true);
+    late dynamic jsonResponse;
+    if (response.body.isNotEmpty) {
+      jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    } else {
+      jsonResponse = {};
+    }
     return success(jsonResponse);
   } else {
     // 200대가 아니면 에러 코드를 보내줍니다
