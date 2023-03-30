@@ -1,49 +1,50 @@
 {
   "project_info": {
-    "project_number": "370038842555",
-    "project_id": "flutter-auth-381504",
-    "storage_bucket": "flutter-auth-381504.appspot.com"
+    "project_number": "241391269143",
+    "project_id": "please-auth-382210",
+    "storage_bucket": "please-auth-382210.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:370038842555:android:eb85a8b609b49a6836b59e",
+        "mobilesdk_app_id": "1:241391269143:android:1896e7beb189592863b352",
         "android_client_info": {
           "package_name": "com.hero.client"
         }
       },
       "oauth_client": [
         {
-          "client_id": "370038842555-g6hta0b3a9e43pm5n3q00vo0jqc2400j.apps.googleusercontent.com",
+          "client_id": "241391269143-625gjc8blfdm225mdnm2jk05ig5qmi86.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.hero.client",
-            "certificate_hash": "833cfbd34c86b68d76bd0953e0b2fd08eb02de2d"
+            "certificate_hash": "270e8959d48def1f6ad1aca506732fb4b675d15c"
           }
         },
         {
-          "client_id": "370038842555-gocfd55nupopaalibbapu1538n60c7af.apps.googleusercontent.com",
+          "client_id": "241391269143-ktqal1n0da01qprn78euuv2fs2bog0fl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hero.client",
+            "certificate_hash": "ae563af11fc94072e245229198ce0a3a2ccab884"
+          }
+        },
+        {
+          "client_id": "241391269143-3qt7p1cergi83a0np8f5cssb598spg6i.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD5uekp-Sic77GdPGbpj619bcmQq4UyS-8"
+          "current_key": "AIzaSyC1sXgQGTbWU64RlZf4pzB8juHwl5syHRc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "370038842555-gocfd55nupopaalibbapu1538n60c7af.apps.googleusercontent.com",
+              "client_id": "241391269143-3qt7p1cergi83a0np8f5cssb598spg6i.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "370038842555-0i4qkbmdnrk9eipu2498kk2v01fouuql.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.client.RunnerTests"
-              }
             }
           ]
         }

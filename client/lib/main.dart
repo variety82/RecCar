@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'firebase_options.dart';
 import 'widgets/common/header.dart';
 import 'widgets/common/footer.dart';
 import 'screens/register/car_register_main.dart';
@@ -11,7 +13,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'screens/detail/car_detail.dart';
 import 'screens/calendar_screen/calendar_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MaterialApp(
       title: 'cilent',
