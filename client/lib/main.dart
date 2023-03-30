@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'widgets/common/header.dart';
 import 'widgets/common/footer.dart';
 import 'screens/register/car_register_main.dart';
 import 'screens/my_page/my_page.dart';
@@ -10,6 +9,7 @@ import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'screens/detail/car_detail.dart';
 import 'screens/calendar_screen/calendar_screen.dart';
+import 'widgets/main_page/Main_Page_Body.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
@@ -36,7 +36,7 @@ void main() async {
         '/login': (context) => const Login(),
         '/before-recording': (context) => const BeforeRecordingScreen(),
         '/recording': (context) => CameraScreen(),
-        '/calendar': (context) => Calendar(),
+        '/calendar': (context) => const Calendar(),
       },
     ),
   );
@@ -88,38 +88,53 @@ class _MyAppState extends State<MyApp> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          const Header(
-            title: 'Main',
+          const SizedBox(
+            height: 100,
           ),
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  '대충 차고 이미지',
-                ),
-                const SizedBox(
-                  height: 100,
-                ),
-                const Text('차량 등록 아직 안했을 경우'),
-                IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/register');
-                    },
-                    icon: const Icon(Icons.add_box_rounded)),
-                const Text(
-                  '차량 등록됐을 경우',
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/detail');
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor),
-                    child: const Text('차량 상세 페이지'))
-              ],
-            ),
-          ),
+              child: userCarId == 0
+                  ? MainPageBody(
+                      imgRoute: 'lib/assets/images/empty_garage.svg',
+                      imageDisabled: true,
+                      mainContainter: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '대여중인 차가 없습니다',
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            '자동차를 등록해주세요',
+                            style: TextStyle(
+                                color: Theme.of(context).secondaryHeaderColor,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    )
+                  : MainPageBody(
+                      imgRoute: 'lib/assets/images/car_garage.svg',
+                      imageDisabled: false,
+                      mainContainter: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/detail');
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor),
+                              child: const Text('차량 상세 페이지'))
+                        ],
+                      ),
+                    )),
           const Footer()
         ],
       ),
