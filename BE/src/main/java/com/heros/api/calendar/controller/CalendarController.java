@@ -88,13 +88,18 @@ public class CalendarController {
         return ResponseEntity.status(201).body(null);
     }
 
-    @Operation(summary = "캘린더 삭제")
+    @Operation(summary = "캘린더 삭제", description = "캘린더 삭제 메서드입니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = PartWithDetectionInfoResponse.class))),
+            @ApiResponse(responseCode = "200", description = "success"),
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
     @DeleteMapping(value = "{calendarId}")
     public ResponseEntity<?> calendarDelete(@Schema(description = "삭제할 calendar Id", example = "1") @NotNull @Min(1) @PathVariable Long calendarId) {
+        Calendar oneCalendar = calendarService.getOneCalendar(calendarId);
+        if (oneCalendar.isAuto()) {
+            throw (new CarException(ErrorCode.INVALID_DELETE_VALUE));
+        }
+
         calendarService.deleteCalendar(calendarId);
         return ResponseEntity.status(201).body(null);
     }
