@@ -37,74 +37,104 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    width: 190,
-                    child: Text(
-                      widget.partName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Stack(
+                  Column(
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(
-                          top: 10,
-                        ),
-                        width: 180,
-                        height: 13,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: const Color(0xFFEFEFEF),
+                      SizedBox(
+                        width: 190,
+                        child: Text(
+                          widget.partName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                          top: 10,
-                        ),
-                        width: 180 * (widget.damageLevel / 4),
-                        height: 13,
-                        decoration: BoxDecoration(
-                          borderRadius:
-                            widget.damageLevel == 4
-                              ? BorderRadius.circular(5)
-                              : const BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  bottomLeft: Radius.circular(5),
+                      Stack(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(
+                              top: 10,
                             ),
-                          color: Theme.of(context).primaryColor,
-                        ),
+                            width: 180,
+                            height: 13,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: const Color(0xFFEFEFEF),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              top: 10,
+                            ),
+                            width: 180 * (widget.damageLevel / 4),
+                            height: 13,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                widget.damageLevel == 4
+                                  ? BorderRadius.circular(5)
+                                  : const BorderRadius.only(
+                                      topLeft: Radius.circular(5),
+                                      bottomLeft: Radius.circular(5),
+                                ),
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        right: 3
-                    ),
-                    child: Text(
-                      '${widget.damageLevel}',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.w600
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            right: 3
+                        ),
+                        child: Text(
+                          '${widget.damageLevel}',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w600
+                          ),
+                        ),
                       ),
-                    ),
+                      const Text('건')
+                    ],
                   ),
-                  const Text('건')
+
                 ],
               ),
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(7),
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          child: Image.network(
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtHU4BqZcNHPKDPWdn28TYFjpJWWNhZvUvWQ&usqp=CAU', // 이미지 URL
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 30,
+                      ),
+                      Text('2023.03.03 18:30'),
+                    ],
+                  ),
+                ],
+              )
             ],
           ),
         ),
