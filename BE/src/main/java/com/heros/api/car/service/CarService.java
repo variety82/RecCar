@@ -3,6 +3,7 @@ package com.heros.api.car.service;
 import com.heros.api.car.dto.request.CarCreate;
 import com.heros.api.car.dto.request.CarModify;
 import com.heros.api.car.dto.response.CarCatalogResponse;
+import com.heros.api.car.dto.response.CarListResponse;
 import com.heros.api.car.dto.response.CarResponse;
 import com.heros.api.car.entity.Car;
 import com.heros.api.car.entity.CarCatalog;
@@ -49,11 +50,11 @@ public class CarService {
         return new CarResponse(carRepository.save(car));
     }
 
-    public List<CarResponse> findCarList(User user) {
+    public List<CarListResponse> findCarList(User user) {
         List<Car> carList = userRepository.findById(user.getUserId()).get().getCars();
-        List<CarResponse> carResponseList = new ArrayList<>();
+        List<CarListResponse> carResponseList = new ArrayList<>();
         for (Car car: carList) {
-            carResponseList.add(new CarResponse(car));
+            carResponseList.add(new CarListResponse(car));
         }
         return carResponseList;
     }

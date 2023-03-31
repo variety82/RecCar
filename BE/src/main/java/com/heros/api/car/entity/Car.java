@@ -49,6 +49,9 @@ public class Car {
     @Column(name = "RETURNED", columnDefinition="tinyint(1)")
     private boolean returned;
 
+    @Column(name = "INITIAL_DAMAGE_COUNT")
+    private int initialDamageCount;
+
     @Column(name = "INITIAL_FRONT_DAMAGE_COUNT")
     private int initialFrontDamageCount;
 
@@ -60,6 +63,9 @@ public class Car {
 
     @Column(name = "INITIAL_WHEEL_DAMAGE_COUNT")
     private int initialWheelDamageCount;
+
+    @Column(name = "LATTER_DAMAGE_COUNT")
+    private int latterDamageCount;
 
     @Column(name = "LATTER_FRONT_DAMAGE_COUNT")
     private int latterFrontDamageCount;
@@ -74,7 +80,7 @@ public class Car {
     private int latterWheelDamageCount;
 
     @Builder
-    public Car(User user, String carNumber, String carManufacturer, String carModel, String carFuel, LocalDateTime rentalDate, LocalDateTime returnDate, String rentalCompany, boolean returned, int initialFrontDamageCount, int initialMidDamageCount, int initialBackDamageCount, int initialWheelDamageCount, int latterFrontDamageCount, int latterMidDamageCount, int latterBackDamageCount, int latterWheelDamageCount) {
+    public Car(User user, String carNumber, String carManufacturer, String carModel, String carFuel, LocalDateTime rentalDate, LocalDateTime returnDate, String rentalCompany, boolean returned, int initialDamageCount, int initialFrontDamageCount, int initialMidDamageCount, int initialBackDamageCount, int initialWheelDamageCount, int latterDamageCount, int latterFrontDamageCount, int latterMidDamageCount, int latterBackDamageCount, int latterWheelDamageCount) {
         this.user = user;
         this.carNumber = carNumber;
         this.carManufacturer = carManufacturer;
@@ -84,10 +90,12 @@ public class Car {
         this.returnDate = returnDate;
         this.rentalCompany = rentalCompany;
         this.returned = returned;
+        this.initialDamageCount = initialDamageCount;
         this.initialFrontDamageCount = initialFrontDamageCount;
         this.initialMidDamageCount = initialMidDamageCount;
         this.initialBackDamageCount = initialBackDamageCount;
         this.initialWheelDamageCount = initialWheelDamageCount;
+        this.latterDamageCount = latterDamageCount;
         this.latterFrontDamageCount = latterFrontDamageCount;
         this.latterMidDamageCount = latterMidDamageCount;
         this.latterBackDamageCount = latterBackDamageCount;
@@ -110,12 +118,14 @@ public class Car {
 
     public void setDamageCount(Boolean former, int[] damages) {
         if (former) {
+            this.initialDamageCount = damages[0] + damages[1] + damages[2] + damages[3];
             this.initialFrontDamageCount = damages[0];
             this.initialMidDamageCount = damages[1];
             this.initialBackDamageCount = damages[2];
             this.initialWheelDamageCount = damages[3];
         }
         else {
+            this.latterDamageCount = damages[0] + damages[1] + damages[2] + damages[3];
             this.latterFrontDamageCount = damages[0];
             this.latterMidDamageCount = damages[1];
             this.latterBackDamageCount = damages[2];
