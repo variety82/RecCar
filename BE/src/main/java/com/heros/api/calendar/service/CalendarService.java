@@ -22,17 +22,17 @@ public class CalendarService {
 
     public List<Calendar> getCalendar(Long userId) {
         List<Calendar> calendars = calendarRepository.getCalendars(userId);
-
         return calendars;
     }
 
-    public void createCalendar(CalendarRequest calendarRequest) {
-        User user = userRepository.findById(calendarRequest.getUserId()).orElseThrow(IllegalArgumentException::new);
+    public void createCalendar(CalendarRequest calendarRequest, Long userId) {
+
         Calendar calendar = Calendar.builder()
-                .user(user)
+                .userId(userId)
                 .calendarDate(calendarRequest.getCalendarDate())
                 .title(calendarRequest.getTitle())
                 .memo(calendarRequest.getMemo())
+                .isAuto(calendarRequest.isAuto())
                 .build();
         calendarRepository.save(calendar);
     }
