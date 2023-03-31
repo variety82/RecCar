@@ -30,26 +30,29 @@ public class Calendar {
     @Column(name = "CALENDAR_MEMO")
     private String memo;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    @JsonIgnore
-    private User user;
+    @Column(name = "USER_ID")
+    private Long userId;
+
+    @Column(name = "IS_AUTO", columnDefinition="tinyint(1)")
+    private boolean isAuto;
 
     @Builder(builderMethodName = "modifyBuilder")
-    public Calendar(long calendarId, LocalDate calendarDate, String title, String memo, User user) {
+    public Calendar(long calendarId, LocalDate calendarDate, String title, String memo, Long userId, boolean isAuto) {
         this.calendarId = calendarId;
         this.calendarDate = calendarDate;
         this.title = title;
         this.memo = memo;
-        this.user = user;
+        this.userId = userId;
+        this.isAuto = isAuto;
     }
 
     @Builder(builderMethodName = "builder")
-    public Calendar(LocalDate calendarDate, String title, String memo, User user) {
+    public Calendar(LocalDate calendarDate, String title, String memo, Long userId, boolean isAuto) {
         this.calendarDate = calendarDate;
         this.title = title;
         this.memo = memo;
-        this.user = user;
+        this.userId = userId;
+        this.isAuto = isAuto;
     }
 
 }
