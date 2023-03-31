@@ -35,7 +35,7 @@ class _LoginState extends State<Login> {
       padding: EdgeInsets.only(bottom: 100),
       alignment: Alignment.bottomCenter,
       child: TextButton(
-        onPressed: loginWithGoogle,
+        onPressed: signIn,
         child: Container(
           width: 300,
           padding: EdgeInsets.symmetric(vertical: 10),
@@ -76,29 +76,30 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-
-  Future<void> loginWithGoogle() async {
-    print("HI!!!");
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication gAuth = await googleUser!.authentication;
+  Future signIn() async {
+    final GoogleSignInAccount? user = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication gAuth = await user!.authentication;
     final credential = gAuth.accessToken;
-    print("================================");
-    print(credential.toString());
+    print("여기는용??");
+    print(user);
+    print(credential);
 
-    if (googleUser != null) {
+    if (user == null) {
+      // print("유저가 없다!!!");
+    } else {
       await storage.write(
         key: "accessToken",
         value: credential,
       );
       login(
-        success: (dynamic response) {
-          setState(() async {
-            userInfo = response;
-            await storage.write(key: "nickName", value: userInfo['nickName']);
-            await storage.write(key: "picture", value: userInfo['picture']);
-            await storage.write(key: "carId", value: userInfo['currentCarId'].toString());
-            Navigator.pushNamed(context, '/home');
+        success: (dynamic response) async {
+          userInfo = response;
+          await storage.write(key: "nickName", value: userInfo['nickName']);
+          await storage.write(key: "picture", value: userInfo['picture']);
+          await storage.write(key: "carId", value: userInfo['currentCarId'].toString());
+          setState(() {
           });
+          Navigator.pushNamed(context, '/home');
         },
         fail: (error) {
           print('로그인 호출 오류: $error');
@@ -107,3 +108,4 @@ class _LoginState extends State<Login> {
     }
   }
 }
+
