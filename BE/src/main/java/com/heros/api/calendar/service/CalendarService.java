@@ -5,8 +5,7 @@ import com.heros.api.calendar.dto.request.CalendarRequest;
 import com.heros.api.calendar.dto.response.CalendarResponse;
 import com.heros.api.calendar.entity.Calendar;
 import com.heros.api.calendar.repository.CalendarRepository;
-import com.heros.api.user.entity.User;
-import com.heros.api.user.repository.UserRepository;
+import com.heros.api.car.dto.request.CarCreate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import java.util.List;
 public class CalendarService {
 
     private final CalendarRepository calendarRepository;
-    private final UserRepository userRepository;
 
     public Calendar getOneCalendar(Long calendarId) {
         Calendar calendar = calendarRepository.findById(calendarId).orElse(null);
@@ -55,5 +53,29 @@ public class CalendarService {
 
     public void deleteCalendar(Long calendarId) {
         calendarRepository.deleteById(calendarId);
+    }
+
+    public void createCarCalendar(CarCreate carCreate, Long userId) {
+        String rentalTitle = carCreate.getCarManufacturer() + " " + carCreate.getCarModel() + " " + carCreate.getCarNumber() + " " + " 대여";
+        String returnTitle = carCreate.getCarManufacturer() + " " + carCreate.getCarModel() + " " + carCreate.getCarNumber() + " " + " 반납";
+
+        Calendar rentarCarCalendar = Calendar.builder()
+                .calendarDate(carCreate.getRentalDate())
+                .title(rentalTitle)
+                .isAuto(true)
+                .memo("")
+                .userId(userId)
+                .build();
+
+        Calendar returnCarCalendar = Calendar.builder()
+                .calendarDate(carCreate.getReturnDate())
+                .title(returnTitle)
+                .isAuto(true)
+                .memo("")
+                .userId(userId)
+                .build();
+
+        calendarRepository.save(rentarCarCalendar);
+        calendarRepository.save(returnCarCalendar);
     }
 }
