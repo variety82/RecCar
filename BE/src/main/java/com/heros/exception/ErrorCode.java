@@ -18,7 +18,8 @@ public enum ErrorCode {
     DAMAGE_INPUT_INVALID(400, "D002", "잘못된 파손 정보(damage)입니다"),
 
     // Calendar
-    INVALID_UPDATE_VALUE(400, "A001", "자동 생성된 달력은 제목과 날짜를 수정할 수 없습니다. Check value isAuto");
+    INVALID_UPDATE_VALUE(400, "A001", "자동 생성된 달력은 제목과 날짜를 수정할 수 없습니다. Check value isAuto"),
+    INVALID_DELETE_VALUE(400, "A002", "자동 생성된 달력은 삭제할 수 없습니다. Check value isAuto");
 
 
     private final String code;
