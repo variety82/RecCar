@@ -1,5 +1,6 @@
 package com.heros.api.car.controller;
 
+import com.heros.api.calendar.service.CalendarService;
 import com.heros.api.car.dto.request.CarCreate;
 import com.heros.api.car.dto.request.CarModify;
 import com.heros.api.car.dto.response.CarCatalogResponse;
@@ -33,6 +34,8 @@ import java.util.List;
 @Tag(name = "Car-Api", description = "Car-Api 입니다.")
 public class CarController {
     private final CarService carService;
+    private final CalendarService calendarService;
+
     @Operation(summary = "차량 등록", description = "차량 등록 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "차량 등록 성공"),
@@ -46,6 +49,8 @@ public class CarController {
         HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         User user = (User) httpServletRequest.getAttribute("user");
         Long carId = carService.createCar(carCreate, user);
+        calendarService.createCarCalendar(carCreate, user.getUserId());
+
         return ResponseEntity.status(201).body(carId);
     }
 
