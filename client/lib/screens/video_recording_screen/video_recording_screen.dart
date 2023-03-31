@@ -296,7 +296,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                         top: 16,
                         left: (orientation == Orientation.portrait)
                             ? MediaQuery.of(context).size.width / 2 - 90
-                            : MediaQuery.of(context).size.height / 2 + 45,
+                            : MediaQuery.of(context).size.height / 2,
                         child: Container(
                           height: 32,
                           width: 180,
