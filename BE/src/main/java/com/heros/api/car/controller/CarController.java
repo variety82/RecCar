@@ -3,11 +3,11 @@ package com.heros.api.car.controller;
 import com.heros.api.car.dto.request.CarCreate;
 import com.heros.api.car.dto.request.CarModify;
 import com.heros.api.car.dto.response.CarCatalogResponse;
+import com.heros.api.car.dto.response.CarListResponse;
 import com.heros.api.car.dto.response.CarResponse;
 import com.heros.api.car.service.CarService;
 import com.heros.api.user.entity.User;
 import com.heros.exception.ErrorCode;
-import com.heros.exception.customException.BusinessException;
 import com.heros.exception.customException.CarException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -73,19 +73,16 @@ public class CarController {
         return ResponseEntity.status(201).body(carService.modifyCar(carModify));
     }
 
-    @Operation(summary = "차량 리스트 조회", description = "현재 로그인된 user의 차량 리스트 조회 메서드입니다.")
+    @Operation(summary = "차량 대여 기록 조회", description = "현재 로그인된 user의 반납 기록 조회 메서드입니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "차량 리스트 조회 성공", content = @Content(schema = @Schema(implementation = CarResponse.class))),
+            @ApiResponse(responseCode = "200", description = "차량 대여 기록 조회 성공", content = @Content(schema = @Schema(implementation = CarListResponse.class))),
             @ApiResponse(responseCode = "400", description = "bad request operation")
     })
     @GetMapping(value = "history")
     public ResponseEntity<?> carListGet() {
         HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         User user = (User) httpServletRequest.getAttribute("user");
-        List<CarResponse> carList = carService.findCarList(user);
-        if (carList.size() == 0) {
-            throw (new BusinessException(ErrorCode.PAGE_NOT_FOUND));
-        }
+        List<CarListResponse> carList = carService.findCarList(user);
         return ResponseEntity.status(200).body(carList);
     }
 
@@ -129,7 +126,8 @@ public class CarController {
     @DeleteMapping(value = "/{carId}")
     public ResponseEntity<?> carDelete(@PathVariable("carId") Long carId) {
         HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        carService.deleteCar(carId);
+        User user = (User) httpServletRequest.getAttribute("user");
+        carService.deleteCar(carId, user);
         return ResponseEntity.status(200).body(null);
     }
 }
