@@ -10,6 +10,7 @@ import com.heros.api.example.model.ErrorResponseExample;
 import com.heros.api.user.entity.User;
 import com.heros.exception.ErrorCode;
 import com.heros.exception.customException.BusinessException;
+import com.heros.exception.customException.CarException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -67,12 +68,23 @@ public class CalendarController {
 
     @Operation(summary = "캘린더 수정", description = "캘린더 수정 메서드입니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = Calendar.class))),
+            @ApiResponse(responseCode = "200", description = "success"),
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
     @PutMapping(value = "")
     public ResponseEntity<?> calendarUpdate(@Valid @RequestBody CalendarModifyRequest calendarModifyRequest) {
-        calendarService.updateCalendar(calendarModifyRequest);
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        User user = (User) httpServletRequest.getAttribute("user");
+        Long userId = user.getUserId();
+
+        Calendar oneCalendar = calendarService.getOneCalendar(calendarModifyRequest.getCalendarId());
+        if (calendarModifyRequest.isAuto() &&
+                (!calendarModifyRequest.getTitle().equals(oneCalendar.getTitle()) ||
+                        (!calendarModifyRequest.getCalendarDate().isEqual(oneCalendar.getCalendarDate())))) {
+            throw (new CarException(ErrorCode.INVALID_UPDATE_VALUE));
+        }
+
+        calendarService.updateCalendar(calendarModifyRequest, userId);
         return ResponseEntity.status(201).body(null);
     }
 
