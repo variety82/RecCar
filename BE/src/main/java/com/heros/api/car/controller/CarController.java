@@ -126,7 +126,8 @@ public class CarController {
     @DeleteMapping(value = "/{carId}")
     public ResponseEntity<?> carDelete(@PathVariable("carId") Long carId) {
         HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        carService.deleteCar(carId);
+        User user = (User) httpServletRequest.getAttribute("user");;
+        carService.deleteCar(carId, user);
         return ResponseEntity.status(200).body(null);
     }
 }

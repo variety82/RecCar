@@ -93,7 +93,11 @@ public class CarService {
         return result;
     }
 
-    public void deleteCar(Long carId) {
+    public void deleteCar(Long carId, User user) {
+        if (user.getCurrentCarId() == carId) {
+            user.setCurrentCarId(0L);
+            userRepository.save(user);
+        }
         carRepository.customDeleteCar(carId);
     }
 
