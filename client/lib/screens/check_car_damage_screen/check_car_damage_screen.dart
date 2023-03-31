@@ -63,12 +63,12 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     '이격',
   ];
 
-  ValueNotifier<List<Map<String, dynamic>>> damageInfoNotifier =
-      DamageInfoNotifier([]);
-
-  void _updateDamageInfo(newDamageInfo) {
-    damageInfoNotifier = newDamageInfo;
-  }
+  // ValueNotifier<List<Map<String, dynamic>>> damageInfoNotifier =
+  //     DamageInfoNotifier([]);
+  //
+  // void _updateDamageInfo(newDamageInfo) {
+  //   damageInfoNotifier = newDamageInfo;
+  // }
 
   List<Map<String, dynamic>> selectedCarDamagesList = [];
   List<int> selectedIndexList = [];
@@ -215,27 +215,27 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     int separated_count,
     String memoValue,
   ) {
-    if (!selectedIndexList.contains(indexValue - 1)) {
-      setState(() {
-        // print(indexValue);
-        widget.carDamagesAllList[indexValue - 1]["part"] = partValue;
-        widget.carDamagesAllList[indexValue - 1]["Scratch"] = scratch_count;
-        widget.carDamagesAllList[indexValue - 1]["Crushed"] = crushed_count;
-        widget.carDamagesAllList[indexValue - 1]["Breakage"] = breakage_count;
-        widget.carDamagesAllList[indexValue - 1]["Separated"] = separated_count;
-        widget.carDamagesAllList[indexValue - 1]["memo"] = memoValue;
-        widget.carDamagesAllList[indexValue - 1]["selected"] = true;
+    setState(() {
+      // print(indexValue);
+      widget.carDamagesAllList[indexValue - 1]["part"] = partValue;
+      widget.carDamagesAllList[indexValue - 1]["Scratch"] = scratch_count;
+      widget.carDamagesAllList[indexValue - 1]["Crushed"] = crushed_count;
+      widget.carDamagesAllList[indexValue - 1]["Breakage"] = breakage_count;
+      widget.carDamagesAllList[indexValue - 1]["Separated"] = separated_count;
+      widget.carDamagesAllList[indexValue - 1]["memo"] = memoValue;
+      widget.carDamagesAllList[indexValue - 1]["selected"] = true;
+
+      if (!selectedIndexList.contains(indexValue - 1)) {
         selectedIndexList.add(indexValue - 1);
-        selectedIndexList.sort((a, b) => a.compareTo(b));
-        _updateDamageInfo(widget.carDamagesAllList);
-      });
-    }
+      }
+      selectedIndexList.sort((a, b) => a.compareTo(b));
+    });
   }
 
   @override
   void initState() {
     _initVideoPlayer();
-    _updateDamageInfo(widget.carDamagesAllList);
+    // _updateDamageInfo(widget.carDamagesAllList);
     _tabController = TabController(vsync: this, length: 2); // 탭 수에 따라 length 변경
     int _selectedTabIndex = 0; // 기본값은 첫 번째 탭
 
@@ -535,13 +535,34 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                       child: DefaultTabController(
                         length: 2,
                         child: Scaffold(
-                          floatingActionButton: MyFABMenu(
-                            selected_categories: selected_categories,
-                            addCategories: addCategories,
-                            removeCategories: removeCategories,
-                            filePath: widget.filePath,
-                            carDamagesAllList: widget.carDamagesAllList,
-                            selectedIndexList: selectedIndexList,
+                          floatingActionButton:
+                              // MyFABMenu(
+                              //   selected_categories: selected_categories,
+                              //   addCategories: addCategories,
+                              //   removeCategories: removeCategories,
+                              //   filePath: widget.filePath,
+                              //   carDamagesAllList: widget.carDamagesAllList,
+                              //   selectedIndexList: selectedIndexList,
+                              // ),
+                              FloatingActionButton(
+                            onPressed:
+                                selectedIndexList.length > 0 ? () {} : null,
+                            backgroundColor: Theme.of(context).primaryColor,
+                            tooltip: '손상을 저장할 수 있습니다.',
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.save_as,
+                                  size: 14,
+                                ),
+                                Text(
+                                  '저장',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                           appBar: AppBar(
                             toolbarHeight: 2,
@@ -587,7 +608,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                 changeDamageValue: changeDamageValue,
                                 selectedIndexList: selectedIndexList,
                                 isSelectedView: false,
-                                damageInfoNotifier: damageInfoNotifier,
+                                // damageInfoNotifier: damageInfoNotifier,
                               ),
                               CheckCarDamageContainer(
                                 carDamageList: widget.carDamagesAllList,
@@ -595,7 +616,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                 changeDamageValue: changeDamageValue,
                                 selectedIndexList: selectedIndexList,
                                 isSelectedView: true,
-                                damageInfoNotifier: damageInfoNotifier,
+                                // damageInfoNotifier: damageInfoNotifier,
                               ),
                             ],
                           ),
