@@ -2,6 +2,7 @@ package com.heros.api.calendar.controller;
 
 import com.heros.api.calendar.dto.request.CalendarModifyRequest;
 import com.heros.api.calendar.dto.request.CalendarRequest;
+import com.heros.api.calendar.dto.response.CalendarResponse;
 import com.heros.api.calendar.entity.Calendar;
 import com.heros.api.calendar.service.CalendarService;
 import com.heros.api.detectionInfo.dto.response.PartWithDetectionInfoResponse;
@@ -37,7 +38,7 @@ public class CalendarController {
 
     @Operation(summary = "캘린더 조회", description = "캘린더 조회 메서드 입니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = Calendar.class))),
+            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = CalendarResponse.class))),
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
     @GetMapping(value = "")
@@ -45,7 +46,7 @@ public class CalendarController {
         HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         User user = (User) httpServletRequest.getAttribute("user");
         Long userId = user.getUserId();
-        List<Calendar> response = calendarService.getCalendar(userId);
+        List<CalendarResponse> response = calendarService.getCalendar(userId);
         return ResponseEntity.ok().body(response);
     }
 
@@ -64,9 +65,9 @@ public class CalendarController {
         return ResponseEntity.status(201).body(null);
     }
 
-    @Operation(summary = "캘린더 수정")
+    @Operation(summary = "캘린더 수정", description = "캘린더 수정 메서드입니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = PartWithDetectionInfoResponse.class))),
+            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = Calendar.class))),
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
     @PutMapping(value = "")
