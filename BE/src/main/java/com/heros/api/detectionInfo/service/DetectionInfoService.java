@@ -3,18 +3,16 @@ package com.heros.api.detectionInfo.service;
 import com.heros.api.car.entity.Car;
 import com.heros.api.car.repository.CarRepository;
 import com.heros.api.detectionInfo.dto.request.DetectionInfoCreate;
-import com.heros.api.detectionInfo.dto.response.PartWithDetectionInfoResponse;
-import com.heros.api.detectionInfo.dto.response.RentDetailResponse;
+import com.heros.api.detectionInfo.dto.response.CarDetectionResponse;
 import com.heros.api.detectionInfo.entity.DetectionInfo;
 import com.heros.api.detectionInfo.repository.DetectionInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,14 +23,18 @@ public class DetectionInfoService {
     private final DetectionInfoRepository detectionInfoRepository;
     private final CarRepository carRepository;
 
-    public List<PartWithDetectionInfoResponse> getDetectionInfos(Long carId){
-        List<PartWithDetectionInfoResponse> detectionInfos = detectionInfoRepository.getDetectionInfos(carId);
-        return detectionInfos;
-    }
-
-    public RentDetailResponse getRentDetailInfos(Long carId){
-        RentDetailResponse rentDetailInfos = detectionInfoRepository.getRentalDetailInfos(carId);
-        return rentDetailInfos;
+    public CarDetectionResponse getRentDetailInfos(Long carId){
+        Car car = carRepository.findById(carId).get();
+        List<DetectionInfo> detectionInfos = detectionInfoRepository.findByCar(car);
+        List<DetectionInfo> initialDetectionInfos = new ArrayList<>();
+        List<DetectionInfo> latterDetectionInfos = new ArrayList<>();
+        for (DetectionInfo detectionInfo:detectionInfos) {
+            if (detectionInfo.isFormer())
+                initialDetectionInfos.add(detectionInfo);
+            else
+                latterDetectionInfos.add(detectionInfo);
+        }
+        return new CarDetectionResponse(car, initialDetectionInfos, latterDetectionInfos);
     }
 
     @Transactional
@@ -69,10 +71,5 @@ public class DetectionInfoService {
             detectionInfoRepository.save(detectionInfo);
         }
         car.setDamageCount(former, damages);
-    }
-
-    public Optional<DetectionInfo> getDetectionInfoDetail(Long detectionInfoId) {
-        Optional<DetectionInfo> detectionInfo = detectionInfoRepository.findById(detectionInfoId);
-        return detectionInfo;
     }
 }
