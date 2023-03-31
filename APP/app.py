@@ -53,7 +53,6 @@ async def upload_video(file : UploadFile, user_id : str):
 
     for idx, image in enumerate(images_list):
         images[idx]['url'] = image
-        images[idx]['damage'] = labels[idx % 3][:-2]
 
     return images
 
