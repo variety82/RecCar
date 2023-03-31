@@ -8,11 +8,10 @@ import numpy as np
 import asyncio
 from collections import OrderedDict
 from src.Models import Unet
-
+from Utils.convert_color import *
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_classes = 2
-
 
 def load_model(labels):
     models = []
@@ -34,7 +33,6 @@ def load_model(labels):
     return models
 
 def load_img(img_name):
-    # load img
     #org_img : 원본이미지
     #img_img : 인퍼런스하기 위해 정규화 및 RGB변경
     img_path = f"./dataset/images/{img_name}"
@@ -51,41 +49,45 @@ def load_img(img_name):
     return org_img, img_input
 
 
-def inference_img(model, org_img, img_input, output_name):
-
-    output = model(img_input)
-
-    image_save_before = time.time()
-    img_output = torch.argmax(output, dim=1).detach().cpu().numpy()
-    img_output = img_output.transpose([1, 2, 0])
+def save_image(org_img, img_output, output_name):
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(16, 10))
-
     ax[0].imshow(org_img)
-    ax[0].set_title('car image')
     ax[0].axis('off')
 
     ax[1].imshow(org_img.astype('uint8'), alpha=0.9)
-    ax[1].imshow(img_output, cmap=cm.Reds, alpha=0.5)
-    ax[1].set_title('damage')
+    ax[1].imshow(img_output, alpha=0.5)
     ax[1].axis('off')
     fig.set_tight_layout(True)
 
     if not os.path.exists("./dataset/output_images"):
             os.makedirs("./dataset/output_images")
 
-    image_save_after = time.time()
-    # print(f"image_save_time : {image_save_after - image_save_before}")
-
     plt.savefig(f'./dataset/output_images/{output_name}', dpi=50)
     return output_name
 
+def inference_img(model, img_input):
+    output = model(img_input)
+    output = torch.argmax(output, dim=1).detach().cpu().numpy()
+    output = output.transpose([1, 2, 0])
+    return output
+
+def convert_color(convert_fn, input):
+    output = np.array(input, dtype=np.uint8)
+    output = cv2.cvtColor(output, cv2.COLOR_GRAY2BGR)
+    return convert_fn(output)
+
 def create_images(models, images):
-    labels = ['Scratch', 'Breakage', 'Crushed']
     created_images = []
+    colors = [convert_to_pink, convert_to_blue, convert_to_black]
     for img in images:
         org_img, img_input = load_img(img)
+        gray_to_color = []
         for idx, model in enumerate(models):
-            output_img = inference_img(model, org_img, img_input, f"{labels[idx % 3]}_{img}")
-            created_images.append(output_img)
+            output_img = inference_img(model, img_input)
 
+            output_img = convert_color(colors[idx], output_img)
+            gray_to_color.append(output_img)
+        convert_img = cv2.add(gray_to_color[0], gray_to_color[1])
+        convert_img = cv2.add(convert_img, gray_to_color[2])
+        created_images.append(save_image(org_img, convert_img, f"{img}"))
     return created_images
