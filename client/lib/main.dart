@@ -1,13 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
-import 'widgets/common/header.dart';
 import 'widgets/common/footer.dart';
 import 'screens/register/car_register_main.dart';
 import 'screens/my_page/my_page.dart';
 import 'screens/map_screen/map_screen.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
-import 'screens/video_recording_screen/camera_screen.dart';
 import 'package:client/screens/video_recording_screen/video_recording_screen.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -81,8 +79,9 @@ class _MyAppState extends State<MyApp> {
 
   checkUserState() async {
     var name = await storage.read(key: 'nickName');
-    var img = await storage.read(key: 'picture ');
+    var img = await storage.read(key: 'picture');
     var carId = await storage.read(key: 'carId');
+
     setState(() {
       userName = name;
       userProfileImg = img;
@@ -135,6 +134,12 @@ class _MyAppState extends State<MyApp> {
                       mainContainter: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Text(
+                            '초기 손상 확인하러 이동하기',
+                            style: TextStyle(
+                              color: Theme.of(context).secondaryHeaderColor
+                            ),
+                          ),
                           ElevatedButton(
                               onPressed: () {
                                 Navigator.pushNamed(context, '/detail');
@@ -142,7 +147,7 @@ class _MyAppState extends State<MyApp> {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       Theme.of(context).primaryColor),
-                              child: const Text('차량 상세 페이지'))
+                              child: const Text('차량 촬영'))
                         ],
                       ),
                     ),
