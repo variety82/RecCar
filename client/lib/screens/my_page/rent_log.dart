@@ -15,9 +15,8 @@ class RentLog extends StatefulWidget {
 
 class _RentLogState extends State<RentLog> {
   static final storage = FlutterSecureStorage();
-  dynamic userId = '';
+  // dynamic userId = '';
   dynamic userName = '';
-  dynamic userEmail = '';
   dynamic userProfileImg = '';
   dynamic simpleRentInfo = [];
 
@@ -36,27 +35,26 @@ class _RentLogState extends State<RentLog> {
       },
     );
     // 비동기로 flutter secure storage 정보를 불러오는 작업
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      checkUserState();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   checkUserState();
+    // });
   }
 
-
-  checkUserState() async {
-    var id = await storage.read(key: 'id');
-    var name = await storage.read(key: 'name');
-    var email = await storage.read(key: 'email');
-    var img = await storage.read(key: 'profileImg');
-    setState(() {
-      userId = id;
-      userName = name;
-      userEmail = email;
-      userProfileImg = img;
-    });
-    if (userId == null) {
-      Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
-    }
-  }
+  // checkUserState() async {
+  //   var id = await storage.read(key: 'id');
+  //   var name = await storage.read(key: 'name');
+  //   var email = await storage.read(key: 'email');
+  //   var img = await storage.read(key: 'profileImg');
+  //   setState(() {
+  //     userId = id;
+  //     userName = name;
+  //     userEmail = email;
+  //     userProfileImg = img;
+  //   });
+  //   if (userId == null) {
+  //     Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -125,8 +123,8 @@ class _RentLogState extends State<RentLog> {
                       endDate: simpleRentInfo[i]['returnDate']
                           .toString()
                           .substring(0, 10),
-                      company: "${simpleRentInfo[i]['rentalCompany']}",
-                      damage: simpleRentInfo[i]['newDamageCount'],
+                      company: simpleRentInfo[i]['rentalCompany'],
+                      damage: "0",
                       carId: simpleRentInfo[i]['carId'],
                     ),
                 ],

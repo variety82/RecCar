@@ -96,9 +96,13 @@ class _MyPageState extends State<MyPage> {
                           color: Theme.of(context).primaryColor, width: 2.5),
                       color: Colors.white,
                       image: DecorationImage(
-                          image: NetworkImage("${userProfileImg}" == ""
+                        image: NetworkImage(
+                          "${userProfileImg}" == ""
                               ? "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"
-                              : userProfileImg.toString())),
+                              : userProfileImg.toString(),
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -211,7 +215,7 @@ class _MyPageState extends State<MyPage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: MyPageCategory(
-                      category: "회원 탈퇴",
+                      category: "회원 정보 초기화",
                       textColor: Theme.of(context).primaryColor),
                 ),
               ],
