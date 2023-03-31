@@ -14,17 +14,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CalendarModifyRequest {
 
-    @Schema(description = "userId", example = "1", required = true)
+    @Schema(description = "calendarId", example = "1", required = true)
     @NotNull
     @Min(1)
     private Long calendarId;
 
-    @Schema(description = "userId", example = "1", required = true)
-    @NotNull
-    @Min(1)
-    private Long userId;
-
-    @Schema(description = "등록 날짜", example = "2023-03-12")
+    @Schema(description = "일정 날짜", example = "2023-03-12")
     @NotNull
     private LocalDate calendarDate;
 
@@ -36,16 +31,19 @@ public class CalendarModifyRequest {
     @NotNull
     private String memo;
 
+    @Schema(description = "자동 등록 여부", example = "false")
+    @NotNull
+    private boolean isAuto;
 
-    public Calendar toEntity(User user) {
+
+    public Calendar toEntity(Long userId) {
         return Calendar.modifyBuilder()
                 .calendarId(this.calendarId)
                 .calendarDate(this.calendarDate)
                 .memo(this.memo)
                 .title(this.title)
-                .user(user)
+                .userId(userId)
+                .isAuto(this.isAuto)
                 .build();
-                
-                
     }
 }
