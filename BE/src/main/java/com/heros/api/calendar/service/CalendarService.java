@@ -22,6 +22,11 @@ public class CalendarService {
     private final CalendarRepository calendarRepository;
     private final UserRepository userRepository;
 
+    public Calendar getOneCalendar(Long calendarId) {
+        Calendar calendar = calendarRepository.findById(calendarId).orElse(null);
+        return calendar;
+    }
+
     public List<CalendarResponse> getCalendar(Long userId) {
         List<Calendar> calendars = calendarRepository.getCalendars(userId);
         List<CalendarResponse> responses = new ArrayList<>();
@@ -43,10 +48,9 @@ public class CalendarService {
         calendarRepository.save(calendar);
     }
 
-    public void updateCalendar(CalendarModifyRequest calendarModifyRequest) {
-//        User user = userRepository.findById(calendarModifyRequest.get).orElseThrow();
-//        Calendar calendar = calendarModifyRequest.toEntity(user);
-//        calendarRepository.save(calendar);
+    public void updateCalendar(CalendarModifyRequest calendarModifyRequest, Long userId) {
+        Calendar calendar = calendarModifyRequest.toEntity(userId);
+        calendarRepository.save(calendar);
     }
 
     public void deleteCalendar(Long calendarId) {
