@@ -78,31 +78,31 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-  Future signIn() async {
-    print("되나용???13123");
+  Future<void> signIn() async {
+    // print("되나용???13123");
     // final user = await GoogleSignInApi.login();
     final GoogleSignInAccount? user = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication gAuth = await user!.authentication;
     final credential = gAuth.accessToken;
-    print("여기는용??");
-
-    print(user);
-    print(credential);
+    // print("여기는용??");
+    //
+    // print(user);
+    // print(credential);
     if (user == null) {
-      print("유저가 없다!!!");
+      // print("유저가 없다!!!");
     } else {
-      print("유저는 있어??");
+      // print("유저는 있어??");
       await storage.write(
         key: "accessToken",
         value: credential,
       );
       login(
         success: (dynamic response) {
-          setState(() async {
+          setState(() {
             userInfo = response;
-            await storage.write(key: "nickName", value: userInfo['nickName']);
-            await storage.write(key: "picture", value: userInfo['picture']);
-            await storage.write(key: "carId", value: userInfo['currentCarId'].toString());
+            storage.write(key: "nickName", value: userInfo['nickName']);
+            storage.write(key: "picture", value: userInfo['picture']);
+            storage.write(key: "carId", value: userInfo['currentCarId'].toString());
             Navigator.pushNamed(context, '/home');
           });
         },
