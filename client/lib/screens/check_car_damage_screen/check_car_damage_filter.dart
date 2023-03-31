@@ -58,6 +58,8 @@ class _CheckCarDamagefilterState extends State<CheckCarDamagefilter> {
                     children: damage_categories.map(
                       (damage_category) {
                         return InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
                           onTap: () {
                             if (widget.selected_categories
                                 .contains(damage_category)) {
@@ -112,6 +114,8 @@ class _CheckCarDamagefilterState extends State<CheckCarDamagefilter> {
           //           children: part_categories.map(
           //             (part_category) {
           //               return InkWell(
+          //                 splashColor: Colors.transparent,
+          //                 highlightColor: Colors.transparent,
           //                 onTap: () {
           //                   if (widget.selected_categories
           //                       .contains(part_category)) {

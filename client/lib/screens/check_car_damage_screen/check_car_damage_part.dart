@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_detail_modal.dart';
@@ -7,15 +10,21 @@ import 'package:client/widgets/common/image_go_detail.dart';
 class CheckCarDamagePart extends StatelessWidget {
   final String imageUrl;
   final VideoPlayerController videoPlayerController;
+  final Map<String, dynamic> carDamage;
+  final void Function(int, String, int, int, int, int, String)
+      changeDamageValue;
 
-  const CheckCarDamagePart(
-      {required this.imageUrl, required this.videoPlayerController});
+  const CheckCarDamagePart({
+    required this.imageUrl,
+    required this.videoPlayerController,
+    required this.carDamage,
+    required this.changeDamageValue,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 320,
-      width: double.infinity,
+      height: 300,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -32,12 +41,36 @@ class CheckCarDamagePart extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(4.0),
-            child: ImageGoDetail(
-              imageUrl: imageUrl,
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: 300,
+                maxHeight: 200,
+              ),
+              child: FadeInImage(
+                placeholder:
+                    AssetImage('lib/assets/images/loading_img/loading_gif.gif'),
+                image: NetworkImage(imageUrl),
+              ),
+              // 사진 존재 여부에 따라 사진 표시될 지 아닐지 여부 결정됨
+              // child: imageUrl != ''
+              //     ? ImageGoDetail(
+              //         imagePath: imageUrl,
+              //         imageCase: 'url',
+              //       )
+              //     : Container(
+              //         width: 300,
+              //         height: 200,
+              //         decoration: BoxDecoration(
+              //           color: Theme.of(context).disabledColor,
+              //         ),
+              //         child: Center(
+              //           child: Text('사진이 없습니다'),
+              //         ),
+              //       ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -66,7 +99,7 @@ class CheckCarDamagePart extends StatelessWidget {
                       onTap: () async {
                         await videoPlayerController.pause();
                         await videoPlayerController.seekTo(
-                          Duration(seconds: 5),
+                          Duration(seconds: carDamage["timeStamp"]),
                         );
                         await videoPlayerController.play();
                       },
@@ -103,7 +136,8 @@ class CheckCarDamagePart extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      '스크래치 외 2건',
+                      // carDamage["damage"],
+                      '말 안해줄래',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
@@ -129,7 +163,7 @@ class CheckCarDamagePart extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      '앞범퍼/앞펜더/전조등',
+                      carDamage["part"] != "" ? carDamage["part"] : '미정',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
@@ -154,14 +188,18 @@ class CheckCarDamagePart extends StatelessWidget {
                   ),
                   builder: (BuildContext context) {
                     return SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.8,
+                      height: MediaQuery.of(context).size.height * 6,
                       child: Card(
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(25.0),
                           ),
                         ),
-                        child: CheckCarDamageDetailModal(),
+                        child: CheckCarDamageDetailModal(
+                          carDamage: carDamage,
+                          changeDamageValue: changeDamageValue,
+                          imageUrl: imageUrl,
+                        ),
                       ),
                     );
                   },

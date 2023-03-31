@@ -5,11 +5,13 @@ import 'package:client/screens/check_car_damage_screen/check_car_damage_screen.d
 class MoveableButton extends StatelessWidget {
   final String text;
   final String routing;
+  final List<Map<String, dynamic>>? carDamagesAllList;
 
   const MoveableButton({
     Key? key,
     required this.text,
     required this.routing,
+    this.carDamagesAllList,
   }) : super(key: key);
 
   @override
@@ -28,7 +30,10 @@ class MoveableButton extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CheckCarDamageScreen(filePath: routing),
+                builder: (context) => CheckCarDamageScreen(
+                  filePath: routing,
+                  carDamagesAllList: carDamagesAllList!,
+                ),
               ),
             );
           }
