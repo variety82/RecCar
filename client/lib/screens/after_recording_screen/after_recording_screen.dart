@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:client/widgets/common/moveable_button.dart';
 import 'package:client/services/analysis_car_damage_api.dart';
+import 'package:client/screens/check_car_damage_screen/check_car_damage_screen.dart';
+import 'package:client/screens/after_recording_screen/damage_count_info_block.dart';
 
 // 만약 애니메이션 효과 추가 시, 수정 필요
 class AfterRecordingScreen extends StatefulWidget {
@@ -52,9 +54,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
         body: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 30,
-              ),
+              padding: EdgeInsets.all(30),
               child: loading_api
                   ? Center(
                       // 상하 간격
@@ -64,7 +64,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                         // 나열 방향
                         crossAxisAlignment: WrapCrossAlignment.center,
                         // 정렬 방식
-                        spacing: 40,
+                        spacing: 24,
                         // 좌우 간격
                         runSpacing: 10,
                         children: [
@@ -100,7 +100,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Color(0xFFFF3F3F),
                                 ),
                                 softWrap: true,
                               ),
@@ -116,10 +116,22 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ),
                             ],
                           ),
-                          CircularProgressIndicator(
-                            color: Color(0xFFE0426F),
-                            // strokeWidth: 8,
+                          Container(
+                            constraints: BoxConstraints(
+                              maxWidth: 300,
+                              maxHeight: 400,
+                            ),
+                            child: FadeInImage(
+                              placeholder: AssetImage(
+                                  'lib/assets/images/loading_img/loading_gif.gif'),
+                              image: NetworkImage(
+                                  'https://cdn.dribbble.com/users/11867/screenshots/2989212/_british_car_gif2.gif'),
+                            ),
                           ),
+                          // CircularProgressIndicator(
+                          //   color: Color(0xFFE0426F),
+                          //   // strokeWidth: 8,
+                          // ),
                         ],
                       ),
                     )
@@ -131,7 +143,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                         // 나열 방향
                         crossAxisAlignment: WrapCrossAlignment.center,
                         // 정렬 방식
-                        spacing: 32,
+                        spacing: 24,
                         // 좌우 간격
                         runSpacing: 10,
                         children: [
@@ -187,105 +199,33 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ],
                             ),
                           ),
-                          // Text(
-                          //   '총 15건의 손상이 감지되었습니다.',
-                          //   textAlign: TextAlign.center,
-                          //   style: TextStyle(
-                          //     fontSize: 20,
-                          //     color: Color(0xFFFF3F3F),
-                          //   ),
-                          //   softWrap: true,
-                          // ),
                           Column(
                             children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                ),
+                                child: Text(
+                                  '* 현재 이격은 기록만 가능합니다 *',
+                                  textAlign: TextAlign.center,
+                                  softWrap: true,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Color(0xFFFF3F3F),
+                                  ),
+                                ),
+                              ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 100,
-                                      height: 120,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFFBD5DC),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '스크래치',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Text(
-                                            '------',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Text(
-                                            '8건',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xFFFF3F3F),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  DamageCountInfoBlock(
+                                    damageName: '스크래치',
+                                    damageCnt: 8,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 100,
-                                      height: 120,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFFBD5DC),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '스크래치',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Divider(
-                                            color: Colors.white,
-                                            thickness: 2,
-                                            indent: 16,
-                                            endIndent: 16,
-                                            height: 24,
-                                          ),
-                                          // Text(
-                                          //   '------',
-                                          //   style: TextStyle(
-                                          //     color: Colors.white,
-                                          //     fontSize: 16,
-                                          //   ),
-                                          // ),
-                                          Text(
-                                            '8건',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xFFFF3F3F),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  DamageCountInfoBlock(
+                                    damageName: '찌그러짐',
+                                    damageCnt: 8,
                                   ),
                                 ],
                               ),
@@ -293,91 +233,45 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 100,
-                                      height: 120,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFFBD5DC),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '스크래치',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Text(
-                                            '----------',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Text(
-                                            '8건',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xFFFF3F3F),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  DamageCountInfoBlock(
+                                    damageName: '파손',
+                                    damageCnt: 8,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 100,
-                                      height: 120,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFFBD5DC),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '스크래치',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Text(
-                                            '------',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Text(
-                                            '8건',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xFFFF3F3F),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  DamageCountInfoBlock(
+                                    damageName: '이격',
+                                    damageCnt: 8,
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                          MoveableButton(
-                            text: '확인하기',
-                            routing: widget.filePath,
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              minimumSize: Size(200, 50),
+                              backgroundColor: Color(0xFFE0426F),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CheckCarDamageScreen(
+                                    filePath: widget.filePath,
+                                    carDamagesAllList: carDamagesAllList!,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "확인하기",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ],
                       ),

@@ -58,12 +58,11 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
     // TODO: implement initState
     setState(() {
       memoInput = widget.carDamage["memo"];
-      print(memoInput);
       partInput = widget.carDamage["part"];
-      scratch_count = widget.carDamage["damage"]["scratch"];
-      crushed_count = widget.carDamage["damage"]["crushed"];
-      breakage_count = widget.carDamage["damage"]["breakage"];
-      separated_count = widget.carDamage["damage"]["separated"];
+      scratch_count = widget.carDamage["Scratch"];
+      crushed_count = widget.carDamage["Crushed"];
+      breakage_count = widget.carDamage["Breakage"];
+      separated_count = widget.carDamage["Separated"];
     });
     memoController = TextEditingController(text: memoInput);
     super.initState();
