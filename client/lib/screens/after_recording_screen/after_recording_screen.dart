@@ -17,7 +17,7 @@ class AfterRecordingScreen extends StatefulWidget {
 }
 
 class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
-  bool loading_api = false;
+  bool loading_api = true;
 
   List<Map<String, dynamic>> carDamagesAllList = [];
 
@@ -54,9 +54,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
         body: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 30,
-              ),
+              padding: EdgeInsets.all(30),
               child: loading_api
                   ? Center(
                       // 상하 간격
@@ -66,7 +64,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                         // 나열 방향
                         crossAxisAlignment: WrapCrossAlignment.center,
                         // 정렬 방식
-                        spacing: 40,
+                        spacing: 24,
                         // 좌우 간격
                         runSpacing: 10,
                         children: [
@@ -145,7 +143,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                         // 나열 방향
                         crossAxisAlignment: WrapCrossAlignment.center,
                         // 정렬 방식
-                        spacing: 28,
+                        spacing: 24,
                         // 좌우 간격
                         runSpacing: 10,
                         children: [
@@ -204,7 +202,9 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                           Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8,),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                ),
                                 child: Text(
                                   '* 현재 이격은 기록만 가능합니다 *',
                                   textAlign: TextAlign.center,

@@ -59,7 +59,6 @@ Future<dynamic> analysisCarDamageApi({
     if (jsonList.length > 0) {
       for (int i = 0; i < jsonList.length; i++) {
         index_cnt += 1;
-        print(jsonList[i]['url']);
         Map<String, dynamic> carDamageState = {
           "index": index_cnt,
           "Damage_Image_URL": jsonList[i]['url'],
@@ -68,17 +67,11 @@ Future<dynamic> analysisCarDamageApi({
           "Crushed": 0,
           "Breakage": 0,
           "Separated": 0,
-          // "damage": {
-          //   "scratch": 0,
-          //   "crushed": 0,
-          //   "breakage": 0,
-          //   "separated": 0,
-          // },
           "timeStamp": time_cnt,
           "memo": "",
           "selected": false,
         };
-        // carDamageState[carDamageState["damage"]] += 1;
+        carDamageState[jsonList[i]["damage"]] += 1;
         carDamagesAllList.add(carDamageState);
         if (index_cnt % 3 == 0) {
           time_cnt += 1;

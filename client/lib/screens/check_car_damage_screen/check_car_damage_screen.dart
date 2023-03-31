@@ -4,11 +4,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_container.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_FAB.dart';
 import 'package:client/services/analysis_car_damage_api.dart';
+import 'package:client/provider/car_damage_info_provider/car_damage_info_provider.dart';
 
 class CheckCarDamageScreen extends StatefulWidget {
   final String filePath;
@@ -24,8 +26,14 @@ class CheckCarDamageScreen extends StatefulWidget {
   State<CheckCarDamageScreen> createState() => _CheckCarDamageScreenState();
 }
 
-class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
+class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
+    with TickerProviderStateMixin {
   late VideoPlayerController _videoPlayerController;
+  late TabController _tabController;
+  final List<Widget> _tabs = [
+    Text('전체 보기'),
+    Text('리스트만 보기'),
+  ];
   bool loading_api = true;
   bool loading_video = false;
 
@@ -35,6 +43,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   bool _isforwardTimeSkip = false;
   bool _isSecondTap = false;
   bool video_pause = true;
+  bool isSelectedView = false;
 
   int skip_counter = 0;
 
@@ -54,13 +63,26 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     '이격',
   ];
 
+  ValueNotifier<List<Map<String, dynamic>>> damageInfoNotifier =
+      DamageInfoNotifier([]);
+
+  void _updateDamageInfo(newDamageInfo) {
+    damageInfoNotifier = newDamageInfo;
+  }
+
   List<Map<String, dynamic>> selectedCarDamagesList = [];
   List<int> selectedIndexList = [];
+  int nowDamageCnt = 0;
+
+  void changeDamageCnt(int changedCnt) {
+    setState(() {
+      nowDamageCnt = changedCnt;
+    });
+  }
 
   late Timer _timer;
 
   void turnSwitch() {}
-  bool isSelectedView = false;
 
   @override
   void dispose() {
@@ -95,14 +117,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     );
     _videoPlayerController.addListener(
       () {
-        // if (!_videoPlayerController.value.isPlaying) {
-        //   // 동영상이 재생 중이지 않을 때 수행할 작업
-        //   setState(
-        //     () {
-        //       _isVisible = true;
-        //     },
-        //   );
-        // }
         if (_videoPlayerController.value.position >=
             _videoPlayerController.value.duration) {
           setState(
@@ -117,6 +131,13 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     );
     // await _videoPlayerController.setLooping(true);
     // await _videoPlayerController.play();
+  }
+
+  void _handleTabSelection() {
+    if (_tabController.indexIsChanging) {
+      // 선택된 탭이 변경되었을 때 실행될 코드 작성
+      isSelectedView = !isSelectedView;
+    }
   }
 
   void _watchVideoMenu() {
@@ -185,10 +206,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     }
   }
 
-  void _onDoubleTap() {
-    // 두번 탭을 했을 때 실행할 동작
-  }
-
   void changeDamageValue(
     int indexValue,
     String partValue,
@@ -202,18 +219,15 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
       setState(() {
         // print(indexValue);
         widget.carDamagesAllList[indexValue - 1]["part"] = partValue;
-        widget.carDamagesAllList[indexValue - 1]["scratch"] =
-            scratch_count;
-        widget.carDamagesAllList[indexValue - 1]["crushed"] =
-            crushed_count;
-        widget.carDamagesAllList[indexValue - 1]["breakage"] =
-            breakage_count;
-        widget.carDamagesAllList[indexValue - 1]["separated"] =
-            separated_count;
+        widget.carDamagesAllList[indexValue - 1]["Scratch"] = scratch_count;
+        widget.carDamagesAllList[indexValue - 1]["Crushed"] = crushed_count;
+        widget.carDamagesAllList[indexValue - 1]["Breakage"] = breakage_count;
+        widget.carDamagesAllList[indexValue - 1]["Separated"] = separated_count;
         widget.carDamagesAllList[indexValue - 1]["memo"] = memoValue;
         widget.carDamagesAllList[indexValue - 1]["selected"] = true;
         selectedIndexList.add(indexValue - 1);
         selectedIndexList.sort((a, b) => a.compareTo(b));
+        _updateDamageInfo(widget.carDamagesAllList);
       });
     }
   }
@@ -221,6 +235,19 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
   @override
   void initState() {
     _initVideoPlayer();
+    _updateDamageInfo(widget.carDamagesAllList);
+    _tabController = TabController(vsync: this, length: 2); // 탭 수에 따라 length 변경
+    int _selectedTabIndex = 0; // 기본값은 첫 번째 탭
+
+    _tabController.addListener(() {
+      final newIndex = _tabController.index;
+      if (newIndex != _selectedTabIndex) {
+        setState(() {
+          _selectedTabIndex = newIndex;
+          isSelectedView = !isSelectedView;
+        });
+      }
+    });
     super.initState();
   }
 
@@ -233,7 +260,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-
         body: loading_video
             ? Container(
                 height: screenHeight,
@@ -268,9 +294,9 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                       maxHeight: double.infinity,
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           InkWell(
                                             splashColor: Colors.transparent,
@@ -287,15 +313,15 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                               _videoPlayerController.seekTo(
                                                 Duration(
                                                     seconds:
-                                                    _videoPlayerController
-                                                        .value
-                                                        .position
-                                                        .inSeconds -
-                                                        10),
+                                                        _videoPlayerController
+                                                                .value
+                                                                .position
+                                                                .inSeconds -
+                                                            10),
                                               );
                                               Future.delayed(
                                                 Duration(milliseconds: 200),
-                                                    () {
+                                                () {
                                                   setState(() {
                                                     _isVisible = false;
                                                     _isbackTimeSkip = false;
@@ -305,9 +331,9 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                             },
                                             child: AnimatedOpacity(
                                               opacity:
-                                              _isbackTimeSkip ? 1.0 : 0.0,
+                                                  _isbackTimeSkip ? 1.0 : 0.0,
                                               duration:
-                                              Duration(milliseconds: 200),
+                                                  Duration(milliseconds: 200),
                                               child: Stack(
                                                 children: [
                                                   Icon(
@@ -316,7 +342,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                                     size: screenWidth,
                                                   ),
                                                   Positioned(
-                                                    right: (screenWidth / 4) + 10,
+                                                    right:
+                                                        (screenWidth / 4) + 10,
                                                     top: (screenWidth / 2) - 10,
                                                     child: Column(
                                                       children: [
@@ -349,7 +376,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                                   });
                                                   _timeChecker();
                                                 } else {
-                                                  _videoPlayerController.pause();
+                                                  _videoPlayerController
+                                                      .pause();
                                                   setState(() {
                                                     video_pause = true;
                                                   });
@@ -362,35 +390,37 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                               }
                                             },
                                             child: _isVisibleSPBTN
-                                                ?
-                                            Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.circle,
-                                                  color: Colors.black38,
-                                                  size: 80,
-                                                ),
-                                                _videoPlayerController
-                                                    .value.isPlaying
-                                                    ? Icon(
-                                                  Icons.pause,
-                                                  color: Colors.white,
-                                                  size: 40,
-                                                )
-                                                    : Icon(
-                                                  Icons.play_arrow,
-                                                  color: Colors.white,
-                                                  size: 40,
-                                                ),
-                                              ],
-                                            )
+                                                ? Stack(
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.circle,
+                                                        color: Colors.black38,
+                                                        size: 80,
+                                                      ),
+                                                      _videoPlayerController
+                                                              .value.isPlaying
+                                                          ? Icon(
+                                                              Icons.pause,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 40,
+                                                            )
+                                                          : Icon(
+                                                              Icons.play_arrow,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 40,
+                                                            ),
+                                                    ],
+                                                  )
                                                 : Container(),
                                           ),
                                           AnimatedOpacity(
                                             opacity:
-                                            _isforwardTimeSkip ? 1.0 : 0.0,
-                                            duration: Duration(milliseconds: 200),
+                                                _isforwardTimeSkip ? 1.0 : 0.0,
+                                            duration:
+                                                Duration(milliseconds: 200),
                                             child: InkWell(
                                               onTap: () {
                                                 _watchVideoMenu();
@@ -404,18 +434,19 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                                 _videoPlayerController.seekTo(
                                                   Duration(
                                                       seconds:
-                                                      _videoPlayerController
-                                                          .value
-                                                          .position
-                                                          .inSeconds +
-                                                          10),
+                                                          _videoPlayerController
+                                                                  .value
+                                                                  .position
+                                                                  .inSeconds +
+                                                              10),
                                                 );
                                                 Future.delayed(
                                                   Duration(milliseconds: 200),
-                                                      () {
+                                                  () {
                                                     setState(() {
                                                       _isVisible = false;
-                                                      _isforwardTimeSkip = false;
+                                                      _isforwardTimeSkip =
+                                                          false;
                                                     });
                                                   },
                                                 );
@@ -428,7 +459,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                                     size: screenWidth,
                                                   ),
                                                   Positioned(
-                                                    left: (screenWidth / 4) + 10,
+                                                    left:
+                                                        (screenWidth / 4) + 10,
                                                     top: (screenWidth / 2) - 10,
                                                     child: Column(
                                                       children: [
@@ -447,7 +479,21 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                                       ],
                                                     ),
                                                   ),
-                                                  Positioned(left: 12, bottom: 12, child: Row(children: [Text('data', style: TextStyle(color: Colors.white, fontSize: 12,),),],),),
+                                                  Positioned(
+                                                    left: 12,
+                                                    bottom: 12,
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          'data',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 12,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -463,6 +509,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                         ),
                       ),
                     ),
+                    // 동영상 제어(progressindicator) 파트
                     Container(
                       height: 16,
                       width: double.infinity,
@@ -482,7 +529,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                         ),
                       ),
                     ),
-
+                    // 자동차 각 손상 확인 파트
                     Expanded(
                       flex: 2,
                       child: DefaultTabController(
@@ -500,6 +547,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                             toolbarHeight: 2,
                             backgroundColor: Colors.white,
                             bottom: TabBar(
+                              controller: _tabController,
                               labelColor: Color(0xFFE0426F),
                               unselectedLabelColor: Color(0xFF989696),
                               indicatorColor: Color(0xFFE0426F),
@@ -531,21 +579,24 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                             ),
                           ),
                           body: TabBarView(
+                            controller: _tabController,
                             children: [
-                            CheckCarDamageContainer(
-                                      carDamageList: widget.carDamagesAllList,
-                                      videoPlayerController: _videoPlayerController,
-                                      changeDamageValue: changeDamageValue,
-                                      selectedIndexList: selectedIndexList,
-                                      isSelectedView: false,
-                                    ),
-                          CheckCarDamageContainer(
-                                      carDamageList: widget.carDamagesAllList,
-                                      videoPlayerController: _videoPlayerController,
-                                      changeDamageValue: changeDamageValue,
-                                      selectedIndexList: selectedIndexList,
-                                      isSelectedView: true,
-                                    ),
+                              CheckCarDamageContainer(
+                                carDamageList: widget.carDamagesAllList,
+                                videoPlayerController: _videoPlayerController,
+                                changeDamageValue: changeDamageValue,
+                                selectedIndexList: selectedIndexList,
+                                isSelectedView: false,
+                                damageInfoNotifier: damageInfoNotifier,
+                              ),
+                              CheckCarDamageContainer(
+                                carDamageList: widget.carDamagesAllList,
+                                videoPlayerController: _videoPlayerController,
+                                changeDamageValue: changeDamageValue,
+                                selectedIndexList: selectedIndexList,
+                                isSelectedView: true,
+                                damageInfoNotifier: damageInfoNotifier,
+                              ),
                             ],
                           ),
                         ),
@@ -578,8 +629,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                             horizontal: 12,
                           ),
                           child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -587,7 +637,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Row(
                                       children: [
@@ -604,10 +654,12 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                         ),
                                         Text(
                                           isSelectedView
-                                              ? selectedIndexList.length.toString()
-                                              : (widget.carDamagesAllList.length -
-                                              selectedIndexList.length)
-                                              .toString(),
+                                              ? selectedIndexList.length
+                                                  .toString()
+                                              : (widget.carDamagesAllList
+                                                          .length -
+                                                      selectedIndexList.length)
+                                                  .toString(),
                                           style: TextStyle(
                                             color: Color(0xFFE0426F),
                                             fontWeight: FontWeight.w700,
@@ -621,28 +673,25 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                               ),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceEvenly,
                                 children: damage_categories.map(
-                                      (part_category) {
+                                  (part_category) {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 4,
                                       ),
                                       child: InkWell(
-                                        borderRadius:
-                                        BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(10),
                                         onTap: () {
                                           if (selected_categories
                                               .contains(part_category)) {
                                             setState(() {
-                                              removeCategories(
-                                                  part_category);
+                                              removeCategories(part_category);
                                             });
                                           } else {
                                             setState(
-                                                  () {
-                                                addCategories(
-                                                    part_category);
+                                              () {
+                                                addCategories(part_category);
                                               },
                                             );
                                           }
@@ -654,18 +703,15 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen> {
                                                 fontSize: 12,
                                               ),
                                             ),
-                                            labelPadding:
-                                            EdgeInsets.symmetric(
+                                            labelPadding: EdgeInsets.symmetric(
                                               horizontal: 8,
                                             ),
-                                            backgroundColor:
-                                            selected_categories
-                                                .contains(
-                                                part_category)
+                                            backgroundColor: selected_categories
+                                                    .contains(part_category)
                                                 ? Color(0xFFFBD5DC)
                                                 : Colors.grey
-                                          // deleteIconColor: Color(0xFFE0426F),
-                                        ),
+                                            // deleteIconColor: Color(0xFFE0426F),
+                                            ),
                                       ),
                                     );
                                   },
