@@ -12,11 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CalendarRequest {
 
-    @Schema(description = "userId", example = "1", required = true)
-    @NotNull
-    @Min(1)
-    private Long userId;
-
     @Schema(description = "등록 날짜", example = "2023-03-12")
     @NotNull
     private LocalDate calendarDate;
@@ -29,5 +24,8 @@ public class CalendarRequest {
     @NotNull
     private String memo;
 
+    @Schema(description = "자동 생성 일정", example = "false")
+    @NotNull
+    private boolean isAuto;
 
 }
