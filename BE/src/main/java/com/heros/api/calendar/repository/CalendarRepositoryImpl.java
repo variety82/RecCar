@@ -18,7 +18,7 @@ public class CalendarRepositoryImpl implements CalendarRepositorySupport{
     @Override
     public List<Calendar> getCalendars(Long userId) {
         List<Calendar> fetch = queryFactory.selectFrom(calendar)
-                .where(calendar.user.userId.eq(userId))
+                .where(calendar.userId.eq(userId))
                 .fetch();
 
         return fetch;
