@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
   static const storage = FlutterSecureStorage();
   dynamic userName = '';
   dynamic userProfileImg = '';
-  dynamic userCarId = '';
+  dynamic userCarId = '0';
 
   // dynamic userName = '';
   // dynamic userEmail = '';
@@ -97,7 +97,7 @@ class _MyAppState extends State<MyApp> {
             height: 100,
           ),
           Expanded(
-              child: userCarId == 0
+              child: userCarId == '0'
                   ? MainPageBody(
                       imgRoute: 'lib/assets/images/empty_garage.svg',
                       imageDisabled: true,
@@ -139,7 +139,8 @@ class _MyAppState extends State<MyApp> {
                               child: const Text('차량 상세 페이지'))
                         ],
                       ),
-                    )),
+                    ),
+          ),
           const Footer()
         ],
       ),
