@@ -17,7 +17,7 @@ class AfterRecordingScreen extends StatefulWidget {
 }
 
 class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
-  bool loading_api = true;
+  bool loading_api = false;
 
   List<Map<String, dynamic>> carDamagesAllList = [];
 
@@ -201,20 +201,20 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                           ),
                           Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                ),
-                                child: Text(
-                                  '* 현재 이격은 기록만 가능합니다 *',
-                                  textAlign: TextAlign.center,
-                                  softWrap: true,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Color(0xFFFF3F3F),
-                                  ),
-                                ),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(
+                              //     vertical: 8,
+                              //   ),
+                              //   child: Text(
+                              //     '* 현재 이격은 기록만 가능합니다 *',
+                              //     textAlign: TextAlign.center,
+                              //     softWrap: true,
+                              //     style: TextStyle(
+                              //       fontSize: 14,
+                              //       color: Color(0xFFFF3F3F),
+                              //     ),
+                              //   ),
+                              // ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
