@@ -6,6 +6,7 @@ import com.heros.api.calendar.entity.Calendar;
 import com.heros.api.calendar.service.CalendarService;
 import com.heros.api.detectionInfo.dto.response.PartWithDetectionInfoResponse;
 import com.heros.api.example.model.ErrorResponseExample;
+import com.heros.api.user.entity.User;
 import com.heros.exception.ErrorCode;
 import com.heros.exception.customException.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +18,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -31,28 +35,32 @@ public class CalendarController {
 
     private final CalendarService calendarService;
 
-    @Operation(summary = "캘린더 조회")
+    @Operation(summary = "캘린더 조회", description = "캘린더 조회 메서드 입니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = PartWithDetectionInfoResponse.class))),
+            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = Calendar.class))),
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
-    @GetMapping(value = "{userId}")
-    public ResponseEntity<?> getCalender(@Schema(description = "조회할 userId", example = "1") @NotNull @Min(1) @PathVariable Long userId){
+    @GetMapping(value = "")
+    public ResponseEntity<?> getCalender(){
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        User user = (User) httpServletRequest.getAttribute("user");
+        Long userId = user.getUserId();
         List<Calendar> response = calendarService.getCalendar(userId);
-        if (response.size() == 0) {
-            throw (new BusinessException(ErrorCode.PAGE_NOT_FOUND));
-        }
         return ResponseEntity.ok().body(response);
     }
 
-    @Operation(summary = "캘린더 등록")
+    @Operation(summary = "캘린더 등록", description = "캘린더 등록 메서드입니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = PartWithDetectionInfoResponse.class))),
+            @ApiResponse(responseCode = "201", description = "success"),
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
     @PostMapping(value = "")
     public ResponseEntity<?> calendarAdd(@Valid @RequestBody CalendarRequest calendarRequest) {
-        calendarService.createCalendar(calendarRequest);
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        User user = (User) httpServletRequest.getAttribute("user");
+        Long userId = user.getUserId();
+
+        calendarService.createCalendar(calendarRequest, userId);
         return ResponseEntity.status(201).body(null);
     }
 
