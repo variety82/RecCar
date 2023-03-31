@@ -5,13 +5,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 public class CalendarResponse {
+
+    @Schema(description = "calendarId", example = "1", required = true)
+    @NotNull
+    @Min(1)
+    private Long calendarId;
+
     @Schema(description = "등록 날짜", example = "2023-03-31T06:41:25.359Z")
     @NotNull
     private LocalDateTime calendarDate;
@@ -29,6 +35,7 @@ public class CalendarResponse {
     private boolean isAuto;
 
     public CalendarResponse(Calendar calendar) {
+        this.calendarId = calendar.getCalendarId();
         this.calendarDate = calendar.getCalendarDate();
         this.title = calendar.getTitle();
         this.memo = calendar.getMemo();
