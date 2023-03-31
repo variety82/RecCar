@@ -22,6 +22,9 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
+// START: FlutterFire Configuration
+apply plugin: 'com.google.gms.google-services'
+// END: FlutterFire Configuration
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
@@ -49,6 +52,18 @@ android {
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders += [
+                'appAuthRedirectScheme': 'com.googleusercontent.apps.241391269143-625gjc8blfdm225mdnm2jk05ig5qmi86.apps.googleusercontent.com'
+        ]
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'hero102'
+            storeFile file('mykey.jks')
+            storePassword 'hero102'
+        }
     }
 
     buildTypes {
