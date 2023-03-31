@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "CALENDAR")
@@ -22,7 +23,7 @@ public class Calendar {
     private long calendarId;
 
     @Column(name = "CALENDAR_DATE")
-    private LocalDate calendarDate;
+    private LocalDateTime calendarDate;
 
     @Column(name = "TITLE")
     private String title;
@@ -37,7 +38,7 @@ public class Calendar {
     private boolean isAuto;
 
     @Builder(builderMethodName = "modifyBuilder")
-    public Calendar(long calendarId, LocalDate calendarDate, String title, String memo, Long userId, boolean isAuto) {
+    public Calendar(long calendarId, LocalDateTime calendarDate, String title, String memo, Long userId, boolean isAuto) {
         this.calendarId = calendarId;
         this.calendarDate = calendarDate;
         this.title = title;
@@ -47,7 +48,7 @@ public class Calendar {
     }
 
     @Builder(builderMethodName = "builder")
-    public Calendar(LocalDate calendarDate, String title, String memo, Long userId, boolean isAuto) {
+    public Calendar(LocalDateTime calendarDate, String title, String memo, Long userId, boolean isAuto) {
         this.calendarDate = calendarDate;
         this.title = title;
         this.memo = memo;
