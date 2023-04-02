@@ -165,7 +165,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
                   child: Text('* 사진을 클릭하면 확대됩니다 *', style: TextStyle(color: Theme.of(context).primaryColor),),
                 ),
                 Padding(
@@ -182,6 +182,13 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(32, 0, 32, 32),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [Row(crossAxisAlignment: CrossAxisAlignment.center,children: [Icon(Icons.circle, size: 16, color: Color.fromRGBO(240, 15, 135, 0.75),), SizedBox(width: 4,),Text('스크래치', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900 ,color: Color.fromRGBO(240, 15, 135, 0.75),),)],),Row(crossAxisAlignment: CrossAxisAlignment.center,children: [Icon(Icons.circle, size: 16, color: Color.fromRGBO(64, 64, 64, 0.75),), SizedBox(width: 4,),Text('찌그러짐', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900 ,color: Color.fromRGBO(64, 64, 64, 0.75),),)],),Row(crossAxisAlignment: CrossAxisAlignment.center,children: [Icon(Icons.circle, size: 16, color: Color.fromRGBO(75, 150, 200, 0.75),), SizedBox(width: 4,),Text('파손', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900 ,color: Color.fromRGBO(75, 150, 200, 0.75),),)],),],
+                  ),
+                ),
                 Text(
                   '손상 종류',
                   style: TextStyle(
@@ -190,6 +197,10 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                     color: Colors.black,
                   ),
                 ),
+                (scratch_count + breakage_count + crushed_count + separated_count) == 0 ? Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text('* 최소 하나 이상의 손상 종류를 설정해주세요 *', style: TextStyle(color: Theme.of(context).primaryColor),),
+                ) : Container(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child:  widget.modalCase == "차량 손상 상세 확인"
@@ -360,6 +371,10 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                           color: Colors.black,
                         ),
                       ),
+                      partInput == '' ? Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text('* 차량 부위를 선택해주세요 *', style: TextStyle(color: Theme.of(context).primaryColor),),
+                      ) : Container(),
                       Center(
                         child: widget.modalCase == "차량 손상 상세 확인" ?
                         Chip(
@@ -377,7 +392,8 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                             backgroundColor: Theme.of(context).primaryColorLight,
                           // deleteIconColor: Color(0xFFE0426F),
                         )
-                            : Wrap(
+                            :
+                        Wrap(
                           direction: Axis.horizontal,
                           alignment: WrapAlignment.center,
                           spacing: 10,
@@ -442,7 +458,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                       widget.modalCase == "차량 손상 상세 확인" ?
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(memoInput,
+                        child: Text(memoInput == "" ? "없음" : memoInput,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -491,7 +507,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                         alignment: Alignment.center,
                         padding: EdgeInsets.symmetric(
                           vertical: 5,
-                          horizontal: 20,
+                          horizontal: 13,
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -505,7 +521,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                           ],
                         ),
                         child: Text(
-                          "돌아가기",
+                          widget.modalCase == "차량 손상 상세 확인" ? "닫기" : "취소",
                           style: TextStyle(
                             color: Color(0xFF453F52),
                           ),
@@ -536,7 +552,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFFE0426F)),
                         child: Text(
-                          "등록",
+                          widget.modalCase == "차량 손상 상세 수정" ? "수정" : "추가",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,

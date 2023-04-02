@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'package:client/widgets/common/moveable_button.dart';
-import 'package:client/services/analysis_car_damage_api.dart';
-import 'package:client/screens/check_car_damage_screen/check_car_damage_screen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:client/screens/after_recording_screen/damage_count_info_block.dart';
 import 'package:client/services/check_car_api.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 // 만약 애니메이션 효과 추가 시, 수정 필요
 class AfterCheckDamageScreen extends StatefulWidget {
@@ -20,14 +17,108 @@ class AfterCheckDamageScreen extends StatefulWidget {
 }
 
 class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
+  bool load_data = false;
   bool loading_api = false;
   List<Map<String, dynamic>> damageInfoList = [];
 
+  static final storage = FlutterSecureStorage();
+  int? currentCarId;
+  int? currentCarVideo;
+  late DateTime nowDateTime;
+  bool? formerState;
+
+  // 각 부위 별 파손 개수 변수로 지정
+  num scratch_count = 0;
+  num crushed_count = 0;
+  num breakage_count = 0;
+  num separated_count = 0;
+
+  Future<void> setCurrentCarId() async {
+    final carId = await storage.read(key: 'carId');
+    setState(() {
+      currentCarId = int.parse(carId!);
+    });
+    print(currentCarId);
+  }
+
+  Future<void> setCurrentCarVideo() async {
+    final carVideoState = await storage.read(key: 'carVideoState');
+    setState(() {
+      if (carVideoState == '0') {
+        setState(() {
+          currentCarVideo = 0;
+          formerState = true;
+        });
+      } else if (carVideoState == '1') {
+        setState(() {
+          currentCarVideo = 1;
+          formerState = false;
+        });
+      } else {
+        setState(() {
+          currentCarVideo = 2;
+          formerState = false;
+        });
+      }
+    });
+    print(currentCarVideo);
+    print(formerState);
+  }
+
+  String checkDamagePart(Map<String, dynamic> damage) {
+      if (damage["part"] == "앞범퍼/앞펜더/전조등") {
+        return 'front';
+      } else if (damage["part"] == "뒷범퍼/뒷펜더/후미등") {
+        return 'back';
+      } else if (damage["part"] == "옆면/사이드/스텝") {
+        return 'side';
+      } else if (damage["part"] == "타이어/휠") {
+        return 'wheel';
+      }
+      return 'none';
+    }
+
+    Future<void> fetchData() async {
+    await Future.delayed(Duration(milliseconds: 10));
+    dataChange();
+  }
+  void dataChange() {
+    widget.carDamagesAllList.where((damage) => damage['selected'] == true)
+        .forEach((damage) {
+      Map<String, dynamic> carDamageInfo = {
+        // "carId": int.parse(currentCarId!),
+        "carId": currentCarId == null ? 0 : currentCarId,
+        "former": formerState == null ? false : formerState,
+        "pictureUrl": damage["Damage_Image_URL"],
+        "part": checkDamagePart(damage),
+        "memo": damage["memo"],
+        "damageDate": nowDateTime.toIso8601String(),
+        "scratch": damage["Scratch"],
+        "breakage": damage["Breakage"],
+        "crushed": damage["Crushed"],
+        "separated": damage["Separated"],
+      };
+      print(carDamageInfo);
+      setState(() {
+        damageInfoList.add(carDamageInfo);
+        scratch_count += damage["Scratch"];
+        breakage_count += damage["Breakage"];
+        crushed_count += damage["Crushed"];
+        separated_count += damage["Separated"];
+      });
+    });
+    setState(() {
+      load_data = true;
+    });
+  }
+
   @override
   void initState() {
-    widget.carDamagesAllList.where((damage) => damage['selected'] == true)
-        .map((damage) => print(damage));
     super.initState();
+    setCurrentCarId();
+    setCurrentCarVideo();
+    nowDateTime = DateTime.now();
+    fetchData();
   }
 
   @override
@@ -37,7 +128,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
         // backgroundColor는 흰색으로 설정
         backgroundColor: Colors.white,
         // Column 정렬 이용해 화면 정가운데에 이하 요소들을 정렬
-        body: Center(
+        body: load_data ?  Center(
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.all(30),
@@ -79,7 +170,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                       ],
                     ),
                     RichText(
-                      text: const TextSpan(
+                      text: TextSpan(
                         children: [
                           TextSpan(
                             text: '총 ',
@@ -89,7 +180,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '15',
+                            text: damageInfoList.length.toString(),
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
@@ -108,31 +199,17 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                     ),
                     Column(
                       children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(
-                        //     vertical: 8,
-                        //   ),
-                        //   child: Text(
-                        //     '* 현재 이격은 기록만 가능합니다 *',
-                        //     textAlign: TextAlign.center,
-                        //     softWrap: true,
-                        //     style: TextStyle(
-                        //       fontSize: 14,
-                        //       color: Color(0xFFFF3F3F),
-                        //     ),
-                        //   ),
-                        // ),
                         Row(
                           mainAxisAlignment:
                           MainAxisAlignment.spaceBetween,
                           children: [
                             DamageCountInfoBlock(
                               damageName: '스크래치',
-                              damageCnt: 8,
+                              damageCnt: scratch_count.toInt(),
                             ),
                             DamageCountInfoBlock(
                               damageName: '찌그러짐',
-                              damageCnt: 8,
+                              damageCnt: crushed_count.toInt(),
                             ),
                           ],
                         ),
@@ -142,11 +219,11 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                           children: [
                             DamageCountInfoBlock(
                               damageName: '파손',
-                              damageCnt: 8,
+                              damageCnt: breakage_count.toInt(),
                             ),
                             DamageCountInfoBlock(
                               damageName: '이격',
-                              damageCnt: 8,
+                              damageCnt: separated_count.toInt(),
                             ),
                           ],
                         ),
@@ -161,15 +238,16 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                         backgroundColor: Color(0xFFE0426F),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CheckCarDamageScreen(
-                              filePath: widget.filePath,
-                              carDamagesAllList: widget.carDamagesAllList,
-                            ),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => CheckCarDamageScreen(
+                        //       filePath: widget.filePath,
+                        //       carDamagesAllList: widget.carDamagesAllList,
+                        //         selectedIndexList: selectedIndexList,
+                        //     ),
+                        //   ),
+                        // );
                       },
                       child: Text(
                         "확인하기",
@@ -209,7 +287,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                 ),
                               ),
                               TextSpan(
-                                text: '15',
+                                text: damageInfoList.length.toString(),
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.w900,
@@ -261,7 +339,11 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                         minimumSize: Size(200, 50),
                         backgroundColor: Color(0xFFE0426F),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+                        setState(() {
+                          load_data = false;
+                        });
+                        print(damageInfoList);
                         postCarDamageInfo(
                         success: (dynamic response) {
                             setState(() {
@@ -275,8 +357,13 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                               },
                               );
                               },
-                              body: {},
+                              bodyList: damageInfoList,
                               );
+                        await storage.write(key: "carVideoState", value: currentCarVideo == 0 ? '1': '2');
+                        setState(() {
+                          load_data = true;
+                          loading_api = true;
+                        });
                       },
                       child: Text(
                         "등록하기",
@@ -292,8 +379,10 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
               ),
             ),
           ),
+        ) :  Center(
+          child: CircularProgressIndicator(color: Theme.of(context).primaryColor,),
         ),
-      ),
+      )
     );
   }
 }

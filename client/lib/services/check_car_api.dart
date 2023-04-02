@@ -19,7 +19,7 @@ void postCarDamageInfo({
   // success 콜백함수와 fail 콜백함수, body를 받아줍니다
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
-  Map<String, dynamic>? body,
+  List<Map<String, dynamic>>? bodyList,
 }) {
   // path 및 method를 입력해줍니다
   apiInstance(
@@ -27,6 +27,6 @@ void postCarDamageInfo({
     method : Method.post,
     success: success,
     fail: fail,
-    body: body,
+    bodyList: bodyList,
   );
 }

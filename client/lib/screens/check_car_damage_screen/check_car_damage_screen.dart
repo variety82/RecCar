@@ -17,11 +17,13 @@ import 'package:client/services/analysis_car_damage_api.dart';
 class CheckCarDamageScreen extends StatefulWidget {
   final String filePath;
   final List<Map<String, dynamic>> carDamagesAllList;
+  final List<int> selectedIndexList;
 
   const CheckCarDamageScreen({
     Key? key,
     required this.filePath,
     required this.carDamagesAllList,
+    required this.selectedIndexList,
   }) : super(key: key);
 
   @override
@@ -332,6 +334,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     _initVideoPlayer();
 
     carDamagesAllList = widget.carDamagesAllList;
+    selectedIndexList = widget.selectedIndexList;
 
     _tabController = TabController(vsync: this, length: 2); // 탭 수에 따라 length 변경
     int _selectedTabIndex = 0; // 기본값은 첫 번째 탭

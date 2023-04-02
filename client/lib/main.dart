@@ -75,6 +75,7 @@ class _MyAppState extends State<MyApp> {
   dynamic userCarId = '0';
   dynamic firstVideoInfo = true;
   dynamic firstCheckDamage = true;
+  dynamic currentCarVideo = '0';
 
   // dynamic userName = '';
   // dynamic userEmail = '';
@@ -95,12 +96,14 @@ class _MyAppState extends State<MyApp> {
     var carId = await storage.read(key: 'carId');
     var videoinfo = await storage.read(key: 'firstVideoInfo');
     var checkDamage = await storage.read(key:'firstCheckDamage');
+    var carVideoState = await storage.read(key: 'carVideoState');
     setState(() {
       userName = name;
       userProfileImg = img;
       userCarId = carId;
       firstVideoInfo = videoinfo;
       firstCheckDamage = checkDamage;
+      currentCarVideo = carVideoState;
     });
     if (userName == null) {
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
