@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../widgets/common/footer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import './calendar_utils.dart';
@@ -29,14 +30,14 @@ class _CalendarState extends State<Calendar> {
   DateTime _inputedCalendarDate = DateTime.now();
   String _inputedTitle = "";
   String _inputedMemo = "";
-  bool _inputedIsAuto = false;
 
   Map<String, dynamic> _buildCalendarInfoBody() {
     return {
-      "calendarDate": _inputedCalendarDate,
+      "calendarDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+          .format(_inputedCalendarDate),
       "title": _inputedTitle,
       "memo": _inputedMemo,
-      "isAuto": _inputedIsAuto,
+      "isAuto": false,
     };
   }
 
@@ -227,7 +228,10 @@ class _CalendarState extends State<Calendar> {
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             child: ListTile(
-                              onTap: () => {showDetailCalender(value[index].id)},
+                              onTap: () => {
+                                showDetailCalender(value[index].id,
+                                    value[index].title, value[index].memo)
+                              },
                               title: Text('${value[index].title}',
                                   style: TextStyle(color: Color(0xFF6A6A6A))),
                               subtitle: Text('${value[index].memo}'),
@@ -479,6 +483,7 @@ class _CalendarState extends State<Calendar> {
     setState(() {
       _inputedCalendarDate = _dateController.selectedDate ?? DateTime.now();
     });
+    print(_buildCalendarInfoBody());
     postEvent(
       success: (dynamic response) {},
       fail: (error) {
@@ -486,14 +491,368 @@ class _CalendarState extends State<Calendar> {
       },
       body: _buildCalendarInfoBody(),
     );
+    Navigator.pushNamed(context, '/calendar');
   }
-  
+
   // 일정 상세보기 (수정, 삭제 기능 추가하기)
-  void showDetailCalender(int id) {
+  void showDetailCalender(int id, String title, String memo) {
+    print(_focusedDay);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            height: 200,
+            padding: EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 10,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "${_focusedDay.toString().split(" ")[0]} 일정",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).secondaryHeaderColor),
+                    ),
+                    Container(
+                      width: 48,
+                      margin: EdgeInsets.zero,
+                      child: TextButton(
+                        onPressed: () {modifyCalendar(id, title, memo, _focusedDay);},
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            "수정",
+                            style: TextStyle(color: Colors.white, fontSize: 11),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 48,
+                      margin: EdgeInsets.zero,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            "삭제",
+                            style: TextStyle(color: Colors.white, fontSize: 11),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "TITLE",
+                      style: TextStyle(
+                          color: Theme.of(context).secondaryHeaderColor),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Color(0xFF6A6A6A),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "MEMO",
+                      style: TextStyle(
+                          color: Theme.of(context).secondaryHeaderColor),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    if (memo == "")
+                      Text(
+                        "메모가 없습니다",
+                        style: TextStyle(
+                          color: Color(0xFFD9D9D9),
+                        ),
+                      ),
+                    if (memo != "")
+                      Text(
+                        memo,
+                        style: TextStyle(
+                          color: Color(0xFF6A6A6A),
+                        ),
+                      ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => {Navigator.pop(context)},
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 50,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.7),
+                              blurRadius: 2.0,
+                              spreadRadius: 0.0,
+                            )
+                          ],
+                        ),
+                        child: Text(
+                          "닫기",
+                          style: TextStyle(
+                            color: Color(0xFF453F52),
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void modifyCalendar(int id, String title, String memo, DateTime date) {
+    FocusNode _unUsedFocusNode = FocusNode();
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Dialog();
+          return Dialog(
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 30,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                          child: Text(
+                        "일정 수정",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w500),
+                      )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "TITLE",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).secondaryHeaderColor,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 30,
+                              child: TextField(
+                                controller: _titleController..text = title,
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
+                                decoration: InputDecoration(
+                                  border: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor,
+                                    ),
+                                  ),
+                                ),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 40),
+                      Text(
+                        "DATE ",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).secondaryHeaderColor,
+                        ),
+                      ),
+                      Container(
+                        child: SfDateRangePicker(
+                            view: DateRangePickerView.month,
+                            monthViewSettings:
+                                const DateRangePickerMonthViewSettings(
+                                    firstDayOfWeek: 7),
+                            // onSelectionChanged:
+                            //     (DateRangePickerSelectionChangedArgs args) {
+                            //   print(args.value);
+                            // },
+                            controller: _dateController..selectedDate = date,
+                            todayHighlightColor: Theme.of(context).primaryColor,
+                            selectionColor: Theme.of(context).primaryColor,
+                            headerStyle: DateRangePickerHeaderStyle(
+                              textAlign: TextAlign.center,
+                              textStyle: TextStyle(
+                                fontSize: 15,
+                                color: Theme.of(context).secondaryHeaderColor,
+                              ),
+                            ),
+                            monthCellStyle: DateRangePickerMonthCellStyle(
+                              todayTextStyle: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            selectionTextStyle:
+                                const TextStyle(fontWeight: FontWeight.w700)),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text("MEMO",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).secondaryHeaderColor,
+                          )),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        height: 90,
+                        child: TextField(
+                          controller: _memoController..text = memo,
+                          maxLines: 3,
+                          onTapOutside: (PointerDownEvent event) {
+                            FocusScope.of(context)
+                                .requestFocus(_unUsedFocusNode);
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .secondaryHeaderColor)),
+                            labelText: '',
+                          ),
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => {Navigator.pop(context)},
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 13,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.7),
+                                    blurRadius: 2.0,
+                                    spreadRadius: 0.0,
+                                  )
+                                ],
+                              ),
+                              child: Text(
+                                "취소",
+                                style: TextStyle(
+                                  color: Color(0xFF453F52),
+                                ),
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => {putCalendar()},
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 13,
+                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xFFE0426F)),
+                              child: Text(
+                                "수정",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
         });
+  }
+
+  void putCalendar() {
+
   }
 }

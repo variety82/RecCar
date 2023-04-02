@@ -28,6 +28,21 @@ void postEvent({
     body: body,
   );
 }
+
+// 일정 수정
+void putEvent({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+  Map<String, dynamic>? body,
+}) {
+  apiInstance(
+    path: '/calendar/',
+    method: Method.post,
+    success: success,
+    fail: fail,
+    body: body,
+  );
+}
 // // 렌트 내역
 // void getRentInfo({
 //   required dynamic Function(dynamic) success,
