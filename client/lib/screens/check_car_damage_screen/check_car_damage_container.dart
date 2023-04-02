@@ -10,9 +10,8 @@ class CheckCarDamageContainer extends StatefulWidget {
   final List<int> selectedIndexList;
   final void Function(int, String, int, int, int, int, String)
       changeDamageValue;
-  final void Function(int) deleteDamageList;
-  final void Function(BuildContext, Function, String, String, String, String, {dynamic data}) showConfirmationDialog;
   final bool isSelectedView;
+  // final ValueNotifier<List<Map<String, dynamic>>> damageInfoNotifier;
 
   CheckCarDamageContainer({
     required this.videoPlayerController,
@@ -20,8 +19,7 @@ class CheckCarDamageContainer extends StatefulWidget {
     required this.selectedIndexList,
     required this.changeDamageValue,
     required this.isSelectedView,
-    required this.deleteDamageList,
-    required this.showConfirmationDialog,
+    // required this.damageInfoNotifier,
   });
 
   @override
@@ -33,6 +31,8 @@ class _CheckCarDamageContainerState extends State<CheckCarDamageContainer> {
   final ScrollController _scrollController = ScrollController();
   final ScrollController _selectedScrollController = ScrollController();
 
+  @override
+  // Widget buildItem(Map<String, dynamic> carDamage) {
   @override
   Widget build(BuildContext context) {
     return RawScrollbar(
@@ -49,43 +49,57 @@ class _CheckCarDamageContainerState extends State<CheckCarDamageContainer> {
         child: widget.isSelectedView
             ? ListView(
                 children: [
-                  Column(children: widget.carDamageList.where((damage) => damage['selected'] == true)
-                      .map((damage) => Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: CheckCarDamagePart(
-                      imageUrl: damage['Damage_Image_URL'],
-                      videoPlayerController: widget.videoPlayerController,
-                      carDamage: damage,
-                      changeDamageValue: widget.changeDamageValue,
-                      deleteDamageList: widget.deleteDamageList,
-                      showConfirmationDialog: widget.showConfirmationDialog,
-                      damageView: damage["damageView"] ?? "미정",
+                  for (int i = 0; i < widget.selectedIndexList.length; i++)
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: CheckCarDamagePart(
+                        imageUrl:
+                            widget.carDamageList[widget.selectedIndexList[i]]
+                                ["Damage_Image_URL"],
+                        videoPlayerController: widget.videoPlayerController,
+                        carDamage:
+                            widget.carDamageList[widget.selectedIndexList[i]],
+                        changeDamageValue: widget.changeDamageValue,
+                      ),
                     ),
-                  ))
-                      .toList(),)
+                  // Text(carDamageList[i]["Damage_Image_URL"]),
                 ],
               )
             : ListView(
                 controller: widget.isSelectedView
                     ? _selectedScrollController
                     : _scrollController,
-                children: widget.carDamageList
-            .where((damage) => damage['selected'] == false)
-          .map((damage) => Padding(
-        padding: const EdgeInsets.all(12),
-        child: CheckCarDamagePart(
-          imageUrl: damage['Damage_Image_URL'],
-          videoPlayerController: widget.videoPlayerController,
-          carDamage: damage,
-          changeDamageValue: widget.changeDamageValue,
-            deleteDamageList: widget.deleteDamageList,
-            showConfirmationDialog: widget.showConfirmationDialog,
-          damageView: damage["damageView"] ?? "미정",
-        ),
-      ))
-          .toList(),
+                children: [
+                  for (int i = 0; i < widget.carDamageList.length; i++)
+                    if (!widget.selectedIndexList.contains(i))
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: CheckCarDamagePart(
+                          imageUrl: widget.carDamageList[i]["Damage_Image_URL"],
+                          videoPlayerController: widget.videoPlayerController,
+                          carDamage: widget.carDamageList[i],
+                          changeDamageValue: widget.changeDamageValue,
+                        ),
+                      ),
+                  // Text(carDamageList[i]["Damage_Image_URL"]),
+                ],
               ),
       ),
     );
   }
 }
+
+//carDamageList
+//               .map((carDamage) {
+//             Padding(
+//               padding: const EdgeInsets.all(12),
+//               child: CheckCarDamagePart(
+//                 imageUrl:
+//                 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/damage_user_50_2023-03-23_14-24-26_3.jpg',
+//                 videoPlayerController: videoPlayerController,
+//               ),
+//             ),
+//           },
+//
+//               )
+//               .toList(),

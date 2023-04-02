@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 
-// enum Method { get, post }
+enum Method { get, post }
 
 // apiInstance를 만듭니다
 Future<dynamic> analysisCarDamageApi({
@@ -36,6 +36,14 @@ Future<dynamic> analysisCarDamageApi({
   print('myname');
   print(file);
   request.files.add(await http.MultipartFile.fromPath("file", filePath));
+  // request.files.add(await http.MultipartFile.fromBytes(
+  //   'file',
+  //   bytes,
+  //   filename: 'video.mp4',
+  //   contentType: MediaType('video', 'mp4'),
+  // ));
+  print(request);
+
   var response = await request.send();
 
   if (200 <= response.statusCode && response.statusCode < 300) {
@@ -46,22 +54,28 @@ Future<dynamic> analysisCarDamageApi({
 
     List<Map<String, dynamic>> carDamagesAllList = [];
 
+    int time_cnt = 0;
+    int index_cnt = 0;
     if (jsonList.length > 0) {
       for (int i = 0; i < jsonList.length; i++) {
+        index_cnt += 1;
         Map<String, dynamic> carDamageState = {
-          "index": i,
+          "index": index_cnt,
           "Damage_Image_URL": jsonList[i]['url'],
           "part": "",
           "Scratch": 0,
           "Crushed": 0,
           "Breakage": 0,
           "Separated": 0,
-          "timeStamp": i,
-          "damageView": '미정',
+          "timeStamp": time_cnt,
           "memo": "",
           "selected": false,
         };
+        carDamageState[jsonList[i]["damage"]] += 1;
         carDamagesAllList.add(carDamageState);
+        if (index_cnt % 3 == 0) {
+          time_cnt += 1;
+        }
       }
     }
 
