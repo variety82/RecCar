@@ -4,105 +4,29 @@ import 'package:client/widgets/common/moveable_button.dart';
 import 'package:client/services/analysis_car_damage_api.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_screen.dart';
 import 'package:client/screens/after_recording_screen/damage_count_info_block.dart';
+import 'package:client/services/check_car_api.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // 만약 애니메이션 효과 추가 시, 수정 필요
-class AfterRecordingScreen extends StatefulWidget {
+class AfterCheckDamageScreen extends StatefulWidget {
   final String filePath;
+  final List<Map<String, dynamic>> carDamagesAllList;
 
-  const AfterRecordingScreen({Key? key, required this.filePath})
+  const AfterCheckDamageScreen({Key? key, required this.filePath, required this.carDamagesAllList,})
       : super(key: key);
 
   @override
-  State<AfterRecordingScreen> createState() => _AfterRecordingScreenState();
+  State<AfterCheckDamageScreen> createState() => _AfterCheckDamageScreen();
 }
 
-class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
-  bool loading_api = true;
-
-  List<Map<String, dynamic>> carDamagesAllList = [{
-  "index": 0,
-  "Damage_Image_URL": 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/user_1_2023-04-01_10-07-48_5.jpg',
-  "part": "",
-  "Scratch": 0,
-  "Crushed": 0,
-  "Breakage": 0,
-  "Separated": 0,
-  "timeStamp": 0,
-  "memo": "",
-  "selected": false,
-}, {
-    "index": 1,
-    "Damage_Image_URL": 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/user_1_2023-04-01_10-07-48_5.jpg',
-    "part": "",
-    "Scratch": 0,
-    "Crushed": 0,
-    "Breakage": 0,
-    "Separated": 0,
-    "timeStamp": 0,
-    "memo": "",
-    "selected": false,
-  }, {
-    "index": 2,
-    "Damage_Image_URL": 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/user_1_2023-04-01_10-07-48_5.jpg',
-    "part": "",
-    "Scratch": 0,
-    "Crushed": 0,
-    "Breakage": 0,
-    "Separated": 0,
-    "timeStamp": 0,
-    "memo": "",
-    "selected": false,
-  }, {
-    "index": 3,
-    "Damage_Image_URL": 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/user_1_2023-04-01_10-07-48_5.jpg',
-    "part": "",
-    "Scratch": 0,
-    "Crushed": 0,
-    "Breakage": 0,
-    "Separated": 0,
-    "timeStamp": 0,
-    "memo": "",
-    "selected": false,
-  }, {
-    "index": 4,
-    "Damage_Image_URL": 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/user_1_2023-04-01_10-07-48_5.jpg',
-    "part": "",
-    "Scratch": 0,
-    "Crushed": 0,
-    "Breakage": 0,
-    "Separated": 0,
-    "timeStamp": 0,
-    "memo": "",
-    "selected": false,
-  },
-  ];
-
-  void getUserInfo() async {
-    final storage = FlutterSecureStorage();
-    dynamic user_id = await storage.read(key: 'myKey');
-  }
+class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
+  bool loading_api = false;
+  List<Map<String, dynamic>> damageInfoList = [];
 
   @override
   void initState() {
-    // analysisCarDamageApi(
-    //       success: (dynamic response) {
-    //         setState(() {
-    //           carDamagesAllList = response;
-    //           loading_api = true;
-    //         });
-    //       },
-    //       fail: (error) {
-    //         print('차량 손상 분석 오류: $error');
-    //         setState(
-    //           () {
-    //             loading_api = true;
-    //           },
-    //         );
-    //       },
-    //       filePath: widget.filePath,
-    //       user_id: 1,
-    //     );
+    widget.carDamagesAllList.where((damage) => damage['selected'] == true)
+        .map((damage) => print(damage));
     super.initState();
   }
 
@@ -133,7 +57,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                     Column(
                       children: [
                         Text(
-                          '분석이',
+                          '등록이',
                           textAlign: TextAlign.center,
                           softWrap: true,
                           style: TextStyle(
@@ -173,7 +97,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: '건의 손상이 발견되었습니다.',
+                            text: '건의 손상이 등록되었습니다',
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.black,
@@ -242,7 +166,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                           MaterialPageRoute(
                             builder: (context) => CheckCarDamageScreen(
                               filePath: widget.filePath,
-                              carDamagesAllList: carDamagesAllList!,
+                              carDamagesAllList: widget.carDamagesAllList,
                             ),
                           ),
                         );
@@ -273,18 +197,38 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                   children: [
                     Column(
                       children: [
-                        Text(
-                          '녹화가',
-                          textAlign: TextAlign.center,
-                          softWrap: true,
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w900,
-                            color: Theme.of(context).secondaryHeaderColor,
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '총 ',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xFF453F52),
+                                ),
+                              ),
+                              TextSpan(
+                                text: '15',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w900,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '건의 손상을',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xFF453F52),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Text(
-                          '완료되었습니다.',
+                          '등록할 예정입니다',
                           textAlign: TextAlign.center,
                           softWrap: true,
                           style: TextStyle(
@@ -298,17 +242,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                     Column(
                       children: [
                         Text(
-                          '영상을 분석 중입니다.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFFFF3F3F),
-                          ),
-                          softWrap: true,
-                        ),
-                        Text(
-                          '도중에 앱을 중지하지 마세요.',
+                          '정말 등록하시겠습니까?',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
@@ -319,22 +253,40 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                         ),
                       ],
                     ),
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: 300,
-                        maxHeight: 400,
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: Size(200, 50),
+                        backgroundColor: Color(0xFFE0426F),
                       ),
-                      child: FadeInImage(
-                        placeholder: AssetImage(
-                            'lib/assets/images/loading_img/loading_gif.gif'),
-                        image: NetworkImage(
-                            'https://cdn.dribbble.com/users/11867/screenshots/2989212/_british_car_gif2.gif'),
+                      onPressed: () {
+                        postCarDamageInfo(
+                        success: (dynamic response) {
+                            setState(() {
+                            loading_api = true;
+                            });},
+                            fail: (error) {
+                              print('차량 손상 분석 오류: $error');
+                              setState(
+                              () {
+                              loading_api = true;
+                              },
+                              );
+                              },
+                              body: {},
+                              );
+                      },
+                      child: Text(
+                        "등록하기",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                    // CircularProgressIndicator(
-                    //   color: Color(0xFFE0426F),
-                    //   // strokeWidth: 8,
-                    // ),
                   ],
                 ),
               ),
