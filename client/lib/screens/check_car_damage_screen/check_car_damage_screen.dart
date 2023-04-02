@@ -8,11 +8,9 @@ import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_container.dart';
-import 'package:client/screens/after_check_damage_screen/after_check_damage_screen.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_FAB.dart';
 import 'package:client/services/analysis_car_damage_api.dart';
-// import 'package:client/utils/dialog_util.dart';
-
+import 'package:client/provider/car_damage_info_provider/car_damage_info_provider.dart';
 
 class CheckCarDamageScreen extends StatefulWidget {
   final String filePath;
@@ -65,7 +63,13 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     '이격',
   ];
 
-  List<Map<String, dynamic>> carDamagesAllList = [];
+  // ValueNotifier<List<Map<String, dynamic>>> damageInfoNotifier =
+  //     DamageInfoNotifier([]);
+  //
+  // void _updateDamageInfo(newDamageInfo) {
+  //   damageInfoNotifier = newDamageInfo;
+  // }
+
   List<Map<String, dynamic>> selectedCarDamagesList = [];
   List<int> selectedIndexList = [];
   int nowDamageCnt = 0;
@@ -213,126 +217,25 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
   ) {
     setState(() {
       // print(indexValue);
-      carDamagesAllList[indexValue]["part"] = partValue;
-      carDamagesAllList[indexValue]["Scratch"] = scratch_count;
-      carDamagesAllList[indexValue]["Crushed"] = crushed_count;
-      carDamagesAllList[indexValue]["Breakage"] = breakage_count;
-      carDamagesAllList[indexValue]["Separated"] = separated_count;
-      carDamagesAllList[indexValue]["memo"] = memoValue;
-      carDamagesAllList[indexValue]["selected"] = true;
+      widget.carDamagesAllList[indexValue - 1]["part"] = partValue;
+      widget.carDamagesAllList[indexValue - 1]["Scratch"] = scratch_count;
+      widget.carDamagesAllList[indexValue - 1]["Crushed"] = crushed_count;
+      widget.carDamagesAllList[indexValue - 1]["Breakage"] = breakage_count;
+      widget.carDamagesAllList[indexValue - 1]["Separated"] = separated_count;
+      widget.carDamagesAllList[indexValue - 1]["memo"] = memoValue;
+      widget.carDamagesAllList[indexValue - 1]["selected"] = true;
 
-      if (!selectedIndexList.contains(indexValue)) {
-        selectedIndexList.add(indexValue);
+      if (!selectedIndexList.contains(indexValue - 1)) {
+        selectedIndexList.add(indexValue - 1);
       }
       selectedIndexList.sort((a, b) => a.compareTo(b));
-      damageView(indexValue);
-    }
-    );
-  }
-
-  void deleteDamageList(
-      int indexValue
-      ) {
-      setState(() {
-        carDamagesAllList[indexValue]["selected"] = false;
-        selectedIndexList.remove(indexValue);
-      },);
-  }
-
-  void damageView(int indexValue) {
-    List<String> damagedParts = [];
-    // carDamageList의 인덱스 2, 3, 4, 5의 값을 검사하여 damagedParts 리스트에 추가
-    if (carDamagesAllList[indexValue]["Scratch"]! > 0) {
-      damagedParts.add("스크래치");
-    }
-    if (carDamagesAllList[indexValue]["Crushed"]! > 0) {
-      damagedParts.add("찌그러짐");
-    }
-    if (carDamagesAllList[indexValue]["Breakage"]! > 0) {
-      damagedParts.add("파손");
-    }
-    if (carDamagesAllList[indexValue]["Separated"]! > 0) {
-      damagedParts.add("이격");
-    }
-
-    if (damagedParts.length > 1) {
-      setState(() {
-        carDamagesAllList[indexValue]["damageView"] = '${damagedParts[0]} 외 ${damagedParts.length - 1}건';
-      });
-    } else if (damagedParts.length > 0) {
-      setState(() {
-        carDamagesAllList[indexValue]["damageView"] = damagedParts[0]!;
-      });
-    } else {
-      //
-    }
-  }
-
-  void goOtherScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AfterCheckDamageScreen(
-          filePath: widget.filePath,
-          carDamagesAllList: widget.carDamagesAllList,
-        ),
-      ),
-    );
-  }
-
-  void showConfirmationDialog(BuildContext context, Function func, String title, String content, String yes_text, String no_text, {dynamic data}) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700,),),
-          content: Text(content),
-          actions: <Widget>[
-            TextButton(
-              child: Text(yes_text, style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),),
-              onPressed: () {
-                // Yes 버튼을 눌렀을 때 수행할 작업
-                Navigator.of(context).pop(true);
-              },
-            ),
-            TextButton(
-              child: Text(no_text, style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),),
-              onPressed: () {
-                // No 버튼을 눌렀을 때 수행할 작업
-                Navigator.of(context).pop(false);
-              },
-            ),
-          ],
-        );
-      },
-    ).then((value) {
-      if (value == true) {
-        if (data != null) {
-          func(data);
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AfterCheckDamageScreen(
-                filePath: widget.filePath,
-                carDamagesAllList: widget.carDamagesAllList,
-              ),
-            ),
-          );
-        }
-      } else if (value == false) {
-        // No 버튼을 눌렀을 때 수행할 작업
-      }
     });
   }
-
 
   @override
   void initState() {
     _initVideoPlayer();
-
-    carDamagesAllList = widget.carDamagesAllList;
-
+    // _updateDamageInfo(widget.carDamagesAllList);
     _tabController = TabController(vsync: this, length: 2); // 탭 수에 따라 length 변경
     int _selectedTabIndex = 0; // 기본값은 첫 번째 탭
 
@@ -633,23 +536,31 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                         length: 2,
                         child: Scaffold(
                           floatingActionButton:
+                              // MyFABMenu(
+                              //   selected_categories: selected_categories,
+                              //   addCategories: addCategories,
+                              //   removeCategories: removeCategories,
+                              //   filePath: widget.filePath,
+                              //   carDamagesAllList: widget.carDamagesAllList,
+                              //   selectedIndexList: selectedIndexList,
+                              // ),
                               FloatingActionButton(
                             onPressed:
-                                selectedIndexList.length > 0 ? () {
-                                  showConfirmationDialog(
-                                    context, goOtherScreen, '손상 등록', '손상을 등록합니다. 정말 괜찮으시겠습니까?','예', '아니오'
-                                  );
-                                } : null,
-                            backgroundColor: selectedIndexList.length > 0 ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
+                                selectedIndexList.length > 0 ? () {} : null,
+                            backgroundColor: Theme.of(context).primaryColor,
                             tooltip: '손상을 저장할 수 있습니다.',
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-
                                 Icon(
                                   Icons.save_as,
-                                  size: 28,
+                                  size: 14,
                                 ),
+                                Text(
+                                  '저장',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -668,7 +579,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       vertical: 4,
                                     ),
                                     child: Text(
-                                      "추가 전 손상",
+                                      "전체 보기",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
@@ -679,7 +590,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       vertical: 4,
                                     ),
                                     child: Text(
-                                      "추가할 손상",
+                                      "리스트만 보기",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
@@ -692,28 +603,43 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                             controller: _tabController,
                             children: [
                               CheckCarDamageContainer(
-                                carDamageList: carDamagesAllList,
+                                carDamageList: widget.carDamagesAllList,
                                 videoPlayerController: _videoPlayerController,
                                 changeDamageValue: changeDamageValue,
                                 selectedIndexList: selectedIndexList,
                                 isSelectedView: false,
-                                  deleteDamageList: deleteDamageList,
-                                  showConfirmationDialog: showConfirmationDialog,
+                                // damageInfoNotifier: damageInfoNotifier,
                               ),
                               CheckCarDamageContainer(
-                                carDamageList: carDamagesAllList,
+                                carDamageList: widget.carDamagesAllList,
                                 videoPlayerController: _videoPlayerController,
                                 changeDamageValue: changeDamageValue,
                                 selectedIndexList: selectedIndexList,
                                 isSelectedView: true,
-                                deleteDamageList: deleteDamageList,
-                                  showConfirmationDialog: showConfirmationDialog,
+                                // damageInfoNotifier: damageInfoNotifier,
                               ),
                             ],
                           ),
                         ),
                       ),
                     ),
+                    // Expanded(
+                    //   child: loading_api
+                    //       ? CheckCarDamageContainer(
+                    //           carDamageList: widget.carDamagesAllList,
+                    //           videoPlayerController: _videoPlayerController,
+                    //           changeDamageValue: changeDamageValue,
+                    //           selectedIndexList: selectedIndexList,
+                    //           isSelectedView: isSelectedView,
+                    //         )
+                    //       : Container(
+                    //           child: Center(
+                    //             child: CircularProgressIndicator(
+                    //               color: Color(0xFFE0426F),
+                    //             ),
+                    //           ),
+                    //         ),
+                    // ),
                     Container(
                       color: Colors.white,
                       width: screenWidth,
@@ -751,7 +677,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                           isSelectedView
                                               ? selectedIndexList.length
                                                   .toString()
-                                              : (carDamagesAllList
+                                              : (widget.carDamagesAllList
                                                           .length -
                                                       selectedIndexList.length)
                                                   .toString(),
@@ -796,10 +722,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                               part_category,
                                               style: TextStyle(
                                                 fontSize: 12,
-                                                color: selected_categories
-                                                    .contains(part_category)
-                                                    ? Theme.of(context).primaryColor : Colors.black,
-                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                             labelPadding: EdgeInsets.symmetric(

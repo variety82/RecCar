@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 import 'widgets/common/header.dart';
 import 'widgets/common/footer.dart';
@@ -18,18 +17,14 @@ import 'widgets/main_page/Main_Page_Body.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
-  // 앱 처음 실행 시 flutter 엔진 초기화 메소드 호출
-  // flutter 자체의 렌더링 엔진을 사용할 때 필요한 기본적인 설정들을 수행하는 메소드라고 생각하면 됨
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await dotenv.load(fileName: '.env');
-  // 세로 방향으로 고정
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  // 앱 처음 실행 시 flutter 엔진 초기화 메소드 호출
+  // flutter 자체의 렌더링 엔진을 사용할 때 필요한 기본적인 설정들을 수행하는 메소드라고 생각하면 됨
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
       title: 'cilent',
@@ -40,9 +35,6 @@ void main() async {
         secondaryHeaderColor: const Color(0xFF453F52),
         shadowColor: const Color(0xFFEFEFEF),
         disabledColor: const Color(0xFF999999),
-        // scratchColor: const Color.fromRGBO(240, 15, 135, 1),
-        // crushedColor: const Color.fromRGBO(64, 64, 64, 1),
-        // breakageColor: const Color.fromRGBO(250, 150, 200, 1),
       ),
       themeMode: ThemeMode.system,
       initialRoute: '/home',
@@ -73,8 +65,6 @@ class _MyAppState extends State<MyApp> {
   dynamic userName = '';
   dynamic userProfileImg = '';
   dynamic userCarId = '0';
-  dynamic firstVideoInfo = true;
-  dynamic firstCheckDamage = true;
 
   // dynamic userName = '';
   // dynamic userEmail = '';
@@ -93,14 +83,10 @@ class _MyAppState extends State<MyApp> {
     var name = await storage.read(key: 'nickName');
     var img = await storage.read(key: 'picture ');
     var carId = await storage.read(key: 'carId');
-    var videoinfo = await storage.read(key: 'firstVideoInfo');
-    var checkDamage = await storage.read(key:'firstCheckDamage');
     setState(() {
       userName = name;
       userProfileImg = img;
       userCarId = carId;
-      firstVideoInfo = videoinfo;
-      firstCheckDamage = checkDamage;
     });
     if (userName == null) {
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
