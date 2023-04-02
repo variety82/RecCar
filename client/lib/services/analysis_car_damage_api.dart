@@ -45,23 +45,6 @@ Future<dynamic> analysisCarDamageApi({
   print(request);
 
   var response = await request.send();
-  print(response);
-  print('my_response');
-  print(response.statusCode);
-
-  // Map data = {
-  //   "file": fileData,
-  // };
-  //
-  // var body = json.encode(data);
-  // print(body);
-  // // response 값입니다
-  // late http.Response response;
-  // response = await http.post(
-  //   url,
-  //   headers: headers,
-  //   body: body,
-  // );
 
   if (200 <= response.statusCode && response.statusCode < 300) {
     // statuse가 200대이면 성공으로 해서 jsonResponse를 쓰는 콜백함수로 보내줍니다
@@ -73,27 +56,26 @@ Future<dynamic> analysisCarDamageApi({
 
     int time_cnt = 0;
     int index_cnt = 0;
-    for (int i = 0; i < jsonList.length; i++) {
-      index_cnt += 1;
-      print(jsonList[i]['url']);
-      Map<String, dynamic> carDamageState = {
-        "index": index_cnt,
-        "Damage_Image_URL": jsonList[i]['url'],
-        "part": "",
-        "damage": {
-          "scratch": 0,
-          "crushed": 0,
-          "breakage": 0,
-          "separated": 0,
-        },
-        "timeStamp": time_cnt,
-        "memo": "",
-        "selected": false,
-      };
-      // carDamageState["damage"][carDamageState["damage"]] += 1;
-      carDamagesAllList.add(carDamageState);
-      if (index_cnt % 3 == 0) {
-        time_cnt += 1;
+    if (jsonList.length > 0) {
+      for (int i = 0; i < jsonList.length; i++) {
+        index_cnt += 1;
+        Map<String, dynamic> carDamageState = {
+          "index": index_cnt,
+          "Damage_Image_URL": jsonList[i]['url'],
+          "part": "",
+          "Scratch": 0,
+          "Crushed": 0,
+          "Breakage": 0,
+          "Separated": 0,
+          "timeStamp": time_cnt,
+          "memo": "",
+          "selected": false,
+        };
+        carDamageState[jsonList[i]["damage"]] += 1;
+        carDamagesAllList.add(carDamageState);
+        if (index_cnt % 3 == 0) {
+          time_cnt += 1;
+        }
       }
     }
 

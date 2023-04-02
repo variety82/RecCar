@@ -10,12 +10,18 @@ class MyFABMenu extends StatefulWidget {
   final void Function(String) addCategories;
   final void Function(String) removeCategories;
   final List<String> selected_categories;
+  final String filePath;
+  final List<Map<String, dynamic>> carDamagesAllList;
+  final List<int> selectedIndexList;
 
   const MyFABMenu({
     super.key,
     required this.selected_categories,
     required this.addCategories,
     required this.removeCategories,
+    required this.filePath,
+    required this.carDamagesAllList,
+    required this.selectedIndexList,
   });
 
   @override
@@ -68,7 +74,7 @@ class _MyFABMenuState extends State<MyFABMenu>
             color: Colors.white,
             fontSize: 13.0,
           ),
-          backgroundColor: Color(0xFFE0426F),
+          backgroundColor: widget.selectedIndexList.length > 0 ? Color(0xFFE0426F) : Theme.of(context).disabledColor,
           labelBackgroundColor: Color(0xFFE0426F),
           onTap: () {},
         ),

@@ -7,7 +7,7 @@ import 'package:video_player/video_player.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_detail_modal.dart';
 import 'package:client/widgets/common/image_go_detail.dart';
 
-class CheckCarDamagePart extends StatelessWidget {
+class CheckCarDamagePart extends StatefulWidget {
   final String imageUrl;
   final VideoPlayerController videoPlayerController;
   final Map<String, dynamic> carDamage;
@@ -20,6 +20,51 @@ class CheckCarDamagePart extends StatelessWidget {
     required this.carDamage,
     required this.changeDamageValue,
   });
+
+  @override
+  State<CheckCarDamagePart> createState() => _CheckCarDamagePartState();
+}
+
+class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
+  List<String> damagedParts = []; // damagedParts 리스트 초기화
+  String damageView = '미정';
+
+  // timer 시, 분, 초 단위로 표시 전환해줌
+  String _durationToString(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  @override
+  void initState() {
+    // carDamageList의 인덱스 2, 3, 4, 5의 값을 검사하여 damagedParts 리스트에 추가
+    if (widget.carDamage["Scratch"] > 0) {
+      damagedParts.add("스크래치");
+    }
+    if (widget.carDamage["Crushed"] > 0) {
+      damagedParts.add("찌그러짐");
+    }
+    if (widget.carDamage["Breakage"] > 0) {
+      damagedParts.add("파손");
+    }
+    if (widget.carDamage["Separated"] > 0) {
+      damagedParts.add("이격");
+    }
+
+    if (damagedParts.length > 1) {
+      setState(() {
+        damageView = '${damagedParts[0]} 외 ${damagedParts.length - 1}건';
+      });
+    } else if (damagedParts.length > 0) {
+      setState(() {
+        damageView = damagedParts[0];
+      });
+    }
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +94,7 @@ class CheckCarDamagePart extends StatelessWidget {
               child: FadeInImage(
                 placeholder:
                     AssetImage('lib/assets/images/loading_img/loading_gif.gif'),
-                image: NetworkImage(imageUrl),
+                image: NetworkImage(widget.imageUrl),
               ),
               // 사진 존재 여부에 따라 사진 표시될 지 아닐지 여부 결정됨
               // child: imageUrl != ''
@@ -97,14 +142,14 @@ class CheckCarDamagePart extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () async {
-                        await videoPlayerController.pause();
-                        await videoPlayerController.seekTo(
-                          Duration(seconds: carDamage["timeStamp"]),
+                        await widget.videoPlayerController.pause();
+                        await widget.videoPlayerController.seekTo(
+                          Duration(seconds: widget.carDamage["timeStamp"]),
                         );
-                        await videoPlayerController.play();
+                        await widget.videoPlayerController.play();
                       },
                       child: Text(
-                        '00:05',
+                        "${_durationToString(Duration(seconds: widget.carDamage["timeStamp"]))}",
                         style: TextStyle(
                           color: Colors.blueAccent,
                           decoration: TextDecoration.underline,
@@ -136,8 +181,7 @@ class CheckCarDamagePart extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      // carDamage["damage"],
-                      '말 안해줄래',
+                      damageView,
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
@@ -163,7 +207,9 @@ class CheckCarDamagePart extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      carDamage["part"] != "" ? carDamage["part"] : '미정',
+                      widget.carDamage["part"] != ""
+                          ? widget.carDamage["part"]
+                          : '미정',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
@@ -196,9 +242,9 @@ class CheckCarDamagePart extends StatelessWidget {
                           ),
                         ),
                         child: CheckCarDamageDetailModal(
-                          carDamage: carDamage,
-                          changeDamageValue: changeDamageValue,
-                          imageUrl: imageUrl,
+                          carDamage: widget.carDamage,
+                          changeDamageValue: widget.changeDamageValue,
+                          imageUrl: widget.imageUrl,
                         ),
                       ),
                     );

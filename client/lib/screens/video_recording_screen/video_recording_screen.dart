@@ -203,6 +203,9 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     _cameraPermission();
     _initCamera();
     getVideoFilePath();
+    setState(() {
+      _nowLoading = false;
+    });
     super.initState();
   }
 
@@ -230,9 +233,9 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
         ResolutionPreset.high,
         enableAudio: true,
       );
+      _nowFlashMode = _cameraController.value.flashMode;
       // 컨트롤러를 초기화함
       await _cameraController.initialize();
-      _nowFlashMode = _cameraController.value.flashMode;
       // 로딩 종료함
       setState(() {
         _nowLoading = false;
@@ -296,7 +299,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                         top: 16,
                         left: (orientation == Orientation.portrait)
                             ? MediaQuery.of(context).size.width / 2 - 90
-                            : MediaQuery.of(context).size.height / 2 + 45,
+                            : MediaQuery.of(context).size.height / 2,
                         child: Container(
                           height: 32,
                           width: 180,
