@@ -17,67 +17,25 @@ class _CalendarState extends State<Calendar> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by longpressing a date
-  DateTime _focusedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.parse(DateTime.now().toString().substring(0, 11)+"00:00:00.000Z");
   DateTime? _selectedDay;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
   dynamic events = [];
   Map<DateTime, List<Event>> kEvents = {};
 
   @override
   void initState() {
     super.initState();
-    // 대여 및 반납 일자도 캘린더에 표시
-    getRentInfo(
-      success: (dynamic response) {
-        setState(() {
-          events = response;
-          for (int i = 0; i < events.length; i++) {
-            // print(events[i]['rentalDate']);
-            print(events[i]['rentalDate'].toString().substring(0, 11)+" 00:00:00.000Z");
-            var temp = events[i]['rentalDate'].toString().substring(0, 10)+" 00:00:00.000";
-            var rentalDate = DateTime.parse(temp).toUtc().subtract(const Duration(hours: 15));
-
-            // var temp = DateTime.parse(events[i]['rentalDate'])
-            //     .toUtc()
-            //     .subtract(const Duration(hours: 15));
-            if (kEvents.containsKey(rentalDate)) {
-              kEvents[rentalDate]!.add(Event(i,
-                  '대여', events[i]['carManufacturer']+" "+events[i]['carModel']+" "+events[i]['carNumber']));
-            } else {
-              kEvents.addAll({
-                rentalDate: [
-                  Event(i, '대여', events[i]['carManufacturer']+" "+events[i]['carModel']+" "+events[i]['carNumber']),
-                ]
-              });
-            }
-            temp = events[i]['returnDate'].toString().substring(0, 10)+" 00:00:00.000";
-            var returnDate = DateTime.parse(temp).toUtc().subtract(const Duration(hours: 15));
-            if (kEvents.containsKey(returnDate)) {
-              kEvents[returnDate]!.add(Event(i,
-                  '반납', events[i]['carManufacturer']+" "+events[i]['carModel']+" "+events[i]['carNumber']));
-            } else {
-              kEvents.addAll({
-                returnDate: [
-                  Event(i, '반납', events[i]['carManufacturer']+" "+events[i]['carModel']+" "+events[i]['carNumber']),
-                ]
-              });
-            }
-          }
-        });
-      },
-      fail: (error) {
-        print('렌트 내역 호출 오류: $error');
-      },
-    );
-    // 등록한 일정도 표시
+    setState(() {
+      _focusedDay = DateTime.parse(DateTime.now().toString().substring(0, 11)+"00:00:00.000Z");
+    });
+    // 일정 불러오기
     getEvents(
       success: (dynamic response) {
         setState(() {
           events = response;
           for (int i = 0; i < events.length; i++) {
-            var temp = events[i]['calendarDate'];
-            var eventDate = DateTime.parse(temp).toUtc().subtract(const Duration(hours: 15));
+            var temp = (DateTime.parse(events[i]['calendarDate']).add(const Duration(hours: 9))).toString().substring(0, 11)+"00:00:00.000Z";
+            var eventDate = DateTime.parse(temp);
             if (kEvents.containsKey(eventDate)) {
               kEvents[eventDate]!.add(Event(events[i]['calendarId'],
                   events[i]['title'], events[i]['memo']));
@@ -92,7 +50,7 @@ class _CalendarState extends State<Calendar> {
         });
       },
       fail: (error) {
-        print('렌트 내역 호출 오류: $error');
+        print('캘린더 내역 호출 오류: $error');
       },
     );
     _selectedDay = _focusedDay;
