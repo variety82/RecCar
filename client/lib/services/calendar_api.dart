@@ -15,6 +15,19 @@ void getEvents({
   );
 }
 
+void postEvent({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+  Map<String, dynamic>? body,
+}) {
+  apiInstance(
+    path: '/calendar/',
+    method: Method.post,
+    success: success,
+    fail: fail,
+    body: body,
+  );
+}
 // // 렌트 내역
 // void getRentInfo({
 //   required dynamic Function(dynamic) success,
