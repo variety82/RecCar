@@ -136,6 +136,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     try {
       // stopVideoRecording에서 return한 영상 정보를 videoFile에 저장한 후, 경로를 myFilePath에 저장함
       // 이후 해당 경로를 return함
+      _nowLoading = true;
       XFile? videoFile = await _cameraController.stopVideoRecording();
       String myFilePath = videoFile.path;
       return myFilePath;
@@ -203,9 +204,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     _cameraPermission();
     _initCamera();
     getVideoFilePath();
-    setState(() {
-      _nowLoading = false;
-    });
+
     super.initState();
   }
 
@@ -216,30 +215,47 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     super.dispose();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final CameraController? cameraController = _cameraController;
+
+    // App state changed before we got the chance to initialize.
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      cameraController.dispose();
+    }
+    //    else if (state == AppLifecycleState.resumed) {
+    //       onNewCameraSelected(cameraController.description);
+    //     }
+  }
+
   // camera 초기 설정
   Future<void> _initCamera() async {
     try {
       // 먼저 현재 기기 내에서 사용 가능한 카메라 목록을 전부 불러옴
-      avaliableCameraList = await availableCameras();
-      // // 전면 카메라 선택
-      // final front = cameras.firstWhere(
-      //     (camera) => camera.lensDirection == CameraLensDirection.front);
+      List<CameraDescription> availableCameraList = await availableCameras();
       // 후면 카메라 선택
-      final back = avaliableCameraList.firstWhere(
-          (camera) => camera.lensDirection == CameraLensDirection.back);
+      final back = availableCameraList.firstWhere(
+              (camera) => camera.lensDirection == CameraLensDirection.back);
       // 후면 카메라를 선택한 후, 영상 해상도를 최대로 선택함
       _cameraController = CameraController(
         back,
         ResolutionPreset.high,
         enableAudio: true,
+        imageFormatGroup: ImageFormatGroup.jpeg,
       );
-      _nowFlashMode = _cameraController.value.flashMode;
+
       // 컨트롤러를 초기화함
       await _cameraController.initialize();
-      // 로딩 종료함
+      _nowFlashMode = FlashMode.auto;
+      await _cameraController.setFlashMode(_nowFlashMode);
       setState(() {
         _nowLoading = false;
       });
+
       print(_nowLoading);
     } catch (err) {
       print('$err로 인해 카메라 initialized 실패');
