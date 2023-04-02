@@ -6,7 +6,7 @@ class RentLogCard extends StatelessWidget {
   final String startDate;
   final String endDate;
   final String company;
-  final int damage;
+  final String damage;
   final int carId;
 
   const RentLogCard({

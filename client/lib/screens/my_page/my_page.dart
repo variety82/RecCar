@@ -16,32 +16,37 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   XFile? profileImg;
   static final storage = FlutterSecureStorage();
-  dynamic userId = '';
-  dynamic userName = '';
-  dynamic userEmail = '';
-  dynamic userProfileImg = '';
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // checkUserState();
-  //   // 비동기로 flutter secure storage 정보를 불러오는 작업
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     checkUserState();
-  //   });
-  // }
-  //
-  // checkUserState() async {
-  //   var name = await storage.read(key: 'nickName');
-  //   var img = await storage.read(key: 'picture');
-  //   setState(() {
-  //     userName = name;
-  //     userProfileImg = img;
-  //   });
-  //   if (userName == null) {
-  //     Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
-  //   }
-  // }
+  String? userName;
+  String? userProfileImg;
+
+  @override
+  void initState() {
+    setUserName().then((value) {
+      setState(() {
+        userName = value;
+      });
+    });
+    setUserProfileImg().then((value) {
+      setState(() {
+        userProfileImg = value;
+      });
+    });
+    super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   setUser();
+    // });
+  }
+
+  Future<String?> setUserName() async {
+    final userName = await storage.read(key: 'nickName');
+    return userName;
+  }
+
+  Future<String?> setUserProfileImg() async {
+    final userProfileImg = await storage.read(key: 'picture');
+    return userProfileImg;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +96,13 @@ class _MyPageState extends State<MyPage> {
                           color: Theme.of(context).primaryColor, width: 2.5),
                       color: Colors.white,
                       image: DecorationImage(
-                          image: NetworkImage(userProfileImg == null
+                        image: NetworkImage(
+                          "${userProfileImg}" == ""
                               ? "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"
-                              : userProfileImg.toString())),
+                              : userProfileImg.toString(),
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -104,7 +113,7 @@ class _MyPageState extends State<MyPage> {
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "서울 1반 우너송희",
+                    "${userName}",
                     style: TextStyle(
                       color: Theme.of(context).secondaryHeaderColor,
                       fontSize: 15,
@@ -206,7 +215,7 @@ class _MyPageState extends State<MyPage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: MyPageCategory(
-                      category: "회원 탈퇴",
+                      category: "회원 정보 초기화",
                       textColor: Theme.of(context).primaryColor),
                 ),
               ],

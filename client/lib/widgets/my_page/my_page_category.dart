@@ -38,7 +38,7 @@ String convertCategoryNameToKor(CategoryName name) {
     case CategoryName.Logout:
       return "로그아웃";
     case CategoryName.Resign:
-      return "회원 탈퇴";
+      return "회원 정보 초기화";
   }
 }
 
