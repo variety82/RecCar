@@ -33,6 +33,9 @@ public class User {
     @Column(name = "CURRENT_CAR_ID")
     private Long currentCarId;
 
+    @Column(name = "CURRENT_CAR_VIDEO")
+    private int currentCarVideo;
+
     @OneToMany(mappedBy = "user")
     private List<Car> cars = new ArrayList<>();
 
@@ -55,7 +58,9 @@ public class User {
     public void updateCar(Car car){
         this.cars.add(car);
     }
-
+    public void updateCurrentCarVideo(){
+        this.currentCarVideo += 1;
+    }
     @Override
     public String toString() {
         return "User{" +

@@ -14,10 +14,13 @@ public class UserResponse {
     private String picture;
     @Schema(description = "currentCarId", example = "1")
     private Long currentCarId;
+    @Schema(description = "currentCarVideo", example = "1")
+    private int currentCarVideo;
     public UserResponse(User user) {
         this.nickName = user.getNickName();
         this.picture = user.getPicture();
         this.currentCarId = user.getCurrentCarId();
+        this.currentCarVideo = user.getCurrentCarVideo();
     }
 
     @Override

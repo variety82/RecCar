@@ -6,6 +6,8 @@ import com.heros.api.detectionInfo.dto.request.DetectionInfoCreate;
 import com.heros.api.detectionInfo.dto.response.CarDetectionResponse;
 import com.heros.api.detectionInfo.entity.DetectionInfo;
 import com.heros.api.detectionInfo.repository.DetectionInfoRepository;
+import com.heros.api.user.entity.User;
+import com.heros.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class DetectionInfoService {
 
     private final DetectionInfoRepository detectionInfoRepository;
     private final CarRepository carRepository;
+    private final UserRepository userRepository;
 
     public CarDetectionResponse getRentDetailInfos(Long carId){
         Car car = carRepository.findById(carId).get();
@@ -38,7 +41,7 @@ public class DetectionInfoService {
     }
 
     @Transactional
-    public void createDamageInfo(List<DetectionInfoCreate> detectionInfoCreates){
+    public void createDamageInfo(List<DetectionInfoCreate> detectionInfoCreates, User user){
         Car car = carRepository.findById(detectionInfoCreates.get(0).getCarId()).orElseThrow(IllegalArgumentException::new);
         Boolean former = detectionInfoCreates.get(0).isFormer();
         int[] damages = new int[4];
@@ -71,5 +74,7 @@ public class DetectionInfoService {
             detectionInfoRepository.save(detectionInfo);
         }
         car.setDamageCount(former, damages);
+        user.updateCurrentCarVideo();
+        userRepository.save(user);
     }
 }
