@@ -5,6 +5,7 @@ import com.heros.api.detectionInfo.dto.request.DetectionInfoCreate;
 import com.heros.api.detectionInfo.dto.response.CarDetectionResponse;
 import com.heros.api.detectionInfo.service.DetectionInfoService;
 import com.heros.api.example.model.ErrorResponseExample;
+import com.heros.api.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +19,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -51,7 +55,9 @@ public class DetectionInfoController {
     })
     @PostMapping(value = "/api/v1/detection")
     public ResponseEntity<?> addDetectionInfo(@Valid @RequestBody List<DetectionInfoCreate> detectionInfoCreates) {
-        detectionInfoService.createDamageInfo(detectionInfoCreates);
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        User user = (User) httpServletRequest.getAttribute("user");
+        detectionInfoService.createDamageInfo(detectionInfoCreates, user);
         return ResponseEntity.status(201).body(null);
     }
 }

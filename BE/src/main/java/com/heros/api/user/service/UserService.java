@@ -42,6 +42,7 @@ public class UserService {
             user.setNickName((String)googleResponse.getBody().get("name"));
             user.setPicture((String)googleResponse.getBody().get("picture"));
             user.setCurrentCarId(0L);
+            user.setCurrentCarVideo(0);
             user = userRepository.save(user);
         }
         else {
