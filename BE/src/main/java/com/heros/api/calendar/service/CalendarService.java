@@ -56,10 +56,10 @@ public class CalendarService {
     }
 
     public void createCarCalendar(CarCreate carCreate, Long userId) {
-        String rentalTitle = carCreate.getCarManufacturer() + " " + carCreate.getCarModel() + " " + carCreate.getCarNumber() + " " + " 대여";
-        String returnTitle = carCreate.getCarManufacturer() + " " + carCreate.getCarModel() + " " + carCreate.getCarNumber() + " " + " 반납";
+        String rentalTitle = carCreate.getCarManufacturer() + " " + carCreate.getCarModel() + " " + carCreate.getCarNumber() +  " 대여";
+        String returnTitle = carCreate.getCarManufacturer() + " " + carCreate.getCarModel() + " " + carCreate.getCarNumber() +  " 반납";
 
-        Calendar rentarCarCalendar = Calendar.builder()
+        Calendar rentalCarCalendar = Calendar.builder()
                 .calendarDate(carCreate.getRentalDate())
                 .title(rentalTitle)
                 .isAuto(true)
@@ -75,7 +75,7 @@ public class CalendarService {
                 .userId(userId)
                 .build();
 
-        calendarRepository.save(rentarCarCalendar);
+        calendarRepository.save(rentalCarCalendar);
         calendarRepository.save(returnCarCalendar);
     }
 }
