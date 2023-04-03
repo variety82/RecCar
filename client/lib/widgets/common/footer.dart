@@ -3,9 +3,14 @@ import '../../screens/map_screen/map_screen.dart';
 import '../../screens/my_page/my_page.dart';
 import '../../main.dart';
 
-class Footer extends StatelessWidget {
+class Footer extends StatefulWidget {
   const Footer({Key? key}) : super(key: key);
 
+  @override
+  State<Footer> createState() => _FooterState();
+}
+
+class _FooterState extends State<Footer> {
   void home() {}
 
   @override
@@ -70,8 +75,7 @@ class Footer extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              if (ModalRoute.of(context)?.settings.name !=
-                  '/calendar') {
+              if (ModalRoute.of(context)?.settings.name != '/calendar') {
                 Navigator.pushNamed(context, '/calendar');
               }
             },

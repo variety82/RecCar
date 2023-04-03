@@ -7,7 +7,7 @@ void getEvents({
   Map<String, String>? body,
 }) {
   apiInstance(
-    path : '/calendar/2',
+    path : '/calendar/',
     method : Method.get,
     body: body,
     success: success,
@@ -15,17 +15,17 @@ void getEvents({
   );
 }
 
-// 렌트 내역
-void getRentInfo({
-  required dynamic Function(dynamic) success,
-  required Function(String error) fail,
-  Map<String, String>? body,
-}) {
-  apiInstance(
-    path : '/car/history/1',
-    method : Method.get,
-    body: body,
-    success: success,
-    fail: fail,
-  );
-}
+// // 렌트 내역
+// void getRentInfo({
+//   required dynamic Function(dynamic) success,
+//   required Function(String error) fail,
+//   Map<String, String>? body,
+// }) {
+//   apiInstance(
+//     path : '/car/history/1',
+//     method : Method.get,
+//     body: body,
+//     success: success,
+//     fail: fail,
+//   );
+// }
