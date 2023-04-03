@@ -37,6 +37,10 @@ class _SelectFuelState extends State<SelectFuel> {
 
   @override
   Widget build(BuildContext context) {
+    int maxItemCountPerRow = 2;
+    double screenWidth = MediaQuery.of(context).size.width - 50;
+    double itemWidth = screenWidth / maxItemCountPerRow;
+
     return Column(
       children: [
         // Modal Bar
@@ -110,7 +114,7 @@ class _SelectFuelState extends State<SelectFuel> {
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    width: 180,
+                    width: itemWidth,
                     height: 30,
                     child: Row(
                       children: [
