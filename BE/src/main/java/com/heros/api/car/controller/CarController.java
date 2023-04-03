@@ -6,6 +6,8 @@ import com.heros.api.car.dto.response.CarCatalogResponse;
 import com.heros.api.car.dto.response.CarListResponse;
 import com.heros.api.car.dto.response.CarResponse;
 import com.heros.api.car.service.CarService;
+import com.heros.api.detectionInfo.dto.response.CarDetectionResponse2;
+import com.heros.api.detectionInfo.service.DetectionInfoService;
 import com.heros.api.user.entity.User;
 import com.heros.exception.ErrorCode;
 import com.heros.exception.customException.CarException;
@@ -33,6 +35,7 @@ import java.util.List;
 @Tag(name = "Car-Api", description = "Car-Api 입니다.")
 public class CarController {
     private final CarService carService;
+    private final DetectionInfoService detectionInfoService;
     @Operation(summary = "차량 등록", description = "차량 등록 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "차량 등록 성공"),
@@ -100,6 +103,19 @@ public class CarController {
             throw (new CarException(ErrorCode.PAGE_NOT_FOUND));
         }
         return ResponseEntity.status(200).body(carResponse);
+    }
+
+    @Operation(summary = "대여중인 차량 조회", description = "현재 로그인된 user의 대여중인 차량 조회 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "대여중인 차량 조회 성공", content = @Content(schema = @Schema(implementation = CarDetectionResponse2.class))),
+            @ApiResponse(responseCode = "400", description = "bad request operation")
+    })
+    @GetMapping(value = "/current")
+    public ResponseEntity<?> carGet2() {
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        User user = (User) httpServletRequest.getAttribute("user");
+        CarDetectionResponse2 carDetectionResponse2 = detectionInfoService.getRentDetailInfos2(user.getCurrentCarId());
+        return ResponseEntity.status(200).body(carDetectionResponse2);
     }
 
     @Operation(summary = "대여중인 차량 반납", description = "현재 로그인된 user의 대여중인 차량 반납 메서드입니다.")
