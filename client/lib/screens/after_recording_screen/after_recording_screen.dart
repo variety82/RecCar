@@ -77,6 +77,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
     "selected": false,
   },
   ];
+  List<int> selectedIndexList = [];
 
   void getUserInfo() async {
     final storage = FlutterSecureStorage();
@@ -243,6 +244,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                             builder: (context) => CheckCarDamageScreen(
                               filePath: widget.filePath,
                               carDamagesAllList: carDamagesAllList!,
+                                selectedIndexList: selectedIndexList,
                             ),
                           ),
                         );
