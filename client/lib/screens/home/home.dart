@@ -42,10 +42,12 @@ class _HomeState extends State<Home> {
     setState(() {
       userName = name;
       userProfileImg = img;
-      userCarId = carId;
+      // userCarId = carId;
+      userCarId = '0';
       firstVideoInfo = videoinfo;
       firstCheckDamage = checkDamage;
-      currentCarVideo = carVideoState;
+      // currentCarVideo = carVideoState;
+      currentCarVideo = '2';
     });
     if (userName == null) {
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
@@ -85,6 +87,19 @@ class _HomeState extends State<Home> {
                               color: Theme.of(context).secondaryHeaderColor,
                               fontWeight: FontWeight.w500),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10.0
+                          ),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/register');
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                  Theme.of(context).primaryColor),
+                              child: const Text('등록하기')),
+                        )
                       ],
                     ),
                   )
@@ -94,14 +109,36 @@ class _HomeState extends State<Home> {
                     mainContainter: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
+                        if (currentCarVideo == '0')
+                          ElevatedButton(
                             onPressed: () {
                               Navigator.pushNamed(context, '/detail');
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    Theme.of(context).primaryColor),
-                            child: const Text('차량 상세 페이지'))
+                                Theme.of(context).primaryColor),
+                            child: const Text('반납하기'),
+                          ),
+                        if (currentCarVideo == '1')
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/detail');
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                Theme.of(context).primaryColor),
+                            child: const Text('촬영하기'),
+                          ),
+                        if (currentCarVideo == '2')
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/detail');
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                Theme.of(context).primaryColor),
+                            child: const Text('어떤 작업'),
+                          ),
                       ],
                     ),
                   ),
