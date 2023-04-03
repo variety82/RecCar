@@ -7,8 +7,8 @@ void getSimpleRentInfo({
   Map<String, String>? body,
 }) {
   apiInstance(
-    path : '/car/history',
-    method : Method.get,
+    path: '/car/history',
+    method: Method.get,
     body: body,
     success: success,
     fail: fail,
@@ -19,11 +19,11 @@ void getSimpleRentInfo({
 void getDetailRentInfo({
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
+  Map<String, dynamic>? body,
   required int carId,
-  Map<String, String>? body,
 }) {
   apiInstance(
-    path: '/detection/rental?carId=${carId}',
+    path: '/detection?carId=${carId}',
     method: Method.get,
     body: body,
     success: success,
@@ -35,8 +35,8 @@ void getDetailRentInfo({
 void getSimpleDamageInfo({
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
+  Map<String, dynamic>? body,
   required int carId,
-  Map<String, String>? body,
 }) {
   apiInstance(
     path: '/detection?carId=${carId}',

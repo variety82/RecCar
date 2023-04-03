@@ -30,7 +30,7 @@ class _AfterRentState extends State<AfterRent> {
                     DamageLogCard(
                       imageUrl:
                       "${info['damageImageUrl']}",
-                      kindOfDamage: "${info['damage']}",
+                      // kindOfDamage: "${info['scratch']}",
                       damageLocation: "${info['part']}",
                       damageId: info['detectionInfoId'],
                     ),

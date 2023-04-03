@@ -82,139 +82,147 @@ class _MyPageCategoryState extends State<MyPageCategory> {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        if (widget.category ==
-            convertCategoryNameToKor(CategoryName.ModifyInfo)) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MyDataModify()),
-          );
-        } else if (widget.category ==
-            convertCategoryNameToKor(CategoryName.MyCar)) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CarInfo()),
-          );
-        } else if (widget.category ==
-            convertCategoryNameToKor(CategoryName.RentLog)) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const RentLog()),
-          );
-        } else if (widget.category ==
-            convertCategoryNameToKor(CategoryName.NoticeSetting)) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AlarmSetting()),
-          );
-        } else if (widget.category ==
-            convertCategoryNameToKor(CategoryName.Logout)) {
-          logout();
-        } else if (widget.category ==
-            convertCategoryNameToKor(CategoryName.Resign)) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Dialog(
-                child: Container(
-                  height: 190,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 15,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${userName} 님",
-                        style: TextStyle(
-                          height: 2,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        "모든 렌트 내역 및 차량 파손 내역이 삭제됩니다.\n계속 진행하시겠습니까?",
-                        style: TextStyle(height: 2),
-                      ),
-                      SizedBox(height: 17),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                            onPressed: () => {resignUser()},
-                            child: Container(
-                              width: 110,
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6,
-                                horizontal: 20,
-                              ),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Color(0xFFE0426F)),
-                              child: Text(
-                                "확인",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () => {Navigator.pop(context)},
-                            child: Container(
-                              width: 110,
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6,
-                                horizontal: 20,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.7),
-                                    blurRadius: 2.0,
-                                    spreadRadius: 0.0,
-                                  )
-                                ],
-                              ),
-                              child: Text(
-                                "취소",
-                                style: TextStyle(
-                                  color: Color(0xFF453F52),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 30,
+    return Expanded(
+      child: TextButton(
+        style: ButtonStyle(
+          fixedSize: MaterialStatePropertyAll(
+            Size(1000, 40),
+          ),
+          alignment: Alignment.centerLeft,
         ),
-        height: 30,
-        child: Text(
-          "${widget.category}",
-          style: TextStyle(
-            color: widget.textColor,
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            decoration: TextDecoration.none,
+        onPressed: () {
+          if (widget.category ==
+              convertCategoryNameToKor(CategoryName.ModifyInfo)) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MyDataModify()),
+            );
+          } else if (widget.category ==
+              convertCategoryNameToKor(CategoryName.MyCar)) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CarInfo()),
+            );
+          } else if (widget.category ==
+              convertCategoryNameToKor(CategoryName.RentLog)) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const RentLog()),
+            );
+          } else if (widget.category ==
+              convertCategoryNameToKor(CategoryName.NoticeSetting)) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AlarmSetting()),
+            );
+          } else if (widget.category ==
+              convertCategoryNameToKor(CategoryName.Logout)) {
+            logout();
+          } else if (widget.category ==
+              convertCategoryNameToKor(CategoryName.Resign)) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  child: Container(
+                    height: 190,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 15,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${userName} 님",
+                          style: TextStyle(
+                            height: 2,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "모든 렌트 내역 및 차량 파손 내역이 삭제됩니다.\n계속 진행하시겠습니까?",
+                          style: TextStyle(height: 2),
+                        ),
+                        SizedBox(height: 17),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () => {resignUser()},
+                              child: Container(
+                                width: 110,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 6,
+                                  horizontal: 20,
+                                ),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Color(0xFFE0426F)),
+                                child: Text(
+                                  "확인",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => {Navigator.pop(context)},
+                              child: Container(
+                                width: 110,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 6,
+                                  horizontal: 20,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.7),
+                                      blurRadius: 2.0,
+                                      spreadRadius: 0.0,
+                                    )
+                                  ],
+                                ),
+                                child: Text(
+                                  "취소",
+                                  style: TextStyle(
+                                    color: Color(0xFF453F52),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 30,
+          ),
+          height: 30,
+          child: Text(
+            "${widget.category}",
+            style: TextStyle(
+              color: widget.textColor,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.none,
+            ),
           ),
         ),
       ),

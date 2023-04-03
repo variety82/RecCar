@@ -14,6 +14,12 @@ class BeforeRent extends StatefulWidget {
 }
 
 class _BeforeRentState extends State<BeforeRent> {
+
+  @override
+  void initState() {
+    print(widget.before);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -30,7 +36,7 @@ class _BeforeRentState extends State<BeforeRent> {
                     DamageLogCard(
                       imageUrl:
                           "${info['damageImageUrl']}",
-                      kindOfDamage: "${info['damage']}",
+                      // kindOfDamage: "${info['damage']}",
                       damageLocation: "${info['part']}",
                       damageId: info['detectionInfoId'],
                     ),

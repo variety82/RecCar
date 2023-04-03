@@ -5,14 +5,14 @@ import '../../services/my_page_api.dart';
 
 class DamageLogCard extends StatefulWidget {
   final String imageUrl;
-  final String kindOfDamage;
+  // final String kindOfDamage;
   final String damageLocation;
   final int damageId;
 
   const DamageLogCard({
     super.key,
     required this.imageUrl,
-    required this.kindOfDamage,
+    // required this.kindOfDamage,
     required this.damageLocation,
     required this.damageId,
   });
@@ -78,11 +78,11 @@ class _DamageLogCardState extends State<DamageLogCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            RentLogLine(
-                              infoTitle: "파손 종류",
-                              info: "${widget.kindOfDamage}",
-                              space: 70,
-                            ),
+                            // RentLogLine(
+                            //   infoTitle: "파손 종류",
+                            //   info: "${widget.kindOfDamage}",
+                            //   space: 70,
+                            // ),
                             SizedBox(
                               height: 5,
                             ),

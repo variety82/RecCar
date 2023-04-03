@@ -42,7 +42,7 @@ class _FooterState extends State<Footer> {
               }
             },
             child: const Icon(
-              Icons.local_gas_station_outlined,
+              Icons.map_outlined,
               color: Color(0xFFABABAB),
               size: 30,
             ),
