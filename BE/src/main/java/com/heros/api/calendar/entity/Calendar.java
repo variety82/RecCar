@@ -1,14 +1,11 @@
 package com.heros.api.calendar.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.heros.api.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
