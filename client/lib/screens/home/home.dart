@@ -43,11 +43,11 @@ class _HomeState extends State<Home> {
       userName = name;
       userProfileImg = img;
       // userCarId = carId;
-      userCarId = '0';
+      userCarId = '1';
       firstVideoInfo = videoinfo;
       firstCheckDamage = checkDamage;
       // currentCarVideo = carVideoState;
-      currentCarVideo = '0';
+      currentCarVideo = '2';
     });
     if (userName == null) {
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
@@ -171,42 +171,62 @@ class _HomeState extends State<Home> {
                             ),
                             child: Column(
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: const Color(0xFF999999).withOpacity(0.5),
-                                          spreadRadius: 0.3,
-                                          blurRadius: 6,
-                                        )
-                                      ]
-                                  ),
-                                  width: double.infinity,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 20,
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/before-recording');
+                                    },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 2,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: const Color(0xFF999999).withOpacity(0.5),
+                                            spreadRadius: 0.3,
+                                            blurRadius: 6,
+                                          )
+                                        ]
                                     ),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          '대여하기 전, 차량의 손상 상태를 파악하기 위해 영상 촬영을 진행해주세요.',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              color: Theme.of(context).primaryColor,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          '자동차를 등록해주세요',
-                                          style: TextStyle(
-                                              color: Theme.of(context).secondaryHeaderColor,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
+                                    width: double.infinity,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 20,
+                                        horizontal: 20,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '영상미등록',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Theme.of(context).secondaryHeaderColor,
+                                                    fontWeight: FontWeight.w700),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                '차량 손상 분석을 위해 대여 영상 촬영이 필요합니다',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                    color: Theme.of(context).secondaryHeaderColor,
+                                                    fontWeight: FontWeight.w400),
+                                              ),
+                                            ],
+                                          ),
+                                          const Icon(
+                                              Icons.arrow_forward_ios
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -214,24 +234,196 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         if (currentCarVideo == '1')
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/detail');
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                Theme.of(context).primaryColor),
-                            child: const Text('촬영하기'),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/detail');
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: const Color(0xFF999999).withOpacity(0.5),
+                                            spreadRadius: 0.3,
+                                            blurRadius: 6,
+                                          )
+                                        ]
+                                    ),
+                                    width: double.infinity,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 20,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '대여 영상이 등록되었습니다.',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Theme.of(context).secondaryHeaderColor,
+                                                    fontWeight: FontWeight.w400),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                '손상 내역 확인하기',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                    color: Theme.of(context).primaryColor,
+                                                    fontWeight: FontWeight.w600),
+                                              ),
+                                            ],
+                                          ),
+                                          const Icon(
+                                              Icons.arrow_forward_ios
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/before-recording');
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 2,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: const Color(0xFF999999).withOpacity(0.5),
+                                            spreadRadius: 0.3,
+                                            blurRadius: 6,
+                                          )
+                                        ]
+                                    ),
+                                    width: double.infinity,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 20,
+                                        horizontal: 20,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '반납 영상 등록',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Theme.of(context).secondaryHeaderColor,
+                                                    fontWeight: FontWeight.w700),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                '차량 손상 분석을 위해 영상 촬영이 필요합니다',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Theme.of(context).secondaryHeaderColor,
+                                                    fontWeight: FontWeight.w400),
+                                              ),
+                                            ],
+                                          ),
+                                          const Icon(
+                                              Icons.arrow_forward_ios
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         if (currentCarVideo == '2')
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/detail');
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                Theme.of(context).primaryColor),
-                            child: const Text('어떤 작업'),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/detail');
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: const Color(0xFF999999).withOpacity(0.5),
+                                            spreadRadius: 0.3,
+                                            blurRadius: 6,
+                                          )
+                                        ]
+                                    ),
+                                    width: double.infinity,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 20,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '반납 영상이 등록되었습니다.',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Theme.of(context).secondaryHeaderColor,
+                                                    fontWeight: FontWeight.w400),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                '손상 내역 확인하고 반납하기',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Theme.of(context).primaryColor,
+                                                    fontWeight: FontWeight.w600),
+                                              ),
+                                            ],
+                                          ),
+                                          const Icon(
+                                              Icons.arrow_forward_ios
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                       ],
                     ),
