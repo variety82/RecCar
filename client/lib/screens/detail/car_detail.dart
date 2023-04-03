@@ -2,8 +2,8 @@ import 'package:client/services/detail_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:math';
-import 'package:client/widgets/detail/part_detail.dart';
+import 'package:client/screens/detail/part_detail.dart';
+import 'package:client/widgets/common/footer.dart';
 
 enum Part { front, side, back, wheel }
 
@@ -27,44 +27,6 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
   }
 
   Map<String, dynamic>? _detectionInfo;
-
-  // Map<String, int> countDamageParts(List<dynamic> detectionInfos) {
-  //   int frontDamageCount = 0;
-  //   int sideDamageCount = 0;
-  //   int backDamageCount = 0;
-  //   int wheelDamageCount = 0;
-  //
-  //   for (var detection in detectionInfos) {
-  //     dynamic part = detection['part'];
-  //     int breakage = detection['breakage'];
-  //     int crushed = detection['crushed'];
-  //     int separated = detection['separated'];
-  //     int scratch = detection['scratch'];
-  //     int damageCount = breakage + crushed + separated + scratch;
-  //
-  //     switch (part) {
-  //       case Part.front:
-  //         frontDamageCount += damageCount;
-  //         break;
-  //       case Part.side:
-  //         sideDamageCount += damageCount;
-  //         break;
-  //       case Part.back:
-  //         backDamageCount += damageCount;
-  //         break;
-  //       case Part.wheel:
-  //         wheelDamageCount += damageCount;
-  //         break;
-  //     };
-  //   };
-  //
-  //   return {
-  //     'frontDamageCount' : frontDamageCount,
-  //     'sideDamageCount' : sideDamageCount,
-  //     'backDamageCount' : backDamageCount,
-  //     'wheelDamageCount' : wheelDamageCount,
-  //   };
-  // }
 
   Future<void> _fetchCarInfo() async {
     getCarInfo(
@@ -95,7 +57,7 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
       body: Column(
         children: [
           const SizedBox(
-            height: 25,
+            height: 35,
           ),
           PreferredSize(
             preferredSize: const Size.fromHeight(100),
@@ -130,6 +92,7 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
               ],
             ),
           ),
+          const Footer()
         ],
       )
     );
