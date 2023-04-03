@@ -13,7 +13,6 @@ import 'package:client/screens/check_car_damage_screen/check_car_damage_FAB.dart
 import 'package:client/services/analysis_car_damage_api.dart';
 // import 'package:client/utils/dialog_util.dart';
 
-
 class CheckCarDamageScreen extends StatefulWidget {
   final String filePath;
   final List<Map<String, dynamic>> carDamagesAllList;
@@ -106,8 +105,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       File(widget.filePath),
     );
     await _videoPlayerController.initialize();
-    print("aspectratio@@@@");
-    print(_videoPlayerController.value.aspectRatio);
     setState(
       () {
         loading_video = true;
@@ -127,8 +124,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
         }
       },
     );
-    // await _videoPlayerController.setLooping(true);
-    // await _videoPlayerController.play();
   }
 
   void _handleTabSelection() {
@@ -143,25 +138,10 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       () {
         _isVisible = !_isVisible;
         _isVisibleSPBTN = !_isVisibleSPBTN;
-        print(_isVisible);
         _timeChecker();
       },
     );
   }
-
-  // void _watchVideoFast() {
-  //   setState(() {
-  //     _isVisible = true;
-  //     _isTimeSkip = true;
-  //   });
-  // }
-  //
-  // void _stopWatchVideoFast() {
-  //   setState(() {
-  //     _isVisible = false;
-  //     _isTimeSkip = false;
-  //   });
-  // }
 
   void _timeChecker() {
     const duration = Duration(seconds: 3); // 버튼이 사라지는 시간 설정 (3초)
@@ -228,17 +208,17 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       }
       selectedIndexList.sort((a, b) => a.compareTo(b));
       damageView(indexValue);
-    }
-    );
+      _tabController.animateTo(1);
+    });
   }
 
-  void deleteDamageList(
-      int indexValue
-      ) {
-      setState(() {
+  void deleteDamageList(int indexValue) {
+    setState(
+      () {
         carDamagesAllList[indexValue]["selected"] = false;
         selectedIndexList.remove(indexValue);
-      },);
+      },
+    );
   }
 
   void damageView(int indexValue) {
@@ -259,7 +239,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
     if (damagedParts.length > 1) {
       setState(() {
-        carDamagesAllList[indexValue]["damageView"] = '${damagedParts[0]} 외 ${damagedParts.length - 1}건';
+        carDamagesAllList[indexValue]["damageView"] =
+            '${damagedParts[0]} 외 ${damagedParts.length - 1}건';
       });
     } else if (damagedParts.length > 0) {
       setState(() {
@@ -282,23 +263,39 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     );
   }
 
-  void showConfirmationDialog(BuildContext context, Function func, String title, String content, String yes_text, String no_text, {dynamic data}) {
+  void showConfirmationDialog(BuildContext context, Function func, String title,
+      String content, String yes_text, String no_text,
+      {dynamic data}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700,),),
+          title: Text(
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           content: Text(content),
           actions: <Widget>[
             TextButton(
-              child: Text(yes_text, style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),),
+              child: Text(
+                yes_text,
+                style: TextStyle(
+                    fontSize: 14, color: Theme.of(context).primaryColor),
+              ),
               onPressed: () {
                 // Yes 버튼을 눌렀을 때 수행할 작업
                 Navigator.of(context).pop(true);
               },
             ),
             TextButton(
-              child: Text(no_text, style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),),
+              child: Text(
+                no_text,
+                style: TextStyle(
+                    fontSize: 14, color: Theme.of(context).primaryColor),
+              ),
               onPressed: () {
                 // No 버튼을 눌렀을 때 수행할 작업
                 Navigator.of(context).pop(false);
@@ -327,7 +324,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       }
     });
   }
-
 
   @override
   void initState() {
@@ -635,20 +631,25 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                       child: DefaultTabController(
                         length: 2,
                         child: Scaffold(
-                          floatingActionButton:
-                              FloatingActionButton(
-                            onPressed:
-                                selectedIndexList.length > 0 ? () {
-                                  showConfirmationDialog(
-                                    context, goOtherScreen, '손상 등록', '손상을 등록합니다. 정말 괜찮으시겠습니까?','예', '아니오'
-                                  );
-                                } : null,
-                            backgroundColor: selectedIndexList.length > 0 ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
+                          floatingActionButton: FloatingActionButton(
+                            onPressed: selectedIndexList.length > 0
+                                ? () {
+                                    showConfirmationDialog(
+                                        context,
+                                        goOtherScreen,
+                                        '손상 등록',
+                                        '손상을 등록합니다. 정말 괜찮으시겠습니까?',
+                                        '예',
+                                        '아니오');
+                                  }
+                                : null,
+                            backgroundColor: selectedIndexList.length > 0
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(context).disabledColor,
                             tooltip: '손상을 저장할 수 있습니다.',
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-
                                 Icon(
                                   Icons.save_as,
                                   size: 28,
@@ -700,8 +701,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                 changeDamageValue: changeDamageValue,
                                 selectedIndexList: selectedIndexList,
                                 isSelectedView: false,
-                                  deleteDamageList: deleteDamageList,
-                                  showConfirmationDialog: showConfirmationDialog,
+                                deleteDamageList: deleteDamageList,
+                                showConfirmationDialog: showConfirmationDialog,
                               ),
                               CheckCarDamageContainer(
                                 carDamageList: carDamagesAllList,
@@ -710,7 +711,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                 selectedIndexList: selectedIndexList,
                                 isSelectedView: true,
                                 deleteDamageList: deleteDamageList,
-                                  showConfirmationDialog: showConfirmationDialog,
+                                showConfirmationDialog: showConfirmationDialog,
                               ),
                             ],
                           ),
@@ -754,8 +755,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                           isSelectedView
                                               ? selectedIndexList.length
                                                   .toString()
-                                              : (carDamagesAllList
-                                                          .length -
+                                              : (carDamagesAllList.length -
                                                       selectedIndexList.length)
                                                   .toString(),
                                           style: TextStyle(
@@ -800,8 +800,10 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: selected_categories
-                                                    .contains(part_category)
-                                                    ? Theme.of(context).primaryColor : Colors.black,
+                                                        .contains(part_category)
+                                                    ? Theme.of(context)
+                                                        .primaryColor
+                                                    : Colors.black,
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),

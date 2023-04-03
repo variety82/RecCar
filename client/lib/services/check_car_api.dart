@@ -23,8 +23,8 @@ void postCarDamageInfo({
 }) {
   // path 및 method를 입력해줍니다
   apiInstance(
-    path : '/car/catalog',
-    method : Method.post,
+    path: '/detection',
+    method: Method.post,
     success: success,
     fail: fail,
     bodyList: bodyList,
