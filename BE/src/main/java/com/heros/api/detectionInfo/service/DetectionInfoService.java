@@ -4,6 +4,7 @@ import com.heros.api.car.entity.Car;
 import com.heros.api.car.repository.CarRepository;
 import com.heros.api.detectionInfo.dto.request.DetectionInfoCreate;
 import com.heros.api.detectionInfo.dto.response.CarDetectionResponse;
+import com.heros.api.detectionInfo.dto.response.CarDetectionResponse2;
 import com.heros.api.detectionInfo.entity.DetectionInfo;
 import com.heros.api.detectionInfo.repository.DetectionInfoRepository;
 import com.heros.api.user.entity.User;
@@ -13,8 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -38,6 +38,26 @@ public class DetectionInfoService {
                 latterDetectionInfos.add(detectionInfo);
         }
         return new CarDetectionResponse(car, initialDetectionInfos, latterDetectionInfos);
+    }
+
+    public CarDetectionResponse2 getRentDetailInfos2(Long carId){
+        List<String> parts = Arrays.asList("front", "side", "back", "wheel");
+        Car car = carRepository.findById(carId).get();
+        List<DetectionInfo> detectionInfos = detectionInfoRepository.findByCar(car);
+        Map<String, List<DetectionInfo>> initialDetectionInfos = new HashMap<>();
+        Map<String, List<DetectionInfo>> latterDetectionInfos = new HashMap<>();
+        for (String part:parts) {
+            initialDetectionInfos.put(part, new ArrayList<>());
+            latterDetectionInfos.put(part, new ArrayList<>());
+        }
+        for (DetectionInfo detectionInfo:detectionInfos) {
+            String part = detectionInfo.getPart();
+            if (detectionInfo.isFormer())
+                initialDetectionInfos.get(part).add(detectionInfo);
+            else
+                latterDetectionInfos.get(part).add(detectionInfo);
+        }
+        return new CarDetectionResponse2(car, initialDetectionInfos, latterDetectionInfos);
     }
 
     @Transactional
