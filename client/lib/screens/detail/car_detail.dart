@@ -28,98 +28,55 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
 
   Map<String, dynamic>? _detectionInfo;
 
-  Map<String, int> countDamageParts(List<dynamic> detectionInfos) {
-    int frontDamageCount = 0;
-    int sideDamageCount = 0;
-    int backDamageCount = 0;
-    int wheelDamageCount = 0;
-
-    for (var detection in detectionInfos) {
-      dynamic part = detection['part'];
-      int breakage = detection['breakage'];
-      int crushed = detection['crushed'];
-      int separated = detection['separated'];
-      int scratch = detection['scratch'];
-      int damageCount = breakage + crushed + separated + scratch;
-
-      switch (part) {
-        case Part.front:
-          frontDamageCount += damageCount;
-          break;
-        case Part.side:
-          sideDamageCount += damageCount;
-          break;
-        case Part.back:
-          backDamageCount += damageCount;
-          break;
-        case Part.wheel:
-          wheelDamageCount += damageCount;
-          break;
-      };
-    };
-
-    return {
-      'frontDamageCount' : frontDamageCount,
-      'sideDamageCount' : sideDamageCount,
-      'backDamageCount' : backDamageCount,
-      'wheelDamageCount' : wheelDamageCount,
-    };
-  }
-
-  int evaluateDamageLevel(int damageCount) {
-    if (damageCount <= 4) {
-      return 0;
-    } else if (damageCount <= 8) {
-      return 1;
-    } else if (damageCount <= 12) {
-      return 2;
-    } else if (damageCount <= 16) {
-      return 3;
-    } else {
-      return 4;
-    }
-  }
-
-  // void processDetectionInfos(Map<String, dynamic>? detectionInfo) {
-  //   List<dynamic> initialDetectionInfos = detectionInfo!['initialDetectionInfos'];
-  //   List<dynamic> latterDetectionInfos = detectionInfo['latterDetectionInfos'];
+  // Map<String, int> countDamageParts(List<dynamic> detectionInfos) {
+  //   int frontDamageCount = 0;
+  //   int sideDamageCount = 0;
+  //   int backDamageCount = 0;
+  //   int wheelDamageCount = 0;
   //
-  //   Map<String, int> initialDamageCount = countDamageParts(initialDetectionInfos);
-  //   Map<String, int> latterDamageCount = countDamageParts(latterDetectionInfos);
+  //   for (var detection in detectionInfos) {
+  //     dynamic part = detection['part'];
+  //     int breakage = detection['breakage'];
+  //     int crushed = detection['crushed'];
+  //     int separated = detection['separated'];
+  //     int scratch = detection['scratch'];
+  //     int damageCount = breakage + crushed + separated + scratch;
   //
-  //   int initialFrontDamageLevel = evaluateDamageLevel(initialDamageCount['front']!);
-  //   int initialSideDamageLevel = evaluateDamageLevel(initialDamageCount['side']!);
-  //   int initialBackDamageLevel = evaluateDamageLevel(initialDamageCount['back']!);
-  //   int initialWheelDamageLevel = evaluateDamageLevel(initialDamageCount['wheel']!);
+  //     switch (part) {
+  //       case Part.front:
+  //         frontDamageCount += damageCount;
+  //         break;
+  //       case Part.side:
+  //         sideDamageCount += damageCount;
+  //         break;
+  //       case Part.back:
+  //         backDamageCount += damageCount;
+  //         break;
+  //       case Part.wheel:
+  //         wheelDamageCount += damageCount;
+  //         break;
+  //     };
+  //   };
   //
-  //   int latterFrontDamageLevel = evaluateDamageLevel(latterDamageCount['front']!);
-  //   int latterSideDamageLevel = evaluateDamageLevel(latterDamageCount['side']!);
-  //   int latterBackDamageLevel = evaluateDamageLevel(latterDamageCount['back']!);
-  //   int latterWheelDamageLevel = evaluateDamageLevel(latterDamageCount['wheel']!);
-  //
-  //   print(initialDamageCount);
-  //   print(latterDamageCount);
+  //   return {
+  //     'frontDamageCount' : frontDamageCount,
+  //     'sideDamageCount' : sideDamageCount,
+  //     'backDamageCount' : backDamageCount,
+  //     'wheelDamageCount' : wheelDamageCount,
+  //   };
   // }
 
   Future<void> _fetchCarInfo() async {
-    var carId = await storage.read(key: 'carId');
-    print(carId);
-    if (carId != null) {
-      getDetectionInfo(
-          success: (dynamic response) {
-            // print(response);
-            setState(() {
-              _detectionInfo = response;
-              // processDetectionInfos(_detectionInfo);
-            });
-            print(_detectionInfo);
-          },
-          fail: (error) {
-            print('차량 파손 정보 호출 오류 : $error');
-          },
-          carId: carId
-      );
-    }
+    getCarInfo(
+      success: (dynamic response) {
+        setState(() {
+          _detectionInfo = response;
+        });
+      },
+      fail: (error) {
+        print('차량 파손 정보 호출 오류 : $error');
+      }
+    );
   }
 
 
@@ -165,16 +122,10 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
               controller: _tabController,
               children: [
                 partDetail(
-                  frontDamageLevel: 0,
-                  sideDamageLevel: 0,
-                  backDamageLevel: 0,
-                  wheelDamageLevel: 0,
+                  detectionInfos: _detectionInfo?['initialDetectionInfos'] ?? {},
                 ),
                 partDetail(
-                  frontDamageLevel: 0,
-                  sideDamageLevel: 0,
-                  backDamageLevel: 0,
-                  wheelDamageLevel: 0,
+                  detectionInfos: _detectionInfo?['latterDetectionInfos'] ?? {},
                 ),
               ],
             ),
