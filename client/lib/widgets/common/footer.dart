@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../screens/map_screen/map_screen.dart';
 import '../../screens/my_page/my_page.dart';
 import '../../main.dart';
+import 'package:client/widgets/common/home_FAB.dart';
 
 class Footer extends StatefulWidget {
   const Footer({Key? key}) : super(key: key);
@@ -12,6 +14,43 @@ class Footer extends StatefulWidget {
 
 class _FooterState extends State<Footer> {
   void home() {}
+
+  static final storage = FlutterSecureStorage();
+  int? currentCarId;
+  int? currentCarVideo;
+
+  Future<void> setCurrentCarId() async {
+    final carId = await storage.read(key: 'carId');
+    setState(() {
+      currentCarId = int.parse(carId!);
+    });
+  }
+
+  Future<void> setCurrentCarVideo() async {
+    final carVideoState = await storage.read(key: 'carVideoState');
+    setState(() {
+      if (carVideoState == '0') {
+        setState(() {
+          currentCarVideo = 0;
+        });
+      } else if (carVideoState == '1') {
+        setState(() {
+          currentCarVideo = 1;
+        });
+      } else {
+        setState(() {
+          currentCarVideo = 2;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setCurrentCarId();
+    setCurrentCarVideo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +86,44 @@ class _FooterState extends State<Footer> {
               size: 30,
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.all(4.0),
+          //   child: homeFABMenu(),
+          // ),
           TextButton(
             onPressed: () {
-              if (ModalRoute.of(context)?.settings.name !=
-                  '/before-recording') {
-                Navigator.pushNamed(context, '/before-recording');
+              if (currentCarVideo == 2 || currentCarId == 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  //SnackBar 구현하는법 context는 위에 BuildContext에 있는 객체를 그대로 가져오면 됨.
+                  SnackBar(
+                    content: Center(
+                      child: Text(
+                        "현재 영상을 찍을 수 없습니다",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                    duration: Duration(milliseconds: 1000),
+                    behavior: SnackBarBehavior.floating,
+                    // action: SnackBarAction(
+                    //   label: '닫기',
+                    //   textColor: Colors.white,
+                    //   onPressed: () => {},
+                    // ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                if (ModalRoute.of(context)?.settings.name !=
+                    '/before-recording') {
+                  Navigator.pushNamed(context, '/before-recording');
+                }
               }
             },
             child: Transform.translate(

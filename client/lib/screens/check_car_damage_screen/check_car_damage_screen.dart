@@ -217,6 +217,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       () {
         carDamagesAllList[indexValue]["selected"] = false;
         selectedIndexList.remove(indexValue);
+        _tabController.animateTo(0);
       },
     );
   }
@@ -838,20 +839,3 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     );
   }
 }
-
-// isSelectedView
-//     ? Icon(
-//         Icons.fact_check,
-//       )
-//     : Icon(
-//         Icons.fact_check_outlined,
-//       ),
-// Switch(
-//   value: isSelectedView,
-//   onChanged: (value) {
-//     setState(() {
-//       isSelectedView = !isSelectedView;
-//     });
-//   },
-//   activeColor: Color(0xFFE0426F),
-// ),

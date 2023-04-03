@@ -11,7 +11,7 @@ void getCarAnalysis({
     success: success,
     fail: fail,
     filePath: filePath,
-    user_id: 1,
+    user_id: 'default_name',
   );
 }
 

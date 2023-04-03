@@ -673,7 +673,35 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                           separated_count) ==
                                       0 ||
                                   partInput == '')
-                                {null}
+                                {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    //SnackBar 구현하는법 context는 위에 BuildContext에 있는 객체를 그대로 가져오면 됨.
+                                    SnackBar(
+                                      content: Center(
+                                        child: Text(
+                                          "손상 유형 및 부위를 모두 설정해주세요.",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                      backgroundColor:
+                                          Theme.of(context).primaryColor,
+                                      duration: Duration(milliseconds: 1000),
+                                      behavior: SnackBarBehavior.floating,
+                                      // action: SnackBarAction(
+                                      //   label: '닫기',
+                                      //   textColor: Colors.white,
+                                      //   onPressed: () => {},
+                                      // ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        side: BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                }
                               else
                                 {
                                   widget.changeDamageValue(

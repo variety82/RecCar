@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:client/widgets/common/moveable_button.dart';
 import 'package:client/services/analysis_car_damage_api.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_screen.dart';
 import 'package:client/screens/after_recording_screen/damage_count_info_block.dart';
@@ -20,73 +19,21 @@ class AfterRecordingScreen extends StatefulWidget {
 class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
   bool loading_api = false;
 
-  List<Map<String, dynamic>> carDamagesAllList = [
-    // {
-//   "index": 0,
-//   "Damage_Image_URL": 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/user_1_2023-04-01_10-07-48_5.jpg',
-//   "part": "",
-//   "Scratch": 0,
-//   "Crushed": 0,
-//   "Breakage": 0,
-//   "Separated": 0,
-//   "timeStamp": 0,
-//   "memo": "",
-//   "selected": false,
-// }, {
-//     "index": 1,
-//     "Damage_Image_URL": 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/user_1_2023-04-01_10-07-48_5.jpg',
-//     "part": "",
-//     "Scratch": 0,
-//     "Crushed": 0,
-//     "Breakage": 0,
-//     "Separated": 0,
-//     "timeStamp": 0,
-//     "memo": "",
-//     "selected": false,
-//   }, {
-//     "index": 2,
-//     "Damage_Image_URL": 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/user_1_2023-04-01_10-07-48_5.jpg',
-//     "part": "",
-//     "Scratch": 0,
-//     "Crushed": 0,
-//     "Breakage": 0,
-//     "Separated": 0,
-//     "timeStamp": 0,
-//     "memo": "",
-//     "selected": false,
-//   }, {
-//     "index": 3,
-//     "Damage_Image_URL": 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/user_1_2023-04-01_10-07-48_5.jpg',
-//     "part": "",
-//     "Scratch": 0,
-//     "Crushed": 0,
-//     "Breakage": 0,
-//     "Separated": 0,
-//     "timeStamp": 0,
-//     "memo": "",
-//     "selected": false,
-//   }, {
-//     "index": 4,
-//     "Damage_Image_URL": 'https://herosbucket.s3.ap-northeast-2.amazonaws.com/hero/user_1_2023-04-01_10-07-48_5.jpg',
-//     "part": "",
-//     "Scratch": 0,
-//     "Crushed": 0,
-//     "Breakage": 0,
-//     "Separated": 0,
-//     "timeStamp": 0,
-//     "memo": "",
-//     "selected": false,
-//   },
-  ];
+  static final storage = FlutterSecureStorage();
+  String? userNickName;
+
+  List<Map<String, dynamic>> carDamagesAllList = [];
   List<int> selectedIndexList = [];
 
-  void getUserInfo() async {
-    final storage = FlutterSecureStorage();
-    dynamic user_id = await storage.read(key: 'myKey');
+  Future<void> setUserName() async {
+    final userName = await storage.read(key: 'nickName');
+    setState(() {
+      userNickName = userName;
+    });
   }
 
-  @override
-  void initState() {
+  Future<void> fetchData() async {
+    await Future.delayed(Duration(seconds: 1));
     analysisCarDamageApi(
       success: (dynamic response) {
         setState(() {
@@ -95,7 +42,6 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
         });
       },
       fail: (error) {
-        print('차량 손상 분석 오류: $error');
         setState(
           () {
             loading_api = true;
@@ -103,9 +49,15 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
         );
       },
       filePath: widget.filePath,
-      user_id: 1,
+      user_id: userNickName == null ? 'default' : userNickName,
     );
+  }
+
+  @override
+  void initState() {
     super.initState();
+    setUserName();
+    fetchData();
   }
 
   @override
@@ -156,81 +108,6 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ),
                             ],
                           ),
-                          // RichText(
-                          //   text: const TextSpan(
-                          //     children: [
-                          //       TextSpan(
-                          //         text: '총 ',
-                          //         style: TextStyle(
-                          //           color: Colors.black,
-                          //           fontSize: 20,
-                          //         ),
-                          //       ),
-                          //       TextSpan(
-                          //         text: '15',
-                          //         style: TextStyle(
-                          //           fontSize: 20,
-                          //           fontWeight: FontWeight.w700,
-                          //           color: Color(0xFFFF3F3F),
-                          //         ),
-                          //       ),
-                          //       TextSpan(
-                          //         text: '건의 손상이 발견되었습니다.',
-                          //         style: TextStyle(
-                          //           fontSize: 20,
-                          //           color: Colors.black,
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-                          // Column(
-                          //   children: [
-                          //     // Padding(
-                          //     //   padding: const EdgeInsets.symmetric(
-                          //     //     vertical: 8,
-                          //     //   ),
-                          //     //   child: Text(
-                          //     //     '* 현재 이격은 기록만 가능합니다 *',
-                          //     //     textAlign: TextAlign.center,
-                          //     //     softWrap: true,
-                          //     //     style: TextStyle(
-                          //     //       fontSize: 14,
-                          //     //       color: Color(0xFFFF3F3F),
-                          //     //     ),
-                          //     //   ),
-                          //     // ),
-                          //     Row(
-                          //       mainAxisAlignment:
-                          //           MainAxisAlignment.spaceBetween,
-                          //       children: [
-                          //         DamageCountInfoBlock(
-                          //           damageName: '스크래치',
-                          //           damageCnt: 8,
-                          //         ),
-                          //         DamageCountInfoBlock(
-                          //           damageName: '찌그러짐',
-                          //           damageCnt: 8,
-                          //         ),
-                          //       ],
-                          //     ),
-                          //     Row(
-                          //       mainAxisAlignment:
-                          //           MainAxisAlignment.spaceBetween,
-                          //       children: [
-                          //         DamageCountInfoBlock(
-                          //           damageName: '파손',
-                          //           damageCnt: 8,
-                          //         ),
-                          //         DamageCountInfoBlock(
-                          //           damageName: '이격',
-                          //           damageCnt: 8,
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ],
-                          // ),
-
                           Stack(
                             alignment: AlignmentDirectional.center,
                             children: [
@@ -246,7 +123,6 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ),
                             ],
                           ),
-
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
