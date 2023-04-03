@@ -35,13 +35,25 @@ public class CalendarController {
 
     private final CalendarService calendarService;
 
+    @Operation(summary = "캘린더 단건 조회", description = "캘린더 id로 캘린더 단건을 조회하는 메서드 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = CalendarResponse.class))),
+            @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
+    })
+    @GetMapping(value = "{calendarId}")
+    public ResponseEntity<?> getOneCalendar(@Schema(description = "조회할 calendar Id", example = "1") @NotNull @Min(1) @PathVariable Long calendarId) {
+        Calendar oneCalendar = calendarService.getOneCalendar(calendarId);
+        CalendarResponse calendarResponse = new CalendarResponse(oneCalendar);
+        return ResponseEntity.ok().body(calendarResponse);
+    }
+
     @Operation(summary = "캘린더 조회", description = "캘린더 조회 메서드 입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = CalendarResponse.class))),
             @ApiResponse(responseCode = "404", description = "fail", content = @Content(schema = @Schema(implementation = ErrorResponseExample.class)))
     })
     @GetMapping(value = "")
-    public ResponseEntity<?> getCalender(){
+    public ResponseEntity<?> getCalendar(){
         HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         User user = (User) httpServletRequest.getAttribute("user");
         Long userId = user.getUserId();
