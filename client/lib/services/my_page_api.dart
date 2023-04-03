@@ -62,3 +62,18 @@ void getDetailDamageInfo({
     fail: fail,
   );
 }
+
+// 파손 상세 내역
+void deleteUserInfo({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+  Map<String, String>? body,
+}) {
+  apiInstance(
+    path: '/user/delete',
+    method: Method.delete,
+    body: body,
+    success: success,
+    fail: fail,
+  );
+}
