@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../widgets/common/footer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import './calendar_utils.dart';
@@ -17,16 +20,51 @@ class _CalendarState extends State<Calendar> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by longpressing a date
-  DateTime _focusedDay = DateTime.parse(DateTime.now().toString().substring(0, 11)+"00:00:00.000Z");
-  DateTime? _selectedDay;
+  DateTime _focusedDay = DateTime.parse(
+      DateTime.now().toString().substring(0, 11) + "00:00:00.000Z");
+  DateTime _selectedDay = DateTime.parse(
+      DateTime.now().toString().substring(0, 11) + "00:00:00.000Z");
   dynamic events = [];
   Map<DateTime, List<Event>> kEvents = {};
+
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _memoController = TextEditingController();
+  DateRangePickerController _dateController = DateRangePickerController();
+  DateTime _inputedCalendarDate = DateTime.parse("0000-00-00 00:00:00.000Z");
+  String _inputedTitle = "";
+  String _inputedMemo = "";
+
+  Map<String, dynamic> _buildCalendarInfoBody() {
+    return {
+      "calendarDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+          .format(_inputedCalendarDate!),
+      "title": _inputedTitle,
+      "memo": _inputedMemo,
+      "isAuto": false,
+    };
+  }
+
+  Map<String, dynamic> _buildCalendarInfoBody2(int id) {
+    return {
+      "calendarId": id,
+      "calendarDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+          .format(_inputedCalendarDate),
+      "title": _inputedTitle,
+      "memo": _inputedMemo,
+      "isAuto": false,
+    };
+  }
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      _focusedDay = DateTime.parse(DateTime.now().toString().substring(0, 11)+"00:00:00.000Z");
+      _focusedDay = DateTime.parse(
+          DateTime.now().toString().substring(0, 11) + "00:00:00.000Z");
+    });
+    setState(() {
+      _selectedDay = DateTime.parse(
+          DateTime.now().toString().substring(0, 11) + "00:00:00.000Z");
     });
     // 일정 불러오기
     getEvents(
@@ -34,7 +72,11 @@ class _CalendarState extends State<Calendar> {
         setState(() {
           events = response;
           for (int i = 0; i < events.length; i++) {
-            var temp = (DateTime.parse(events[i]['calendarDate']).add(const Duration(hours: 9))).toString().substring(0, 11)+"00:00:00.000Z";
+            var temp = (DateTime.parse(events[i]['calendarDate'])
+                        .add(const Duration(hours: 9)))
+                    .toString()
+                    .substring(0, 11) +
+                "00:00:00.000Z";
             var eventDate = DateTime.parse(temp);
             if (kEvents.containsKey(eventDate)) {
               kEvents[eventDate]!.add(Event(events[i]['calendarId'],
@@ -42,7 +84,8 @@ class _CalendarState extends State<Calendar> {
             } else {
               kEvents.addAll({
                 eventDate: [
-                  Event(events[i]['calendarId'], events[i]['title'], events[i]['memo']),
+                  Event(events[i]['calendarId'], events[i]['title'],
+                      events[i]['memo']),
                 ]
               });
             }
@@ -54,7 +97,7 @@ class _CalendarState extends State<Calendar> {
       },
     );
     _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _selectedEvents = ValueNotifier(_getEventsForDay(_focusedDay));
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -63,14 +106,12 @@ class _CalendarState extends State<Calendar> {
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    if (!isSameDay(_selectedDay, selectedDay)) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-        _rangeSelectionMode = RangeSelectionMode.toggledOff;
-        _selectedEvents.value = _getEventsForDay(selectedDay);
-      });
-    }
+    setState(() {
+      _selectedDay = selectedDay;
+      _focusedDay = focusedDay;
+      _rangeSelectionMode = RangeSelectionMode.toggledOff;
+      _selectedEvents.value = _getEventsForDay(selectedDay);
+    });
   }
 
   @override
@@ -182,7 +223,7 @@ class _CalendarState extends State<Calendar> {
                   child: ValueListenableBuilder<List<Event>>(
                     valueListenable: _selectedEvents,
                     builder: (context, value, _) {
-                      if(value.length==0)
+                      if (value.length == 0)
                         return Center(child: Text("일정이 없습니다"));
                       return ListView.builder(
                         itemCount: value.length,
@@ -203,8 +244,10 @@ class _CalendarState extends State<Calendar> {
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             child: ListTile(
-                              onTap: () => print(
-                                  '${value[index].title} ${value[index].memo}'),
+                              onTap: () => {
+                                showDetailCalender(value[index].id,
+                                    value[index].title, value[index].memo)
+                              },
                               title: Text('${value[index].title}',
                                   style: TextStyle(color: Color(0xFF6A6A6A))),
                               subtitle: Text('${value[index].memo}'),
@@ -255,7 +298,6 @@ class _CalendarState extends State<Calendar> {
 
   void addEvent() {
     FocusNode _unUsedFocusNode = FocusNode();
-    // showDialog(context: context, builder: (BuildContext context)
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -296,16 +338,18 @@ class _CalendarState extends State<Calendar> {
                             child: Container(
                               height: 30,
                               child: TextField(
+                                controller: _titleController,
                                 onTapOutside: (PointerDownEvent event) {
                                   FocusScope.of(context)
                                       .requestFocus(_unUsedFocusNode);
                                 },
                                 decoration: InputDecoration(
                                   border: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                    color:
-                                        Theme.of(context).secondaryHeaderColor,
-                                  )),
+                                    borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor,
+                                    ),
+                                  ),
                                 ),
                                 style: TextStyle(
                                   fontSize: 12,
@@ -330,10 +374,11 @@ class _CalendarState extends State<Calendar> {
                             monthViewSettings:
                                 const DateRangePickerMonthViewSettings(
                                     firstDayOfWeek: 7),
-                            onSelectionChanged:
-                                (DateRangePickerSelectionChangedArgs args) {
-                              print(args.value);
-                            },
+                            // onSelectionChanged:
+                            //     (DateRangePickerSelectionChangedArgs args) {
+                            //   print(args.value);
+                            // },
+                            controller: _dateController,
                             todayHighlightColor: Theme.of(context).primaryColor,
                             selectionColor: Theme.of(context).primaryColor,
                             headerStyle: DateRangePickerHeaderStyle(
@@ -365,6 +410,7 @@ class _CalendarState extends State<Calendar> {
                       Container(
                         height: 90,
                         child: TextField(
+                          controller: _memoController,
                           maxLines: 3,
                           onTapOutside: (PointerDownEvent event) {
                             FocusScope.of(context)
@@ -413,7 +459,7 @@ class _CalendarState extends State<Calendar> {
                             ),
                           ),
                           TextButton(
-                            onPressed: () => {},
+                            onPressed: () => {addCalendar()},
                             child: Container(
                               alignment: Alignment.center,
                               padding: EdgeInsets.symmetric(
@@ -441,5 +487,451 @@ class _CalendarState extends State<Calendar> {
             ),
           );
         });
+  }
+
+  void addCalendar() {
+    setState(() {
+      _inputedTitle = _titleController.text;
+    });
+    setState(() {
+      _inputedMemo = _memoController.text;
+    });
+    setState(() {
+      _inputedCalendarDate = _dateController.selectedDate ??
+          DateTime.parse("0000-00-00 00:00:00.000Z");
+    });
+    if (_inputedTitle != "" &&
+        _inputedMemo != "" &&
+        _inputedCalendarDate != DateTime.parse("0000-00-00 00:00:00.000Z")) {
+      postEvent(
+        success: (dynamic response) {
+          // 바로 반영이 안돼서 일단 딜레이 주기
+          sleep(const Duration(seconds: 1));
+        },
+        fail: (error) {
+          print('일정 등록 오류: $error');
+        },
+        body: _buildCalendarInfoBody(),
+      );
+      Navigator.pushNamed(context, '/calendar');
+    } else {
+      print("비어있어요!");
+    }
+  }
+
+  // 일정 상세보기 (수정, 삭제 기능 추가하기)
+  void showDetailCalender(int id, String title, String memo) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            height: 200,
+            padding: EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 10,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "${_focusedDay.toString().split(" ")[0]} 일정",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).secondaryHeaderColor),
+                      ),
+                    ),
+                    Container(
+                      width: 55,
+                      margin: EdgeInsets.zero,
+                      child: TextButton(
+                        onPressed: () {
+                          modifyCalendar(id, title, memo, _focusedDay);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            "수정",
+                            style: TextStyle(color: Colors.white, fontSize: 11),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 55,
+                      margin: EdgeInsets.zero,
+                      child: TextButton(
+                        onPressed: () {
+                          deleteCalendar(id);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            "삭제",
+                            style: TextStyle(color: Colors.white, fontSize: 11),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  thickness: 1.5,
+                  height: 0,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Container(
+                      width: 50,
+                      child: Text(
+                        "TITLE",
+                        style: TextStyle(
+                          color: Theme.of(context).secondaryHeaderColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Color(0xFF6A6A6A),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Container(
+                      width: 50,
+                      child: Text(
+                        "MEMO",
+                        style: TextStyle(
+                          color: Theme.of(context).secondaryHeaderColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    if (memo == "")
+                      Text(
+                        "메모가 없습니다",
+                        style: TextStyle(
+                          color: Color(0xFFD9D9D9),
+                        ),
+                      ),
+                    if (memo != "")
+                      Text(
+                        memo,
+                        style: TextStyle(
+                          color: Color(0xFF6A6A6A),
+                        ),
+                      ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => {Navigator.pop(context)},
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 50,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.7),
+                              blurRadius: 2.0,
+                              spreadRadius: 0.0,
+                            )
+                          ],
+                        ),
+                        child: Text(
+                          "닫기",
+                          style: TextStyle(
+                            color: Color(0xFF453F52),
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void modifyCalendar(int id, String title, String memo, DateTime date) {
+    FocusNode _unUsedFocusNode = FocusNode();
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 30,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                          child: Text(
+                        "일정 수정",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w500),
+                      )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "TITLE",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).secondaryHeaderColor,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 30,
+                              child: TextField(
+                                controller: _titleController..text = title,
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
+                                decoration: InputDecoration(
+                                  border: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor,
+                                    ),
+                                  ),
+                                ),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 40),
+                      Text(
+                        "DATE ",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).secondaryHeaderColor,
+                        ),
+                      ),
+                      Container(
+                        child: SfDateRangePicker(
+                            view: DateRangePickerView.month,
+                            monthViewSettings:
+                                const DateRangePickerMonthViewSettings(
+                                    firstDayOfWeek: 7),
+                            // onSelectionChanged:
+                            //     (DateRangePickerSelectionChangedArgs args) {
+                            //   print(args.value);
+                            // },
+                            controller: _dateController..selectedDate = date,
+                            todayHighlightColor: Theme.of(context).primaryColor,
+                            selectionColor: Theme.of(context).primaryColor,
+                            headerStyle: DateRangePickerHeaderStyle(
+                              textAlign: TextAlign.center,
+                              textStyle: TextStyle(
+                                fontSize: 15,
+                                color: Theme.of(context).secondaryHeaderColor,
+                              ),
+                            ),
+                            monthCellStyle: DateRangePickerMonthCellStyle(
+                              todayTextStyle: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            selectionTextStyle:
+                                const TextStyle(fontWeight: FontWeight.w700)),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text("MEMO",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).secondaryHeaderColor,
+                          )),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        height: 90,
+                        child: TextField(
+                          controller: _memoController..text = memo,
+                          maxLines: 3,
+                          onTapOutside: (PointerDownEvent event) {
+                            FocusScope.of(context)
+                                .requestFocus(_unUsedFocusNode);
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .secondaryHeaderColor)),
+                            labelText: '',
+                          ),
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => {Navigator.pop(context)},
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 13,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.7),
+                                    blurRadius: 2.0,
+                                    spreadRadius: 0.0,
+                                  )
+                                ],
+                              ),
+                              child: Text(
+                                "취소",
+                                style: TextStyle(
+                                  color: Color(0xFF453F52),
+                                ),
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => {putCalendar(id)},
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 13,
+                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xFFE0426F)),
+                              child: Text(
+                                "수정",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  void putCalendar(int id) {
+    setState(() {
+      _inputedTitle = _titleController.text;
+    });
+    setState(() {
+      _inputedMemo = _memoController.text;
+    });
+    setState(() {
+      _inputedCalendarDate = _dateController.selectedDate ?? DateTime.now();
+    });
+    putEvent(
+      success: (dynamic response) {
+        // 바로 반영이 안돼서 일단 딜레이 주기
+        sleep(const Duration(seconds: 1));
+      },
+      fail: (error) {
+        print('일정 수정 오류: $error');
+      },
+      body: _buildCalendarInfoBody2(id),
+    );
+    Navigator.pop(context);
+    Navigator.pushNamed(context, '/calendar');
+  }
+
+  void deleteCalendar(int id) {
+    deleteEvent(
+      success: (dynamic response) {
+        // 바로 반영이 안돼서 일단 딜레이 주기
+        sleep(const Duration(seconds: 1));
+      },
+      fail: (error) {
+        print('일정 수정 오류: $error');
+      },
+      calendarId: id,
+    );
+    Navigator.pop(context);
+    Navigator.pushNamed(context, '/calendar');
   }
 }
