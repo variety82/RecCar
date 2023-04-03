@@ -37,7 +37,23 @@ void putEvent({
 }) {
   apiInstance(
     path: '/calendar/',
-    method: Method.post,
+    method: Method.put,
+    success: success,
+    fail: fail,
+    body: body,
+  );
+}
+
+// 일정 삭제
+void deleteEvent({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+  Map<String, dynamic>? body,
+  required int calendarId,
+}) {
+  apiInstance(
+    path: '/calendar/${calendarId}',
+    method: Method.delete,
     success: success,
     fail: fail,
     body: body,

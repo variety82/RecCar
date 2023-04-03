@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 final storage = FlutterSecureStorage();
-enum Method { get, post }
+enum Method { get, post, put, delete }
 
 // apiInstance를 만듭니다
 Future<dynamic> apiInstance({
@@ -47,13 +47,27 @@ Future<dynamic> apiInstance({
         fail('HTTP 요청 처리 중 오류 발생: $error');
       }
       break;
+    case Method.put:
+      try {
+        response = await http.put(url, headers: headers, body: json.encode(body));
+      } catch(error) {
+        fail('HTTP 요청 처리 중 오류 발생: $error');
+      }
+      break;
+    case Method.delete:
+      try {
+        response = await http.delete(url, headers: headers, body: json.encode(body));
+      } catch(error) {
+        fail('HTTP 요청 처리 중 오류 발생: $error');
+      }
+      break;
   }
 
   if (200 <= response.statusCode && response.statusCode < 300) {
     // statuse가 200대이면 성공으로 해서 jsonResponse를 쓰는 콜백함수로 보내줍니다
     late dynamic jsonResponse;
     if (response.body.isNotEmpty) {
-      jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      jsonResponse = await jsonDecode(utf8.decode(response.bodyBytes));
     } else {
       jsonResponse = {};
     }
