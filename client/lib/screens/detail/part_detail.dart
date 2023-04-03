@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:client/widgets/common/header.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:client/widgets/detail/damage_level_card.dart';
-import 'package:client/widgets/common/footer.dart';
 
 class partDetail extends StatelessWidget {
 
@@ -110,7 +108,6 @@ class partDetail extends StatelessWidget {
           ),
         ),
         ),
-        const Footer()
       ],
     );
   }
