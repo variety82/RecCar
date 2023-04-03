@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:client/services/my_page_api.dart';
 import 'package:flutter/material.dart';
 import '../../screens/my_page/my_data_modify.dart';
 import '../../screens/my_page/car_info.dart';
@@ -27,18 +28,12 @@ enum CategoryName { ModifyInfo, MyCar, RentLog, NoticeSetting, Logout, Resign }
 
 String convertCategoryNameToKor(CategoryName name) {
   switch (name) {
-    case CategoryName.ModifyInfo:
-      return "내 정보 수정";
-    case CategoryName.MyCar:
-      return "차량 정보 조회";
-    case CategoryName.RentLog:
-      return "렌트 내역";
-    case CategoryName.NoticeSetting:
-      return "알림 설정";
-    case CategoryName.Logout:
-      return "로그아웃";
-    case CategoryName.Resign:
-      return "회원 정보 초기화";
+    case CategoryName.ModifyInfo: return "내 정보 수정";
+    case CategoryName.MyCar: return "차량 정보 조회";
+    case CategoryName.RentLog: return "렌트 내역";
+    case CategoryName.NoticeSetting: return "알림 설정";
+    case CategoryName.Logout: return "로그아웃";
+    case CategoryName.Resign: return "회원 정보 초기화";
   }
 }
 
@@ -53,7 +48,6 @@ class _MyPageCategoryState extends State<MyPageCategory> {
   dynamic userId = '';
   dynamic userName = '';
   dynamic userEmail = '';
-
 
   @override
   void initState() {
@@ -73,9 +67,9 @@ class _MyPageCategoryState extends State<MyPageCategory> {
   }
 
   checkUserState() async {
-    var id = await storage.read(key: 'id');
-    var name = await storage.read(key: 'name');
-    var email = await storage.read(key: 'email');
+    // var id = await storage.read(key: 'id');
+    var name = await storage.read(key: 'nickName');
+    // var email = await storage.read(key: 'email');
     setState(() {
       // userId = id;
       userName = name;
@@ -96,14 +90,14 @@ class _MyPageCategoryState extends State<MyPageCategory> {
             context,
             MaterialPageRoute(builder: (context) => const MyDataModify()),
           );
-        } else
-        if (widget.category == convertCategoryNameToKor(CategoryName.MyCar)) {
+        } else if (widget.category ==
+            convertCategoryNameToKor(CategoryName.MyCar)) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const CarInfo()),
           );
-        } else
-        if (widget.category == convertCategoryNameToKor(CategoryName.RentLog)) {
+        } else if (widget.category ==
+            convertCategoryNameToKor(CategoryName.RentLog)) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const RentLog()),
@@ -114,12 +108,11 @@ class _MyPageCategoryState extends State<MyPageCategory> {
             context,
             MaterialPageRoute(builder: (context) => const AlarmSetting()),
           );
-        } else
-        if (widget.category == convertCategoryNameToKor(CategoryName.Logout)) {
+        } else if (widget.category ==
+            convertCategoryNameToKor(CategoryName.Logout)) {
           logout();
-        }
-        else
-        if (widget.category == convertCategoryNameToKor(CategoryName.Resign)) {
+        } else if (widget.category ==
+            convertCategoryNameToKor(CategoryName.Resign)) {
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -144,7 +137,7 @@ class _MyPageCategoryState extends State<MyPageCategory> {
                       ),
                       SizedBox(height: 5),
                       Text(
-                        "모든 렌트 내역 및 차량 파손 내역이 삭제됩니다.\n그래도 탈퇴하시겠습니까?",
+                        "모든 렌트 내역 및 차량 파손 내역이 삭제됩니다.\n계속 진행하시겠습니까?",
                         style: TextStyle(height: 2),
                       ),
                       SizedBox(height: 17),
@@ -152,7 +145,7 @@ class _MyPageCategoryState extends State<MyPageCategory> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                            onPressed: () => {},
+                            onPressed: () => {resignUser()},
                             child: Container(
                               width: 110,
                               alignment: Alignment.center,
@@ -173,7 +166,7 @@ class _MyPageCategoryState extends State<MyPageCategory> {
                             ),
                           ),
                           TextButton(
-                            onPressed: () => {},
+                            onPressed: () => {Navigator.pop(context)},
                             child: Container(
                               width: 110,
                               alignment: Alignment.center,
@@ -226,5 +219,15 @@ class _MyPageCategoryState extends State<MyPageCategory> {
         ),
       ),
     );
+  }
+
+  void resignUser() {
+    deleteUserInfo(
+      success: (dynamic response) {},
+      fail: (error) {
+        print('사용자 정보 초기화 오류: $error');
+      },
+    );
+    Navigator.pop(context);
   }
 }

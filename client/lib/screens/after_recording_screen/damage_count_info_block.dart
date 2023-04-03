@@ -18,17 +18,21 @@ class DamageCountInfoBlock extends StatelessWidget {
         width: 100,
         height: 120,
         decoration: BoxDecoration(
-          color: damageName == "이격" ? Theme.of(context).disabledColor : Theme.of(context).primaryColorLight,
+          color: damageCnt == 0
+              ? Theme.of(context).disabledColor
+              : Theme.of(context).primaryColorLight,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               damageName,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 16,
+                fontSize: 14,
               ),
             ),
             Divider(
@@ -39,11 +43,13 @@ class DamageCountInfoBlock extends StatelessWidget {
               height: 24,
             ),
             Text(
-              damageName == "이격" ? "지원 예정" : '${damageCnt}건',
+              '${damageCnt}건',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: damageName == "이격" ? Colors.black : Theme.of(context).primaryColor,
+                color: damageCnt == 0
+                    ? Colors.black
+                    : Theme.of(context).primaryColor,
               ),
             ),
           ],
