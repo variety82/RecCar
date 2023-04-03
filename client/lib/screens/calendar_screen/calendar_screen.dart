@@ -302,185 +302,188 @@ class _CalendarState extends State<Calendar> {
         context: context,
         builder: (BuildContext context) {
           return Dialog(
-            child: SafeArea(
-              child: SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 30,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                          child: Text(
-                        "일정 등록",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w500),
-                      )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "TITLE",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Theme.of(context).secondaryHeaderColor,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            child: Container(
-                              height: 30,
-                              child: TextField(
-                                controller: _titleController,
-                                onTapOutside: (PointerDownEvent event) {
-                                  FocusScope.of(context)
-                                      .requestFocus(_unUsedFocusNode);
-                                },
-                                decoration: InputDecoration(
-                                  border: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .secondaryHeaderColor,
-                                    ),
-                                  ),
-                                ),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Theme.of(context).secondaryHeaderColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 40),
-                      Text(
-                        "DATE ",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Theme.of(context).secondaryHeaderColor,
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 30,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                            child: Text(
+                          "일정 등록",
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w500),
+                        )),
+                        SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      Container(
-                        child: SfDateRangePicker(
-                            view: DateRangePickerView.month,
-                            monthViewSettings:
-                                const DateRangePickerMonthViewSettings(
-                                    firstDayOfWeek: 7),
-                            // onSelectionChanged:
-                            //     (DateRangePickerSelectionChangedArgs args) {
-                            //   print(args.value);
-                            // },
-                            controller: _dateController,
-                            todayHighlightColor: Theme.of(context).primaryColor,
-                            selectionColor: Theme.of(context).primaryColor,
-                            headerStyle: DateRangePickerHeaderStyle(
-                              textAlign: TextAlign.center,
-                              textStyle: TextStyle(
-                                fontSize: 15,
+                        Row(
+                          children: [
+                            Text(
+                              "TITLE",
+                              style: TextStyle(
+                                fontSize: 12,
                                 color: Theme.of(context).secondaryHeaderColor,
                               ),
                             ),
-                            monthCellStyle: DateRangePickerMonthCellStyle(
-                              todayTextStyle: TextStyle(
-                                color: Theme.of(context).primaryColor,
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 30,
+                                child: TextField(
+                                  controller: _titleController,
+                                  onTapOutside: (PointerDownEvent event) {
+                                    FocusScope.of(context)
+                                        .requestFocus(_unUsedFocusNode);
+                                  },
+                                  decoration: InputDecoration(
+                                    border: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .secondaryHeaderColor,
+                                      ),
+                                    ),
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context).secondaryHeaderColor,
+                                  ),
+                                ),
                               ),
                             ),
-                            selectionTextStyle:
-                                const TextStyle(fontWeight: FontWeight.w700)),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text("MEMO",
+                          ],
+                        ),
+                        SizedBox(height: 40),
+                        Text(
+                          "DATE ",
                           style: TextStyle(
                             fontSize: 12,
                             color: Theme.of(context).secondaryHeaderColor,
-                          )),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        height: 90,
-                        child: TextField(
-                          controller: _memoController,
-                          maxLines: 3,
-                          onTapOutside: (PointerDownEvent event) {
-                            FocusScope.of(context)
-                                .requestFocus(_unUsedFocusNode);
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .secondaryHeaderColor)),
-                            labelText: '',
-                          ),
-                          style: TextStyle(
-                            fontSize: 12,
                           ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () => {Navigator.pop(context)},
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 13,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.7),
-                                    blurRadius: 2.0,
-                                    spreadRadius: 0.0,
-                                  )
-                                ],
-                              ),
-                              child: Text(
-                                "취소",
-                                style: TextStyle(
-                                  color: Color(0xFF453F52),
+                        Container(
+                          child: SfDateRangePicker(
+                              view: DateRangePickerView.month,
+                              monthViewSettings:
+                                  const DateRangePickerMonthViewSettings(
+                                      firstDayOfWeek: 7),
+                              // onSelectionChanged:
+                              //     (DateRangePickerSelectionChangedArgs args) {
+                              //   print(args.value);
+                              // },
+                              controller: _dateController,
+                              todayHighlightColor: Theme.of(context).primaryColor,
+                              selectionColor: Theme.of(context).primaryColor,
+                              headerStyle: DateRangePickerHeaderStyle(
+                                textAlign: TextAlign.center,
+                                textStyle: TextStyle(
+                                  fontSize: 15,
+                                  color: Theme.of(context).secondaryHeaderColor,
                                 ),
                               ),
+                              monthCellStyle: DateRangePickerMonthCellStyle(
+                                todayTextStyle: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              selectionTextStyle:
+                                  const TextStyle(fontWeight: FontWeight.w700)),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text("MEMO",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).secondaryHeaderColor,
+                            )),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          height: 90,
+                          child: TextField(
+                            controller: _memoController,
+                            maxLines: 3,
+                            onTapOutside: (PointerDownEvent event) {
+                              FocusScope.of(context)
+                                  .requestFocus(_unUsedFocusNode);
+                            },
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor)),
+                              labelText: '',
+                            ),
+                            style: TextStyle(
+                              fontSize: 12,
                             ),
                           ),
-                          TextButton(
-                            onPressed: () => {addCalendar()},
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 13,
-                              ),
-                              decoration: BoxDecoration(
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () => {Navigator.pop(context)},
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 13,
+                                ),
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Color(0xFFE0426F)),
-                              child: Text(
-                                "등록",
-                                style: TextStyle(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.w600,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.7),
+                                      blurRadius: 2.0,
+                                      spreadRadius: 0.0,
+                                    )
+                                  ],
+                                ),
+                                child: Text(
+                                  "취소",
+                                  style: TextStyle(
+                                    color: Color(0xFF453F52),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            TextButton(
+                              onPressed: () => {addCalendar()},
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 13,
+                                ),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Color(0xFFE0426F)),
+                                child: Text(
+                                  "등록",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -501,12 +504,11 @@ class _CalendarState extends State<Calendar> {
           DateTime.parse("0000-00-00 00:00:00.000Z");
     });
     if (_inputedTitle != "" &&
-        _inputedMemo != "" &&
         _inputedCalendarDate != DateTime.parse("0000-00-00 00:00:00.000Z")) {
       postEvent(
         success: (dynamic response) {
           // 바로 반영이 안돼서 일단 딜레이 주기
-          sleep(const Duration(seconds: 1));
+          sleep(const Duration(seconds: 2));
         },
         fail: (error) {
           print('일정 등록 오류: $error');
@@ -515,7 +517,27 @@ class _CalendarState extends State<Calendar> {
       );
       Navigator.pushNamed(context, '/calendar');
     } else {
-      print("비어있어요!");
+      ScaffoldMessenger.of(context).showSnackBar(
+        //SnackBar 구현하는법 context는 위에 BuildContext에 있는 객체를 그대로 가져오면 됨.
+        SnackBar(
+          content: Center(child: Text("제목과 날짜 필수 입력값입니다.", style: TextStyle(color: Colors.white))),
+          backgroundColor: Theme.of(context).primaryColor,
+          duration: Duration(milliseconds: 1000),
+          behavior: SnackBarBehavior.floating,
+          // action: SnackBarAction(
+          //   label: '닫기',
+          //   textColor: Colors.white,
+          //   onPressed: () => {},
+          // ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 2,
+            ),
+          ),
+        ),
+      );
     }
   }
 
@@ -909,7 +931,7 @@ class _CalendarState extends State<Calendar> {
     putEvent(
       success: (dynamic response) {
         // 바로 반영이 안돼서 일단 딜레이 주기
-        sleep(const Duration(seconds: 1));
+        sleep(const Duration(seconds: 2));
       },
       fail: (error) {
         print('일정 수정 오류: $error');
@@ -924,7 +946,7 @@ class _CalendarState extends State<Calendar> {
     deleteEvent(
       success: (dynamic response) {
         // 바로 반영이 안돼서 일단 딜레이 주기
-        sleep(const Duration(seconds: 1));
+        sleep(const Duration(seconds: 2));
       },
       fail: (error) {
         print('일정 수정 오류: $error');
