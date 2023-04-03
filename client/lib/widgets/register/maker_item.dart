@@ -20,8 +20,13 @@ class MakerItem extends StatefulWidget {
 
 class _MakerItemState extends State<MakerItem> {
 
+
   @override
   Widget build(BuildContext context) {
+    int maxItemCountPerRow = 4;
+    double screenWidth = MediaQuery.of(context).size.width - 130;
+    double itemWidth = screenWidth / maxItemCountPerRow;
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -34,7 +39,7 @@ class _MakerItemState extends State<MakerItem> {
               });
             },
             child: Container(
-              width: 60,
+              width: itemWidth,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
