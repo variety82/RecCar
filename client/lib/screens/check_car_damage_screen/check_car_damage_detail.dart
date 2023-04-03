@@ -35,7 +35,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
   File? imageFile;
   late TextEditingController memoController;
 
-  // 각 부위 별 파손 개수 변수로 지정
+  // 각 유형 별 파손 개수 변수로 지정
   int scratch_count = 0;
   int crushed_count = 0;
   int breakage_count = 0;
@@ -165,8 +165,11 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Text('* 사진을 클릭하면 확대됩니다 *', style: TextStyle(color: Theme.of(context).primaryColor),),
+                  padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
+                  child: Text(
+                    '* 사진을 클릭하면 확대됩니다 *',
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -182,6 +185,77 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(32, 0, 32, 32),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            size: 16,
+                            color: Color.fromRGBO(240, 15, 135, 0.75),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Text(
+                            '스크래치',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              color: Color.fromRGBO(240, 15, 135, 0.75),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            size: 16,
+                            color: Color.fromRGBO(64, 64, 64, 0.75),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Text(
+                            '찌그러짐',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              color: Color.fromRGBO(64, 64, 64, 0.75),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            size: 16,
+                            color: Color.fromRGBO(75, 150, 200, 0.75),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Text(
+                            '파손',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              color: Color.fromRGBO(75, 150, 200, 0.75),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
                 Text(
                   '손상 종류',
                   style: TextStyle(
@@ -190,163 +264,223 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                     color: Colors.black,
                   ),
                 ),
+                (scratch_count +
+                            breakage_count +
+                            crushed_count +
+                            separated_count) ==
+                        0
+                    ? Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          '* 최소 하나 이상의 손상 종류를 설정해주세요 *',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                      )
+                    : Container(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child:  widget.modalCase == "차량 손상 상세 확인"
-                    ? Wrap(
-                    direction: Axis.horizontal,
-                    alignment: WrapAlignment.center,
-                    spacing: 10,
-                    runSpacing: 5,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Chip(
-                                label: Text(
-                                  '스크래치',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: scratch_count > 0 ? Theme.of(context).primaryColor : Colors.black,
-                                    fontWeight: FontWeight.w600,
+                  child: widget.modalCase == "차량 손상 상세 확인"
+                      ? Wrap(
+                          direction: Axis.horizontal,
+                          alignment: WrapAlignment.center,
+                          spacing: 10,
+                          runSpacing: 5,
+                          children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Chip(
+                                        label: Text(
+                                          '스크래치',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: scratch_count > 0
+                                                ? Theme.of(context).primaryColor
+                                                : Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        labelPadding: EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                        ),
+                                        backgroundColor: scratch_count > 0
+                                            ? Theme.of(context)
+                                                .primaryColorLight
+                                            : Colors.grey,
+                                        // deleteIconColor: Color(0xFFE0426F),
+                                      ),
+                                      Text(
+                                        scratch_count.toString(),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: scratch_count > 0
+                                              ? Theme.of(context).primaryColor
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                labelPadding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                backgroundColor: scratch_count > 0 ? Theme.of(context).primaryColorLight : Colors.grey,
-                                // deleteIconColor: Color(0xFFE0426F),
-                              ),
-                              Text(scratch_count.toString(), style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: scratch_count > 0 ? Theme.of(context).primaryColor : Colors.black,
-                              ),),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Chip(
-                                label: Text(
-                                  '찌그러짐',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: crushed_count > 0 ? Theme.of(context).primaryColor : Colors.black,
-                                    fontWeight: FontWeight.w600,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Chip(
+                                        label: Text(
+                                          '찌그러짐',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: crushed_count > 0
+                                                ? Theme.of(context).primaryColor
+                                                : Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        labelPadding: EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                        ),
+                                        backgroundColor: crushed_count > 0
+                                            ? Theme.of(context)
+                                                .primaryColorLight
+                                            : Colors.grey,
+                                        // deleteIconColor: Color(0xFFE0426F),
+                                      ),
+                                      Text(
+                                        crushed_count.toString(),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: crushed_count > 0
+                                              ? Theme.of(context).primaryColor
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                labelPadding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                backgroundColor: crushed_count > 0 ? Theme.of(context).primaryColorLight : Colors.grey,
-                                // deleteIconColor: Color(0xFFE0426F),
-                              ),
-                              Text(crushed_count.toString(), style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: crushed_count > 0 ? Theme.of(context).primaryColor : Colors.black,
-                              ),),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Chip(
-                                label: Text(
-                                  '파손',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: breakage_count > 0 ? Theme.of(context).primaryColor : Colors.black,
-                                    fontWeight: FontWeight.w600,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Chip(
+                                        label: Text(
+                                          '파손',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: breakage_count > 0
+                                                ? Theme.of(context).primaryColor
+                                                : Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        labelPadding: EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                        ),
+                                        backgroundColor: breakage_count > 0
+                                            ? Theme.of(context)
+                                                .primaryColorLight
+                                            : Colors.grey,
+                                        // deleteIconColor: Color(0xFFE0426F),
+                                      ),
+                                      Text(
+                                        breakage_count.toString(),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: breakage_count > 0
+                                              ? Theme.of(context).primaryColor
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                labelPadding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                backgroundColor: breakage_count > 0 ? Theme.of(context).primaryColorLight : Colors.grey,
-                                // deleteIconColor: Color(0xFFE0426F),
-                              ),
-                              Text(breakage_count.toString(), style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: breakage_count > 0 ? Theme.of(context).primaryColor : Colors.black,
-                              ),),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Chip(
-                                label: Text(
-                                  '이격',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: separated_count > 0 ? Theme.of(context).primaryColor : Colors.black,
-                                    fontWeight: FontWeight.w600,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Chip(
+                                        label: Text(
+                                          '이격',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: separated_count > 0
+                                                ? Theme.of(context).primaryColor
+                                                : Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        labelPadding: EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                        ),
+                                        backgroundColor: separated_count > 0
+                                            ? Theme.of(context)
+                                                .primaryColorLight
+                                            : Colors.grey,
+                                        // deleteIconColor: Color(0xFFE0426F),
+                                      ),
+                                      Text(
+                                        separated_count.toString(),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: separated_count > 0
+                                              ? Theme.of(context).primaryColor
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                labelPadding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                backgroundColor: separated_count > 0 ? Theme.of(context).primaryColorLight : Colors.grey,
-                                // deleteIconColor: Color(0xFFE0426F),
+                                ],
                               ),
-                              Text(separated_count.toString(), style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: separated_count > 0 ? Theme.of(context).primaryColor : Colors.black,
-                              ),),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ]
-                  )
+                            ])
                       : Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            CountWidget(
-                              damage_name: '스크래치',
-                              count_num: scratch_count,
-                              checkChangeCount: checkChangeCount,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  CountWidget(
+                                    damage_name: '스크래치',
+                                    count_num: scratch_count,
+                                    checkChangeCount: checkChangeCount,
+                                  ),
+                                  CountWidget(
+                                    damage_name: '찌그러짐',
+                                    count_num: crushed_count,
+                                    checkChangeCount: checkChangeCount,
+                                  ),
+                                ],
+                              ),
                             ),
-                            CountWidget(
-                              damage_name: '찌그러짐',
-                              count_num: crushed_count,
-                              checkChangeCount: checkChangeCount,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  CountWidget(
+                                    damage_name: '파손',
+                                    count_num: breakage_count,
+                                    checkChangeCount: checkChangeCount,
+                                  ),
+                                  CountWidget(
+                                    damage_name: '이격',
+                                    count_num: separated_count,
+                                    checkChangeCount: checkChangeCount,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            CountWidget(
-                              damage_name: '파손',
-                              count_num: breakage_count,
-                              checkChangeCount: checkChangeCount,
-                            ),
-                            CountWidget(
-                              damage_name: '이격',
-                              count_num: separated_count,
-                              checkChangeCount: checkChangeCount,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -360,66 +494,81 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                           color: Colors.black,
                         ),
                       ),
-                      Center(
-                        child: widget.modalCase == "차량 손상 상세 확인" ?
-                        Chip(
-                            label: Text(
-                              partInput,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.w600,
+                      partInput == ''
+                          ? Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                '* 차량 부위를 선택해주세요 *',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor),
                               ),
-                            ),
-                            labelPadding: EdgeInsets.symmetric(
-                              horizontal: 8,
-                            ),
-                            backgroundColor: Theme.of(context).primaryColorLight,
-                          // deleteIconColor: Color(0xFFE0426F),
-                        )
+                            )
+                          : Container(),
+                      Center(
+                        child: widget.modalCase == "차량 손상 상세 확인"
+                            ? Chip(
+                                label: Text(
+                                  partInput,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                labelPadding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).primaryColorLight,
+                                // deleteIconColor: Color(0xFFE0426F),
+                              )
                             : Wrap(
-                          direction: Axis.horizontal,
-                          alignment: WrapAlignment.center,
-                          spacing: 10,
-                          runSpacing: 5,
-                          children: part_categories.map(
-                            (part_category) {
-                              return InkWell(
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () {
-                                  if (partInput == part_category) {
-                                    setState(() {
-                                      partInput = '';
-                                    });
-                                  } else {
-                                    setState(() {
-                                      partInput = part_category;
-                                    });
-                                  }
-                                },
-                                child: Chip(
-                                    label: Text(
-                                      part_category,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: (partInput == part_category) ? Theme.of(context).primaryColor : Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    labelPadding: EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    backgroundColor:
-                                        (partInput == part_category)
-                                            ? Color(0xFFFBD5DC)
-                                            : Colors.grey
-                                    // deleteIconColor: Color(0xFFE0426F),
-                                    ),
-                              );
-                            },
-                          ).toList(),
-                        ),
+                                direction: Axis.horizontal,
+                                alignment: WrapAlignment.center,
+                                spacing: 10,
+                                runSpacing: 5,
+                                children: part_categories.map(
+                                  (part_category) {
+                                    return InkWell(
+                                      splashColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () {
+                                        if (partInput == part_category) {
+                                          setState(() {
+                                            partInput = '';
+                                          });
+                                        } else {
+                                          setState(() {
+                                            partInput = part_category;
+                                          });
+                                        }
+                                      },
+                                      child: Chip(
+                                          label: Text(
+                                            part_category,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color:
+                                                  (partInput == part_category)
+                                                      ? Theme.of(context)
+                                                          .primaryColor
+                                                      : Colors.black,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          labelPadding: EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                          ),
+                                          backgroundColor:
+                                              (partInput == part_category)
+                                                  ? Color(0xFFFBD5DC)
+                                                  : Colors.grey
+                                          // deleteIconColor: Color(0xFFE0426F),
+                                          ),
+                                    );
+                                  },
+                                ).toList(),
+                              ),
                       ),
                     ],
                   ),
@@ -439,44 +588,46 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                       SizedBox(
                         height: 5,
                       ),
-                      widget.modalCase == "차량 손상 상세 확인" ?
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(memoInput,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),),
-                      ) :
-                      Container(
-                        height: 90,
-                        child: TextField(
-                          controller: memoController,
-                          maxLines: 3,
-                          onTapOutside: (PointerDownEvent event) {
-                            FocusScope.of(context)
-                                .requestFocus(_unUsedFocusNode);
-                          },
-                          onChanged: (text) {
-                            setState(
-                              () {
-                                memoInput = text;
-                              },
-                            );
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .secondaryHeaderColor)),
-                            labelText: '',
-                            hintText: '메모를 입력해주세요.',
-                          ),
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
+                      widget.modalCase == "차량 손상 상세 확인"
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                memoInput == "" ? "없음" : memoInput,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            )
+                          : Container(
+                              height: 90,
+                              child: TextField(
+                                controller: memoController,
+                                maxLines: 3,
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
+                                onChanged: (text) {
+                                  setState(
+                                    () {
+                                      memoInput = text;
+                                    },
+                                  );
+                                },
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .secondaryHeaderColor)),
+                                  labelText: '',
+                                  hintText: '메모를 입력해주세요.',
+                                ),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
                     ],
                   ),
                 ),
@@ -491,7 +642,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                         alignment: Alignment.center,
                         padding: EdgeInsets.symmetric(
                           vertical: 5,
-                          horizontal: 20,
+                          horizontal: 13,
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -505,45 +656,71 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                           ],
                         ),
                         child: Text(
-                          "돌아가기",
+                          widget.modalCase == "차량 손상 상세 확인" ? "닫기" : "취소",
                           style: TextStyle(
                             color: Color(0xFF453F52),
                           ),
                         ),
                       ),
                     ),
-                    widget.modalCase == "차량 손상 상세 등록" || widget.modalCase == "차량 손상 상세 수정" ?
-                    TextButton(
-                      onPressed: () => {
-                        widget.changeDamageValue(
-                          widget.carDamage["index"],
-                          partInput,
-                          scratch_count,
-                          crushed_count,
-                          breakage_count,
-                          separated_count,
-                          memoInput,
-                        ),
-                        Navigator.of(context).pop(),
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 5,
-                          horizontal: 13,
-                        ),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFE0426F)),
-                        child: Text(
-                          "등록",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ) : Container(),
+                    widget.modalCase == "차량 손상 상세 등록" ||
+                            widget.modalCase == "차량 손상 상세 수정"
+                        ? TextButton(
+                            onPressed: () => {
+                              if ((scratch_count +
+                                          crushed_count +
+                                          breakage_count +
+                                          separated_count) ==
+                                      0 ||
+                                  partInput == '')
+                                {null}
+                              else
+                                {
+                                  widget.changeDamageValue(
+                                    widget.carDamage["index"],
+                                    partInput,
+                                    scratch_count,
+                                    crushed_count,
+                                    breakage_count,
+                                    separated_count,
+                                    memoInput,
+                                  ),
+                                  Navigator.of(context).pop(),
+                                }
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 13,
+                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: ((scratch_count +
+                                                  crushed_count +
+                                                  breakage_count +
+                                                  separated_count) ==
+                                              0 ||
+                                          partInput == '')
+                                      ? Theme.of(context).disabledColor
+                                      : Theme.of(context).primaryColor),
+                              child: Text(
+                                widget.modalCase == "차량 손상 상세 수정" ? "수정" : "추가",
+                                style: TextStyle(
+                                  color: ((scratch_count +
+                                                  crushed_count +
+                                                  breakage_count +
+                                                  separated_count) ==
+                                              0 ||
+                                          partInput == '')
+                                      ? Colors.black
+                                      : Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ],

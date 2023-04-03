@@ -97,6 +97,7 @@ class _LoginState extends State<Login> {
           await storage.write(key: "nickName", value: userInfo['nickName']);
           await storage.write(key: "picture", value: userInfo['picture']);
           await storage.write(key: "carId", value: userInfo['currentCarId'].toString());
+          await storage.write(key: "carVideoState", value: userInfo['currentCarVideo'].toString());
           setState(() {
           });
           Navigator.pushNamed(context, '/home');
