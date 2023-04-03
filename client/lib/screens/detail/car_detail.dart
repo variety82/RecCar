@@ -80,26 +80,26 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
     }
   }
 
-  void processDetectionInfos(Map<String, dynamic>? detectionInfo) {
-    List<dynamic> initialDetectionInfos = detectionInfo!['initialDetectionInfos'];
-    List<dynamic> latterDetectionInfos = detectionInfo['latterDetectionInfos'];
-
-    Map<String, int> initialDamageCount = countDamageParts(initialDetectionInfos);
-    Map<String, int> latterDamageCount = countDamageParts(latterDetectionInfos);
-
-    int initialFrontDamageLevel = evaluateDamageLevel(initialDamageCount['front']!);
-    int initialSideDamageLevel = evaluateDamageLevel(initialDamageCount['side']!);
-    int initialBackDamageLevel = evaluateDamageLevel(initialDamageCount['back']!);
-    int initialWheelDamageLevel = evaluateDamageLevel(initialDamageCount['wheel']!);
-
-    int latterFrontDamageLevel = evaluateDamageLevel(latterDamageCount['front']!);
-    int latterSideDamageLevel = evaluateDamageLevel(latterDamageCount['side']!);
-    int latterBackDamageLevel = evaluateDamageLevel(latterDamageCount['back']!);
-    int latterWheelDamageLevel = evaluateDamageLevel(latterDamageCount['wheel']!);
-
-    print(initialDamageCount);
-    print(latterDamageCount);
-  }
+  // void processDetectionInfos(Map<String, dynamic>? detectionInfo) {
+  //   List<dynamic> initialDetectionInfos = detectionInfo!['initialDetectionInfos'];
+  //   List<dynamic> latterDetectionInfos = detectionInfo['latterDetectionInfos'];
+  //
+  //   Map<String, int> initialDamageCount = countDamageParts(initialDetectionInfos);
+  //   Map<String, int> latterDamageCount = countDamageParts(latterDetectionInfos);
+  //
+  //   int initialFrontDamageLevel = evaluateDamageLevel(initialDamageCount['front']!);
+  //   int initialSideDamageLevel = evaluateDamageLevel(initialDamageCount['side']!);
+  //   int initialBackDamageLevel = evaluateDamageLevel(initialDamageCount['back']!);
+  //   int initialWheelDamageLevel = evaluateDamageLevel(initialDamageCount['wheel']!);
+  //
+  //   int latterFrontDamageLevel = evaluateDamageLevel(latterDamageCount['front']!);
+  //   int latterSideDamageLevel = evaluateDamageLevel(latterDamageCount['side']!);
+  //   int latterBackDamageLevel = evaluateDamageLevel(latterDamageCount['back']!);
+  //   int latterWheelDamageLevel = evaluateDamageLevel(latterDamageCount['wheel']!);
+  //
+  //   print(initialDamageCount);
+  //   print(latterDamageCount);
+  // }
 
   Future<void> _fetchCarInfo() async {
     var carId = await storage.read(key: 'carId');
@@ -110,7 +110,7 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
             // print(response);
             setState(() {
               _detectionInfo = response;
-              processDetectionInfos(_detectionInfo);
+              // processDetectionInfos(_detectionInfo);
             });
             print(_detectionInfo);
           },
