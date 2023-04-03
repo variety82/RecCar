@@ -23,8 +23,8 @@ class _MainPageBodyState extends State<MainPageBody> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          height: 30,
+        const SizedBox(
+          height: 50,
         ),
         Stack(
             children: [
