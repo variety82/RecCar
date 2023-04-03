@@ -1,5 +1,9 @@
 package com.heros.api.user.service;
 
+import com.heros.api.calendar.repository.CalendarRepository;
+import com.heros.api.car.entity.Car;
+import com.heros.api.car.repository.CarRepository;
+import com.heros.api.detectionInfo.repository.DetectionInfoRepository;
 import com.heros.api.user.dto.request.UserRequest;
 import com.heros.api.user.dto.response.UserResponse;
 import com.heros.api.user.entity.User;
@@ -11,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,6 +27,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final CarRepository carRepository;
+    private final DetectionInfoRepository detectionInfoRepository;
+    private final CalendarRepository calendarRepository;
 
     public User loginUser(String accessToken) {
         String googleUrl = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" + accessToken;
@@ -57,7 +65,14 @@ public class UserService {
         return new UserResponse(userRepository.save(user));
     }
 
+    @Transactional
     public void deleteUser(User user) {
+        calendarRepository.deleteAllByUserId(user.getUserId());
+        List<Car> carList = carRepository.findByUser(user);
+        for (Car car : carList) {
+            detectionInfoRepository.deleteAllByCar(car);
+            carRepository.delete(car);
+        }
         userRepository.delete(user);
     }
 }

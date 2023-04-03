@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface DetectionInfoRepository extends JpaRepository<DetectionInfo, Long>{
     @Override
     Optional<DetectionInfo> findById(Long aLong);
-
+    void deleteAllByCar(Car car);
     List<DetectionInfo> findByCar(Car car);
 }
