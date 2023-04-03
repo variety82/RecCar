@@ -25,12 +25,14 @@ class DamageCountInfoBlock extends StatelessWidget {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               damageName,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 16,
+                fontSize: 14,
               ),
             ),
             Divider(
