@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:client/widgets/common/footer.dart';
-import 'package:client/widgets/main_page/Main_Page_Body.dart';
+import 'package:client/widgets/main_page/main_page_body.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
       firstVideoInfo = videoinfo;
       firstCheckDamage = checkDamage;
       // currentCarVideo = carVideoState;
-      currentCarVideo = '2';
+      currentCarVideo = '0';
     });
     if (userName == null) {
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
@@ -71,35 +71,90 @@ class _HomeState extends State<Home> {
                     mainContainter: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          '대여중인 차가 없습니다',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w600),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFF999999).withOpacity(0.5),
+                                        spreadRadius: 0.3,
+                                        blurRadius: 6,
+                                      )
+                                    ]
+                                ),
+                                width: double.infinity,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 20,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '대여중인 차가 없습니다',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        '자동차를 등록해주세요',
+                                        style: TextStyle(
+                                            color: Theme.of(context).secondaryHeaderColor,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        Text(
-                          '자동차를 등록해주세요',
-                          style: TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10.0
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/register');
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            child: Container(
+                              height: 75,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFF999999).withOpacity(0.5),
+                                      spreadRadius: 0.3,
+                                      blurRadius: 6,
+                                    )
+                                  ]
+                              ),
+                              width: double.infinity,
+                              child: const Center(
+                                child: Icon(
+                                  Icons.add,
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/register');
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                  Theme.of(context).primaryColor),
-                              child: const Text('등록하기')),
-                        )
+                        ),
                       ],
                     ),
                   )
@@ -110,14 +165,53 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (currentCarVideo == '0')
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/detail');
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                Theme.of(context).primaryColor),
-                            child: const Text('반납하기'),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: const Color(0xFF999999).withOpacity(0.5),
+                                          spreadRadius: 0.3,
+                                          blurRadius: 6,
+                                        )
+                                      ]
+                                  ),
+                                  width: double.infinity,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 20,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          '대여하기 전, 차량의 손상 상태를 파악하기 위해 영상 촬영을 진행해주세요.',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Theme.of(context).primaryColor,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          '자동차를 등록해주세요',
+                                          style: TextStyle(
+                                              color: Theme.of(context).secondaryHeaderColor,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         if (currentCarVideo == '1')
                           ElevatedButton(
