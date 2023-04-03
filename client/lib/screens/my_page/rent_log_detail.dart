@@ -145,9 +145,10 @@ class _RentLogDetailState extends State<RentLogDetail> {
                     "이용 정보",
                     textAlign: TextAlign.start,
                     style: TextStyle(
-                      color: Theme.of(context).secondaryHeaderColor,
+                      color: Theme.of(context).primaryColor,
                       fontSize: 14,
                       decoration: TextDecoration.none,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   SizedBox(
