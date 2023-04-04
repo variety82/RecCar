@@ -3,6 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:client/widgets/register/register_line.dart';
 import 'package:client/widgets/register/register_title.dart';
+import 'package:client/screens/before_recording_confirm_screen/before_recording_confirm_screen.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_filter_modal.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_filter.dart';
 
@@ -103,9 +104,9 @@ class _homeFABMenuState extends State<homeFABMenu>
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
+      openCloseDial: ValueNotifier(_isOpen),
       buttonSize: const Size(64, 64),
       overlayOpacity: 0.0,
-      onPress: () {},
       child: Center(
         child: Icon(
           Icons.camera_alt_outlined,
@@ -115,7 +116,6 @@ class _homeFABMenuState extends State<homeFABMenu>
       ),
       // icon: IconData(Icons.camera_alt_outlined, size: 24),
       activeIcon: Icons.close,
-      visible: true,
       curve: Curves.bounceIn,
       direction: SpeedDialDirection.up,
       backgroundColor: Color(0xFFE0426F),
@@ -133,7 +133,38 @@ class _homeFABMenuState extends State<homeFABMenu>
           ),
           backgroundColor: Color(0xFFE0426F),
           labelBackgroundColor: Color(0xFFE0426F),
-          onTap: () {},
+          onTap: () {
+            if (widget.currentCarVideo == 1) {
+              showConfirmationDialog(
+                context,
+                '손상 등록 불가',
+                '현재 대여 전/후 손상이 모두 등록된 상태입니다. 차량 상세 정보를 확인하시겠습니까?',
+                '예',
+                '아니오',
+                route: '/detail',
+              );
+            } else if (widget.currentCarId == 0) {
+              showConfirmationDialog(
+                context,
+                '손상 등록 불가',
+                '현재 차량이 등록되지 않은 상태입니다. 차량을 등록하러 가시겠습니까?',
+                '예',
+                '아니오',
+                route: '/register',
+              );
+            } else {
+              if (ModalRoute.of(context)?.settings.name !=
+                  '/before-recording-confirm') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        BeforeRecordingConfirmScreen(videoCase: 'take'),
+                  ),
+                );
+              }
+            }
+          },
         ),
         SpeedDialChild(
           child: const Icon(
@@ -148,7 +179,42 @@ class _homeFABMenuState extends State<homeFABMenu>
           ),
           backgroundColor: Color(0xFFE0426F),
           labelBackgroundColor: Color(0xFFE0426F),
-          onTap: () {},
+          onTap: () {
+            if (widget.currentCarVideo == 1) {
+              showConfirmationDialog(
+                context,
+                '손상 등록 불가',
+                '현재 대여 전/후 손상이 모두 등록된 상태입니다. 차량 상세 정보를 확인하시겠습니까?',
+                '예',
+                '아니오',
+                route: '/detail',
+              );
+            } else if (widget.currentCarId == 0) {
+              showConfirmationDialog(
+                context,
+                '손상 등록 불가',
+                '현재 차량이 등록되지 않은 상태입니다. 차량을 등록하러 가시겠습니까?',
+                '예',
+                '아니오',
+                route: '/register',
+              );
+            } else {
+              if (ModalRoute.of(context)?.settings.name !=
+                  '/before-recording-confirm') {
+                if (ModalRoute.of(context)?.settings.name !=
+                    '/before-recording-confirm') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BeforeRecordingConfirmScreen(
+                        videoCase: 'pick',
+                      ),
+                    ),
+                  );
+                }
+              }
+            }
+          },
         ),
       ],
     );

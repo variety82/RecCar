@@ -7,7 +7,6 @@ import 'screens/register/car_register_main.dart';
 import 'screens/my_page/my_page.dart';
 import 'screens/map_screen/map_screen.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
-import 'package:client/screens/before_recording_confirm_screen/before_recording_confirm_screen.dart';
 import 'package:client/screens/video_recording_screen/video_recording_screen.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'screens/detail/car_detail.dart';
@@ -51,8 +50,6 @@ void main() async {
         '/my-page': (context) => const MyPage(),
         '/station': (context) => NaverMapTest(),
         '/login': (context) => const Login(),
-        '/before-recording-confirm': (context) =>
-            BeforeRecordingConfirmScreen(),
         '/before-recording': (context) => const BeforeRecordingScreen(),
         '/recording': (context) => const VideoRecordingScreen(),
         '/calendar': (context) => const Calendar(),

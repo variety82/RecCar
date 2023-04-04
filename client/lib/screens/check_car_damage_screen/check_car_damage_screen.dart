@@ -678,24 +678,37 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                           body: TabBarView(
                             controller: _tabController,
                             children: [
-                              CheckCarDamageContainer(
-                                carDamageList: carDamagesAllList,
-                                videoPlayerController: _videoPlayerController,
-                                changeDamageValue: changeDamageValue,
-                                selectedIndexList: selectedIndexList,
-                                isSelectedView: false,
-                                deleteDamageList: deleteDamageList,
-                                showConfirmationDialog: showConfirmationDialog,
-                              ),
-                              CheckCarDamageContainer(
-                                carDamageList: carDamagesAllList,
-                                videoPlayerController: _videoPlayerController,
-                                changeDamageValue: changeDamageValue,
-                                selectedIndexList: selectedIndexList,
-                                isSelectedView: true,
-                                deleteDamageList: deleteDamageList,
-                                showConfirmationDialog: showConfirmationDialog,
-                              ),
+                              selectedIndexList.length !=
+                                      carDamagesAllList.length
+                                  ? CheckCarDamageContainer(
+                                      carDamageList: carDamagesAllList,
+                                      videoPlayerController:
+                                          _videoPlayerController,
+                                      changeDamageValue: changeDamageValue,
+                                      selectedIndexList: selectedIndexList,
+                                      isSelectedView: false,
+                                      deleteDamageList: deleteDamageList,
+                                      showConfirmationDialog:
+                                          showConfirmationDialog,
+                                    )
+                                  : Center(
+                                      child: Text('현재 손상 데이터가 존재하지 않습니다.'),
+                                    ),
+                              selectedIndexList.length > 0
+                                  ? CheckCarDamageContainer(
+                                      carDamageList: carDamagesAllList,
+                                      videoPlayerController:
+                                          _videoPlayerController,
+                                      changeDamageValue: changeDamageValue,
+                                      selectedIndexList: selectedIndexList,
+                                      isSelectedView: true,
+                                      deleteDamageList: deleteDamageList,
+                                      showConfirmationDialog:
+                                          showConfirmationDialog,
+                                    )
+                                  : Center(
+                                      child: Text('현재 손상 데이터가 존재하지 않습니다.'),
+                                    ),
                             ],
                           ),
                         ),

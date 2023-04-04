@@ -157,53 +157,6 @@ class _FooterState extends State<Footer> {
               currentCarVideo: currentCarVideo,
             ),
           ),
-          // TextButton(
-          //   onPressed: () {
-          //     if (currentCarVideo == 2) {
-          //       showConfirmationDialog(
-          //         context,
-          //         '손상 등록 불가',
-          //         '현재 대여 전/후 손상이 모두 등록된 상태입니다. 차량 상세 정보를 확인하시겠습니까?',
-          //         '예',
-          //         '아니오',
-          //         // route: '/detail',
-          //         route: '/before-recording-confirm',
-          //       );
-          //     } else if (currentCarId == 0) {
-          //       showConfirmationDialog(
-          //         context,
-          //         '손상 등록 불가',
-          //         '현재 차량이 등록되지 않은 상태입니다. 차량을 등록하러 가시겠습니까?',
-          //         '예',
-          //         '아니오',
-          //         route: '/register',
-          //       );
-          //     } else {
-          //       if (ModalRoute.of(context)?.settings.name !=
-          //           '/before-recording-confirm') {
-          //         Navigator.pushNamed(context, '/before-recording-confirm');
-          //       }
-          //     }
-          //   },
-          //   child: Transform.translate(
-          //     offset: const Offset(0, -8),
-          //     child: Transform.scale(
-          //       scale: 1.5,
-          //       child: Container(
-          //         padding: const EdgeInsets.all(10),
-          //         decoration: BoxDecoration(
-          //           borderRadius: BorderRadius.circular(100),
-          //           color: const Color(0XFFE0426F),
-          //         ),
-          //         child: Icon(
-          //           Icons.camera_alt_outlined,
-          //           size: 20,
-          //           color: Colors.white.withOpacity(0.8),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
           TextButton(
             onPressed: () {
               if (ModalRoute.of(context)?.settings.name != '/calendar') {
