@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../screens/my_page/damage_detail.dart';
 import './rent_log_line.dart';
-import '../../services/my_page_api.dart';
 
 class DamageLogCard extends StatefulWidget {
   final String imageUrl;

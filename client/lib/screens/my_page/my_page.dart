@@ -32,6 +32,7 @@ class _MyPageState extends State<MyPage> {
         userProfileImg = value;
       });
     });
+    print(storage.read(key: 'accessToken'));
     super.initState();
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   setUser();
