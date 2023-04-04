@@ -2,24 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:client/widgets/register/category_title.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class SelectDate extends StatefulWidget {
+class SelectReturnDate extends StatefulWidget {
   final void Function(DateTime) updateDate;
   final DateTime? minDate;
   final DateTime? maxDate;
   final void Function(BuildContext, int?) showModal;
 
-  const SelectDate({
+  const SelectReturnDate({
     super.key,
     required this.updateDate,
     this.minDate,
-    this.maxDate, required this.showModal,
+    this.maxDate,
+    required this.showModal,
   });
 
   @override
-  State<SelectDate> createState() => _SelectDateState();
+  State<SelectReturnDate> createState() => _SelectReturnDateState();
 }
 
-class _SelectDateState extends State<SelectDate> {
+class _SelectReturnDateState extends State<SelectReturnDate> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -35,26 +36,26 @@ class _SelectDateState extends State<SelectDate> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
           // 카테고리 리스트, 현재는 선택해서 이동 불가하고 시간 남으면 클릭시 모달 내용 변경하도록 설정
           child: Align(
             alignment: Alignment.centerLeft,
             child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                physics: AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     CategoryTitle(
                       title: '대여 일자',
-                      isSelected: true,
-                      showModal: widget.showModal,
-                    ),
-                    CategoryTitle(
-                      title: '반납 일자',
                       isSelected: false,
                       showModal: widget.showModal,
                       modalIndex: 4,
+                    ),
+                    CategoryTitle(
+                      title: '반납 일자',
+                      isSelected: true,
+                      showModal: widget.showModal,
                     ),
                   ],
                 )),
