@@ -93,10 +93,67 @@ class _MyPageCategoryState extends State<MyPageCategory> {
         onPressed: () {
           if (widget.category ==
               convertCategoryNameToKor(CategoryName.ModifyInfo)) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MyDataModify()),
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  child: Container(
+                    height: 300,
+                    child: Column(
+                      children: [
+                        // SizedBox(
+                        //   height: 10,
+                        // ),
+                        // Text(
+                        //   "프로필 변경",
+                        //   style: TextStyle(
+                        //     color: Theme.of(context).secondaryHeaderColor,
+                        //     fontSize: 15,
+                        //     fontWeight: FontWeight.w600,
+                        //   ),
+                        // ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          width: 110,
+                          height: 110,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                                color: Color(0xFFD9D9D9), width: 2.5),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large",
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.zero,
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.camera_alt_outlined, color: Theme.of(context).primaryColor),
+                                SizedBox(width: 3,),
+                                Text("사진 변경하기", style: TextStyle(color: Theme.of(context).primaryColor),),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => const MyDataModify()),
+            // );
           } else if (widget.category ==
               convertCategoryNameToKor(CategoryName.MyCar)) {
             Navigator.push(

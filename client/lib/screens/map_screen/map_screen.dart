@@ -468,7 +468,6 @@ class _NaverMapTestState extends State<NaverMapTest> {
                       markerId: "${ret[j]['name']}",
                       position: latLng,
                       infoWindow: "${ret[j]['name']}",
-                      captionText: "HI",
                     ));
                 }
               });
@@ -553,7 +552,6 @@ class _NaverMapTestState extends State<NaverMapTest> {
                   markerId: "${ret[j]['name']}",
                   position: latLng,
                   infoWindow: "${ret[j]['name']}",
-                  captionText: "HI",
                 ));
               }
             });

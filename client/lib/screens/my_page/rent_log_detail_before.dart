@@ -29,7 +29,7 @@ class _BeforeRentState extends State<BeforeRent> {
             child: Column(
               children: [
                 if (widget.before.length == 0)
-                  Container(child: Text("손상 정보가 없습니다"),),
+                  Container(child: Text("손상 정보가 없습니다"), alignment: Alignment.center, color: Colors.red, height: 600),
                 if (widget.before.length != 0)
                   for (var info in widget.before)
                     DamageLogCard(

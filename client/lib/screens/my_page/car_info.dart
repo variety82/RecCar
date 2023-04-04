@@ -49,7 +49,7 @@ class _CarInfoState extends State<CarInfo> {
           Expanded(
             // 공간 전체 Padding
             child: rentedCar == null
-                ? Center(child: Text("대여중인 차량이 없습니다"))
+                ? Center(child: Text("현재 대여중인 차량이 없습니다"))
                 : SafeArea(
                     child: SingleChildScrollView(
                       child: Padding(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:client/services/my_page_api.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/common/header.dart';
 import '../../widgets/common/footer.dart';
@@ -16,7 +17,6 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   XFile? profileImg;
   static final storage = FlutterSecureStorage();
-
   String? userName;
   String? userProfileImg;
 
@@ -32,7 +32,7 @@ class _MyPageState extends State<MyPage> {
         userProfileImg = value;
       });
     });
-    print(storage.read(key: 'accessToken'));
+
     super.initState();
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   setUser();
@@ -45,8 +45,8 @@ class _MyPageState extends State<MyPage> {
   }
 
   Future<String?> setUserProfileImg() async {
-    final userProfileImg = await storage.read(key: 'picture');
-    return userProfileImg;
+    final userName = await storage.read(key: 'picture');
+    return userName;
   }
 
   @override
@@ -64,13 +64,15 @@ class _MyPageState extends State<MyPage> {
                 width: 5000,
                 color: Theme.of(context).primaryColor,
               ),
-              Positioned.fill(
-                bottom: -65,
+              Positioned(
+                top: 150,
+                left: 10,
+                right: 10,
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    width: 300,
-                    height: 130,
+                    width: 280,
+                    height: 120,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -85,7 +87,7 @@ class _MyPageState extends State<MyPage> {
                   ),
                 ),
               ),
-              Positioned.fill(
+              Positioned(
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -107,72 +109,54 @@ class _MyPageState extends State<MyPage> {
                     ),
                   ),
                 ),
-                bottom: 15,
+                top: 100,
+                left: 50,
+                right: 50,
               ),
-              Positioned.fill(
-                bottom: -200,
+              Positioned(
+                top: 225,
+                left: 50,
+                right: 50,
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
                     "${userName}",
                     style: TextStyle(
                       color: Theme.of(context).secondaryHeaderColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                       decoration: TextDecoration.none,
                     ),
                   ),
                 ),
               ),
-              Positioned.fill(
-                bottom: -265,
-                child: // 프로필 편집 버튼 Container
-                    Container(
-                  child: TextButton(
-                    onPressed: () => {_getPhotoLibraryImage()},
-                    child: Container(
-                      width: 110,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 5, vertical: 3.5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          width: 1,
-                          color: Colors.white,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.7),
-                            blurRadius: 2.0,
-                            spreadRadius: 0.0,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.settings,
-                            color: Theme.of(context).secondaryHeaderColor,
-                            size: 17,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "프로필 편집",
-                            style: TextStyle(
-                                color: Theme.of(context).secondaryHeaderColor,
-                                fontSize: 13,
-                                decoration: TextDecoration.none),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // Visibility(
+              //   visible: true,
+              //   child: Positioned(
+              //     child: Card(
+              //       child: InkWell(
+              //         child: Text(
+              //           "프로필 편집",
+              //           style: TextStyle(
+              //             color: Theme.of(context).primaryColor,
+              //             fontWeight: FontWeight.w700,
+              //           ),
+              //         ),
+              //         onTap: () {
+              //           // print("HI");
+              //           showDialog(context: context, builder: (BuildContext context) {
+              //             return Dialog(
+              //               child: Text("HI"),
+              //             );
+              //           });
+              //         },
+              //       ),
+              //     ),
+              //     top: 240,
+              //     left: 50,
+              //     right: 50,
+              //   ),
+              // ),
             ],
           ),
           Expanded(
@@ -239,4 +223,14 @@ class _MyPageState extends State<MyPage> {
       print('이미지 선택안함');
     }
   }
+
+// showUserModifyModal() {
+//   return showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return Dialog(
+//           child: Text("HI"),
+//         );
+//       });
+// }
 }
