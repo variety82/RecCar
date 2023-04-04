@@ -40,6 +40,7 @@ public class CarService {
                 .build();
         Long carId = carRepository.save(car).getCarId();
         user.setCurrentCarId(carId);
+        user.setCurrentCarVideo(0);
         userRepository.save(user);
         return carId;
     }
@@ -96,6 +97,7 @@ public class CarService {
     public void deleteCar(Long carId, User user) {
         if (user.getCurrentCarId() == carId) {
             user.setCurrentCarId(0L);
+            user.setCurrentCarVideo(0);
             userRepository.save(user);
         }
         carRepository.customDeleteCar(carId);
@@ -110,6 +112,7 @@ public class CarService {
         car.ReturnCar();
         carRepository.save(car);
         user.setCurrentCarId(0L);
+        user.setCurrentCarVideo(0);
         userRepository.save(user);
         return new CarResponse(car);
     }
