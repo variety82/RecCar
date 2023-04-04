@@ -42,12 +42,12 @@ class _HomeState extends State<Home> {
     setState(() {
       userName = name;
       userProfileImg = img;
-      // userCarId = carId;
-      userCarId = '1';
+      userCarId = carId;
+      // userCarId = '0';
       firstVideoInfo = videoInfo;
       firstCheckDamage = checkDamage;
       currentCarVideo = carVideoState;
-      currentCarVideo = '2';
+      // currentCarVideo = '2';
       // print(currentCarVideo);
     });
     if (userName == null) {
