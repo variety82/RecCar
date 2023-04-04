@@ -11,6 +11,8 @@ import 'package:client/screens/register/select_date.dart';
 import 'package:client/widgets/common/modal_navigator.dart';
 import 'package:intl/intl.dart';
 import 'package:client/services/register_api.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 class CarRegister extends StatefulWidget {
   const CarRegister({Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class CarRegister extends StatefulWidget {
 class _CarRegisterState extends State<CarRegister> {
   final FocusNode _rentalCompanyFocusNode = FocusNode();
   final FocusNode _carNumberFocusNode = FocusNode();
+  final storage = const FlutterSecureStorage();
 
   // 선택한 제조사
   List<dynamic> carInfo = [];
@@ -380,12 +383,15 @@ class _CarRegisterState extends State<CarRegister> {
                                   onPressed: _allRegistered
                                       ? () {
                                           postCarInfo(
-                                              success: (dynamic response) {},
+                                              success: (dynamic response) async {
+                                                print(response);
+                                                await storage.write(key: "carId", value: response.toString());
+                                                Navigator.pushNamed(context, '/home');
+                                              },
                                               fail: (error) {
                                                 print('차량 리스트 호출 오류: $error');
                                               },
                                               body: _buildCarInfoBody());
-                                          Navigator.pushNamed(context, '/home');
                                         }
                                       : null,
                                   style: ElevatedButton.styleFrom(

@@ -11,3 +11,15 @@ void getCarInfo({
     fail: fail,
   );
 }
+
+void getCarReturn({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+}) {
+  apiInstance(
+    path : '/car/return',
+    method : Method.get,
+    success: success,
+    fail: fail,
+  );
+}
