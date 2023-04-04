@@ -32,7 +32,8 @@ class DamageCountInfoBlock extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontSize: 10,
               ),
             ),
             Divider(
