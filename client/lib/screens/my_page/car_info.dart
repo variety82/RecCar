@@ -5,7 +5,6 @@ import '../../services/detail_api.dart';
 import '../../services/my_page_api.dart';
 import '../../widgets/common/header.dart';
 import '../../widgets/common/footer.dart';
-import '../../widgets/common/modal_navigator.dart';
 import '../../widgets/register/register_line.dart';
 import '../../widgets/register/register_list.dart';
 import '../../widgets/register/register_title.dart';

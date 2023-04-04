@@ -137,9 +137,16 @@ class _MyPageCategoryState extends State<MyPageCategory> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.camera_alt_outlined, color: Theme.of(context).primaryColor),
-                                SizedBox(width: 3,),
-                                Text("사진 변경하기", style: TextStyle(color: Theme.of(context).primaryColor),),
+                                Icon(Icons.camera_alt_outlined,
+                                    color: Theme.of(context).primaryColor),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                Text(
+                                  "사진 변경하기",
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor),
+                                ),
                               ],
                             ),
                           ),

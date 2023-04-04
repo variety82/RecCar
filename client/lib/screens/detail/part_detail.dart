@@ -5,9 +5,13 @@ import 'package:client/widgets/detail/damage_level_card.dart';
 class partDetail extends StatelessWidget {
 
   final Map<String, dynamic>? detectionInfos;
+  final int frontDamageCount;
+  final int sideDamageCount;
+  final int backDamageCount;
+  final int wheelDamageCount;
 
   const partDetail({
-    super.key, required this.detectionInfos,
+    super.key, required this.detectionInfos, required this.frontDamageCount, required this.sideDamageCount, required this.backDamageCount, required this.wheelDamageCount,
   });
 
   @override
@@ -17,11 +21,6 @@ class partDetail extends StatelessWidget {
     List<dynamic> sideDamageList = detectionInfos?['side'] ?? [];
     List<dynamic> backDamageList = detectionInfos?['back'] ?? [];
     List<dynamic> wheelDamageList = detectionInfos?['wheel'] ?? [];
-
-    int frontDamageCount = frontDamageList.length;
-    int sideDamageCount = sideDamageList.length;
-    int backDamageCount = backDamageList.length;
-    int wheelDamageCount = wheelDamageList.length;
 
     int evaluateDamageLevel(int damageCount) {
       if (damageCount == 0) {

@@ -49,8 +49,8 @@ class _MakerItemState extends State<MakerItem> {
               ),
               child: ClipOval(
                 child: Container(
-                  width: 60,
-                  height: 60,
+                  width: itemWidth - 4,
+                  height: itemWidth - 4,
                   padding: EdgeInsets.all(8.0), // 테두리와 이미지 사이의 간격을 조절합니다.
                   child: FittedBox(
                     fit: BoxFit.fitWidth,

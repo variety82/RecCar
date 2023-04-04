@@ -7,17 +7,21 @@ import 'package:client/widgets/register/register_list.dart';
 import 'package:client/screens/register/select_maker.dart';
 import 'package:client/screens/register/select_car.dart';
 import 'package:client/screens/register/select_fuel.dart';
-import 'package:client/screens/register/select_date.dart';
-import 'package:client/widgets/common/modal_navigator.dart';
+import 'package:client/screens/register/select_borrow_date.dart';
+import 'package:client/screens/register/select_return_date.dart';
 import 'package:intl/intl.dart';
 import 'package:client/services/register_api.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../services/my_page_api.dart';
 
 class CarModify extends StatefulWidget {
-  final int carId;
+  final carId;
 
-  const CarModify({super.key, required this.carId});
+  const CarModify({
+    super.key,
+    required this.carId,
+  });
 
   @override
   State<CarModify> createState() => _CarModifyState();
@@ -26,11 +30,13 @@ class CarModify extends StatefulWidget {
 class _CarModifyState extends State<CarModify> {
   final FocusNode _rentalCompanyFocusNode = FocusNode();
   final FocusNode _carNumberFocusNode = FocusNode();
+  final storage = const FlutterSecureStorage();
 
   // 선택한 제조사
   List<dynamic> carInfo = [];
   bool _allRegistered = false;
 
+  int? categorySelected;
 
   @override
   void initState() {
@@ -50,7 +56,7 @@ class _CarModifyState extends State<CarModify> {
   Map<String, dynamic> selectedMaker = {
     'id': null,
     'title': null,
-    'logoUrl' : null,
+    'logoUrl': null,
   };
 
   Map<String, dynamic> selectedCar = {
@@ -78,14 +84,18 @@ class _CarModifyState extends State<CarModify> {
 
   Map<String, dynamic> _buildCarInfoBody() {
     return {
+      "userId": 1,
       "carId": widget.carId,
       "carNumber": _inputedCarNumber,
       "carManufacturer": selectedMaker['title'],
       "carModel": selectedCar['title'],
       "carFuel": selectedFuel['title'],
-      "rentalDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(_borrowingDate),
-      "returnDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(_returnDate),
+      "rentalDate":
+          DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(_borrowingDate),
+      "returnDate":
+          DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(_returnDate),
       "rentalCompany": _inputedRentalCompany,
+      "initialVideo": "rental.mp4"
     };
   }
 
@@ -106,7 +116,8 @@ class _CarModifyState extends State<CarModify> {
 
   // 제조사를 업데이트 해주는 function
   // parameter로 id와 이름을 받음
-  void _updateSelectedMaker(int makerId, String makerTitle, String makerLogoUrl) {
+  void _updateSelectedMaker(
+      int makerId, String makerTitle, String makerLogoUrl) {
     setState(() {
       // 선택되어 있는 제조사로 변경했을 경우
       if (selectedMaker['id'] == makerId) {
@@ -114,7 +125,7 @@ class _CarModifyState extends State<CarModify> {
         selectedMaker = {
           'id': null,
           'title': null,
-          'logoUrl' : null,
+          'logoUrl': null,
         };
         carListByMaker = [];
         // 선택되어 있는 제조사와 다른 값으로 변경했을 경우
@@ -123,15 +134,15 @@ class _CarModifyState extends State<CarModify> {
         selectedMaker = {
           'id': makerId,
           'title': makerTitle,
-          'logoUrl' : makerLogoUrl,
+          'logoUrl': makerLogoUrl,
         };
         selectedCar = {
           'id': null,
           'title': null,
-          'logoUrl' : null,
+          'logoUrl': null,
         };
         carListByMaker = carInfo.firstWhere(
-                (maker) => maker['manufacturer'] == makerTitle)['model'];
+            (maker) => maker['manufacturer'] == makerTitle)['model'];
       }
       _updateAllRegistered();
     });
@@ -179,13 +190,13 @@ class _CarModifyState extends State<CarModify> {
     });
   }
 
-
   // 대여기간 업데이트
   void _updateBorrowingDate(DateTime selectedDate) {
     setState(() {
       // 입력받은 DateTime타입의 값을 입력
       _borrowingDate = selectedDate;
-      _isValidatedDate = _returnDate.isAtSameMomentAs(_borrowingDate) || _returnDate.isAfter(_borrowingDate);
+      _isValidatedDate = _returnDate.isAtSameMomentAs(_borrowingDate) ||
+          _returnDate.isAfter(_borrowingDate);
       _updateAllRegistered();
     });
   }
@@ -194,7 +205,8 @@ class _CarModifyState extends State<CarModify> {
     setState(() {
       // 입력받은 DateTime타입의 값을 입력
       _returnDate = selectedDate;
-      _isValidatedDate = _returnDate.isAtSameMomentAs(_borrowingDate) || _returnDate.isAfter(_borrowingDate);
+      _isValidatedDate = _returnDate.isAtSameMomentAs(_borrowingDate) ||
+          _returnDate.isAfter(_borrowingDate);
       _updateAllRegistered();
       print(_isValidatedDate);
     });
@@ -216,6 +228,72 @@ class _CarModifyState extends State<CarModify> {
 
   bool isKeyboardVisible(BuildContext context) {
     return MediaQuery.of(context).viewInsets.bottom != 0;
+  }
+
+  void _showModal(BuildContext context, int? modalIndex) {
+    if (modalIndex == 2 && selectedMaker['id'] == null) {
+      return;
+    }
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        Widget child;
+        switch (modalIndex) {
+          case 1:
+            child = SelectMaker(
+              selectedMaker: selectedMaker,
+              updateSelectedMaker: _updateSelectedMaker,
+              carInfo: carInfo,
+              showModal: _showModal,
+            );
+            break;
+          case 2:
+            child = SelectCar(
+              updateSelectedCar: _updateSelectedCar,
+              carList: carListByMaker,
+              selectedMaker: selectedMaker,
+              selectedCar: selectedCar,
+              showModal: _showModal,
+            );
+            break;
+          case 3:
+            child = SelectFuel(
+              updateSelectedFuel: _updateSelectedFuel,
+              selectedFuel: selectedFuel,
+              showModal: _showModal,
+            );
+            break;
+          case 4:
+            child = SelectBorrowDate(
+              updateDate: _updateBorrowingDate,
+              showModal: _showModal,
+            );
+            break;
+          case 5:
+            child = SelectReturnDate(
+              updateDate: _updateReturnDate,
+              showModal: _showModal,
+            );
+            break;
+          default:
+            child = Container();
+        }
+
+        return Card(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(25.0),
+            ),
+          ),
+          child: child,
+        );
+      },
+    );
   }
 
   @override
@@ -253,59 +331,48 @@ class _CarModifyState extends State<CarModify> {
                             // 목록의 각각 줄들이 들어가는 paramater
                             lineList: [
                               // 모달 오픈하는 Custom Class
-                              ModalNavigator(
-                                // SelectMaker 위젯을 보여줌
-                                showedWidget: SelectMaker(
-                                  updateSelectedMaker: _updateSelectedMaker,
-                                  carInfo: carInfo,
-                                ),
-                                disable: false,
-                                // 클릭하는 영역
-                                child: registerLine(
-                                  category: '제조사',
-                                  content:
-                                  selectedMaker['title'] ?? '제조사를 선택해주세요',
-                                  isLastLine: false,
-                                  isSelected: selectedMaker['id'] != null,
-                                  isInput: false,
-                                  isError: false,
-                                ),
-                              ),
-                              ModalNavigator(
-                                showedWidget: SelectCar(
-                                  updateSelectedCar: _updateSelectedCar,
-                                  carList: carListByMaker,
-                                  selectedMaker: selectedMaker,
-                                ),
-                                disable: selectedMaker['id'] == null,
-                                child: registerLine(
-                                  category: '차종',
-                                  content: selectedMaker['id'] == null
-                                      ? ''
-                                      : selectedCar['title'] ?? '차종을 선택해주세요',
-                                  isLastLine: false,
-                                  isSelected: selectedCar['id'] != null,
-                                  isInput: false,
-                                  isError: false,
-                                ),
-                              ),
-                              ModalNavigator(
-                                // SelectMaker 위젯을 보여줌
-                                showedWidget: SelectFuel(
-                                  updateSelectedFuel: _updateSelectedFuel,
-                                ),
-                                disable: false,
-                                // 클릭하는 영역
-                                child: registerLine(
-                                  category: '연료 종류',
-                                  content:
-                                  selectedFuel['title'] ?? '연료 종류를 선택해주세요',
-                                  isLastLine: false,
-                                  isSelected: selectedFuel['id'] != null,
-                                  isInput: false,
-                                  isError: false,
-                                ),
-                              ),
+                              InkWell(
+                                  onTap: () {
+                                    _showModal(context, 1);
+                                  },
+                                  child: registerLine(
+                                    category: '제조사',
+                                    content:
+                                        selectedMaker['title'] ?? '제조사를 선택해주세요',
+                                    isLastLine: false,
+                                    isSelected: selectedMaker['id'] != null,
+                                    isInput: false,
+                                    isError: false,
+                                  )),
+                              InkWell(
+                                  onTap: selectedMaker['id'] == null
+                                      ? () {}
+                                      : () {
+                                          _showModal(context, 2);
+                                        },
+                                  child: registerLine(
+                                    category: '차종',
+                                    content: selectedMaker['id'] == null
+                                        ? ''
+                                        : selectedCar['title'] ?? '차종을 선택해주세요',
+                                    isLastLine: false,
+                                    isSelected: selectedCar['id'] != null,
+                                    isInput: false,
+                                    isError: false,
+                                  )),
+                              InkWell(
+                                  onTap: () {
+                                    _showModal(context, 3);
+                                  },
+                                  child: registerLine(
+                                    category: '연료 종류',
+                                    content: selectedFuel['title'] ??
+                                        '연료 종류를 선택해주세요',
+                                    isLastLine: false,
+                                    isSelected: selectedFuel['id'] != null,
+                                    isInput: false,
+                                    isError: false,
+                                  ))
                             ],
                           ),
                           const SizedBox(
@@ -314,36 +381,32 @@ class _CarModifyState extends State<CarModify> {
                           const RegisterTitle(title: '대여 정보'),
                           RegisterList(
                             lineList: [
-                              ModalNavigator(
-                                showedWidget: SelectDate(
-                                  updateDate: _updateBorrowingDate,
-                                ),
-                                disable: false,
-                                child: registerLine(
-                                  category: '대여 일자',
-                                  content: DateFormat('yyyy년 MM월 dd일')
-                                      .format(_borrowingDate),
-                                  isLastLine: false,
-                                  isSelected: true,
-                                  isInput: false,
-                                  isError: false,
-                                ),
-                              ),
-                              ModalNavigator(
-                                showedWidget: SelectDate(
-                                  updateDate: _updateReturnDate,
-                                ),
-                                disable: false,
-                                child: registerLine(
-                                  category: '반납 일자',
-                                  content: DateFormat('yyyy년 MM월 dd일')
-                                      .format(_returnDate),
-                                  isLastLine: false,
-                                  isSelected: true,
-                                  isInput: false,
-                                  isError: !_isValidatedDate,
-                                ),
-                              ),
+                              InkWell(
+                                  onTap: () {
+                                    _showModal(context, 4);
+                                  },
+                                  child: registerLine(
+                                    category: '대여 일자',
+                                    content: DateFormat('yyyy년 MM월 dd일')
+                                        .format(_borrowingDate),
+                                    isLastLine: false,
+                                    isSelected: true,
+                                    isInput: false,
+                                    isError: false,
+                                  )),
+                              InkWell(
+                                  onTap: () {
+                                    _showModal(context, 5);
+                                  },
+                                  child: registerLine(
+                                    category: '반납 일자',
+                                    content: DateFormat('yyyy년 MM월 dd일')
+                                        .format(_returnDate),
+                                    isLastLine: false,
+                                    isSelected: true,
+                                    isInput: false,
+                                    isError: !_isValidatedDate,
+                                  )),
                               registerLine(
                                 category: '렌트카 업체',
                                 isLastLine: false,
@@ -382,18 +445,19 @@ class _CarModifyState extends State<CarModify> {
                                 child: ElevatedButton(
                                   onPressed: _allRegistered
                                       ? () {
-                                    putCarInfo(
-                                        success: (dynamic response) {},
-                                        fail: (error) {
-                                          print('차량 리스트 호출 오류: $error');
-                                        },
-                                        body: _buildCarInfoBody());
-                                    Navigator.pushNamed(context, '/my-page');
-                                  }
+                                          putCarInfo(
+                                              success: (dynamic response) {},
+                                              fail: (error) {
+                                                print('차량 리스트 호출 오류: $error');
+                                              },
+                                              body: _buildCarInfoBody());
+                                          Navigator.pushNamed(
+                                              context, '/my-page');
+                                        }
                                       : null,
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor:
-                                      Theme.of(context).primaryColor),
+                                          Theme.of(context).primaryColor),
                                   child: const SizedBox(
                                     width: 70,
                                     child: Text(
