@@ -108,11 +108,11 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 
 ### 📂디렉토리 구조
 
-
 <details>
   <summary>
-  백엔드 디렉토리 구조
+  백엔드 디렉토리 구조(Java)
   </summary>
+
 
 
     ├─main
@@ -162,6 +162,32 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
     │  └─resources
 
  </details>
+
+### 
+
+<details>
+  <summary>
+  백엔드 디렉토리 구조(Python)
+  </summary>
+
+
+
+    ├─dataset
+    │  ├─images
+    │  ├─output_images
+    │  └─video
+    ├─images
+    ├─models
+    ├─service
+    ├─src
+    ├─app.py
+    ├─inference.py
+    ├─requirements.txt
+    └─Utils
+
+ </details>
+
+
 
 <details>
   <summary>
