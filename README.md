@@ -96,6 +96,10 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 
 
 
+## Product Flow
+
+![Product Flow](./assets/Flowchart.png)
+
 ## Service Architecture
 
 ![Architecture](./assets/Architecture.png)
@@ -206,10 +210,24 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 
 ![Architecture](./assets/dataset.PNG)
 
-전체 이미지 개수 : 504,450 장 중 50,000장 사용(Train : 35,000장, Validation : 15,000장)
+- 전체 이미지 개수 : 504,450 장 중 50,000장 사용(Train : 35,000장, Validation : 15,000장)
 
-3 class : 스크래치(Scratch), 찌그러짐(Crushed), 파손(Breakage)
+- 3 class : 스크래치(Scratch), 찌그러짐(Crushed), 파손(Breakage)
 
-## Model Pipeline
+## Experiments
+
+![Experiments](./assets/experiments.png)
+
+### 🚗 **차량 파손 Segmentation**
+
+**Task** : 차량 이미지로 부터 각 클래스에 해당하는 영역을 Segmentation
+
+**Metric** : mIoU
+
+| Model | Backbone | mIoU |
+| ----- | -------- | ---- |
+| Unet  | ResNet34 | 0.72 |
+
+
 
 ## 주요기능 및 화면
