@@ -177,7 +177,7 @@ aws_secret_access_key = 비밀 엑세스 키
 
 ### Ignore 파일 및 생성파일 위치
 
-- Spring : applicaion.yml (main/resources/applicaion.yml)
+- Spring : application-db.yml (main/resources/applicaion-db.yml)
 - FastAPI: .env (최상단 디렉토리)
 - Flutter: 
 
@@ -330,7 +330,8 @@ docekr run --rm -d -p 8081:8081 --name fastapi-latest 이미지ID
 
    - 로그인 버튼을 누른 후 소셜 로그인을 진행할 수 있습니다
    
-![로그인.gif](./assets/로그인.gif)
-   
 
-   
+![로그인.gif](./assets/로그인.gif)
+
+
+

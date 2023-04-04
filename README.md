@@ -230,4 +230,28 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 
 
 
+## 💡 Model Installation Guide
+
+```
+cd APP/modles
+Scratch, Breakage, Crushed클래스를 학습한 모델의 pt파일이 존재합니다.
+```
+
+## 📓 Train Usage
+
+```
+1) 학습할 데이터에 맞춰 json파일을 생성해야 합니다.
+학습할 데이터들을 넣고 AI/utils의 make_damage_labeling.ipynb를 실행하여 damage_labeling.csv를 생성합니다.
+
+cd data/datainfo 위치에 앞서 학습할 데이터에 맞게 만들어놓은 damage_labeling.csv를 위치 시킨 후
+cd AI위치에서 아래 명령어를 실행합니다.
+python code/src/Utils.py --make_cocoformat 1 --task damage
+
+2)Train
+cd AI/code로 이동하여 아래 명령어를 실행합니다.
+python main.py --train y --task damage --label all
+```
+
+
+
 ## 주요기능 및 화면
