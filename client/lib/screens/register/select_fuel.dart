@@ -3,10 +3,14 @@ import 'package:client/widgets/register/category_title.dart';
 
 class SelectFuel extends StatefulWidget {
   final void Function(int, String) updateSelectedFuel;
+  final Map<dynamic, dynamic> selectedFuel;
+  final void Function(BuildContext, int?) showModal;
 
   const SelectFuel({
     super.key,
     required this.updateSelectedFuel,
+    required this.selectedFuel,
+    required this.showModal,
   });
 
   @override
@@ -20,20 +24,25 @@ class _SelectFuelState extends State<SelectFuel> {
    */
 
   // 선택된 제조사의 ID 값이 들어간다
-  int? selectedFuel;
+  int? selectedFuelId;
   void _changeSelectedFuel(fuelId) {
     setState(() {
-      if (selectedFuel == fuelId) {
+      if (selectedFuelId == fuelId) {
         // 선택한 제조사가 현재 선택된 제조사일 경우 null값으로 변경
-        selectedFuel = null;
+        selectedFuelId = null;
       } else {
         // 다를 경우 해당 제조사 ID로 selectedMaker 변경
-        selectedFuel = fuelId;
+        selectedFuelId = fuelId;
       }
     });
   }
 
   List<String> fuelList = ['가솔린', '디젤', '전기', '하이브리드'];
+  @override
+  void initState() {
+    selectedFuelId = widget.selectedFuel['id'];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +65,25 @@ class _SelectFuelState extends State<SelectFuel> {
             color: const Color(0xFFEFEFEF),
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           // 카테고리 리스트, 현재는 선택해서 이동 불가하고 시간 남으면 클릭시 모달 내용 변경하도록 설정
           child: Row(
             children: [
-              CategoryTitle(title: '제조사', isSelected: false),
-              CategoryTitle(title: '차종', isSelected: false),
-              CategoryTitle(title: '연료', isSelected: true),
+              CategoryTitle(
+                title: '제조사',
+                isSelected: false,
+                showModal: widget.showModal,
+                modalIndex: 1,
+              ),
+              CategoryTitle(
+                title: '차종',
+                isSelected: false,
+                showModal: widget.showModal,
+                modalIndex: 2,
+              ),
+              CategoryTitle(
+                  title: '연료', isSelected: true, showModal: widget.showModal),
             ],
           ),
         ),
@@ -121,10 +141,10 @@ class _SelectFuelState extends State<SelectFuel> {
                         Text(
                           carName,
                           style: TextStyle(
-                              fontWeight: selectedFuel == index
+                              fontWeight: selectedFuelId == index
                                   ? FontWeight.w600
                                   : FontWeight.w400,
-                              color: selectedFuel == index
+                              color: selectedFuelId == index
                                   ? Theme.of(context).secondaryHeaderColor
                                   : Theme.of(context).disabledColor),
                         ),
