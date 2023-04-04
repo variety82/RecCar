@@ -56,5 +56,24 @@ async def upload_video(file : UploadFile, user_id : str):
 
     return images
 
+@app.post("/ai-api/v1/image")
+async def upload_image(file : UploadFile, user_id : str):
+    upload_path = "./dataset/images"
+    content = await file.read()
+    file_name = f"user_{user_id}.jpg"
+
+    with open(os.path.join(upload_path, file_name), "wb") as fp:
+        fp.write(content)  # 서버 로컬 스토리지에 이미지 저장 (쓰기)
+
+    created_img = inference.create_images(models, [file_name])
+
+    obj_list = upload_s3(s3, bucket, created_img, "hero")
+    images_list = get_images_url(s3, bucket, obj_list)
+
+    image = {}
+    image['url'] = images_list[0]
+
+    return image
+
 if __name__ == '__main__':
     uvicorn.run("app:app", reload = True, host = '0.0.0.0', port=8081)
