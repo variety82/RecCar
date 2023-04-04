@@ -15,7 +15,7 @@ class DamageCountInfoBlock extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        width: 100,
+        width: 150,
         height: 120,
         decoration: BoxDecoration(
           color: damageCnt == 0
@@ -33,7 +33,7 @@ class DamageCountInfoBlock extends StatelessWidget {
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
-                fontSize: 10,
+                fontSize: 14,
               ),
             ),
             Divider(
@@ -46,7 +46,7 @@ class DamageCountInfoBlock extends StatelessWidget {
             Text(
               '${damageCnt}건',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: damageCnt == 0
                     ? Colors.black

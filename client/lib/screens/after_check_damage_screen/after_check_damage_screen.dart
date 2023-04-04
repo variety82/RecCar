@@ -149,6 +149,11 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
         child: Scaffold(
       // backgroundColor는 흰색으로 설정
       backgroundColor: Colors.white,
+          // appBar: (load_data || loading_api ) ? AppBar(
+          //   elevation: 0,
+          //   backgroundColor: Colors.white,
+          //   foregroundColor: Color(0xFFFF3F3F),
+          // ) : null,
       // Column 정렬 이용해 화면 정가운데에 이하 요소들을 정렬
       body: load_data
           ? Center(
@@ -164,7 +169,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                             // 나열 방향
                             crossAxisAlignment: WrapCrossAlignment.center,
                             // 정렬 방식
-                            spacing: 24,
+                            spacing: 20,
                             // 좌우 간격
                             runSpacing: 10,
                             children: [
@@ -220,44 +225,47 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                   ],
                                 ),
                               ),
-                              Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      DamageCountInfoBlock(
-                                        damageName: "앞범퍼/앞펜더/전조등",
-                                        damageCnt: front_count,
-                                      ),
-                                      DamageCountInfoBlock(
-                                        damageName: "뒷범퍼/뒷펜더/후미등",
-                                        damageCnt: back_count,
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      DamageCountInfoBlock(
-                                        damageName: "옆면/사이드/스텝",
-                                        damageCnt: side_count,
-                                      ),
-                                      DamageCountInfoBlock(
-                                        damageName: "타이어/휠",
-                                        damageCnt: wheel_count,
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        DamageCountInfoBlock(
+                                          damageName: "앞범퍼/앞펜더/전조등",
+                                          damageCnt: front_count,
+                                        ),
+                                        DamageCountInfoBlock(
+                                          damageName: "뒷범퍼/뒷펜더/후미등",
+                                          damageCnt: back_count,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        DamageCountInfoBlock(
+                                          damageName: "옆면/사이드/스텝",
+                                          damageCnt: side_count,
+                                        ),
+                                        DamageCountInfoBlock(
+                                          damageName: "타이어/휠",
+                                          damageCnt: wheel_count,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  minimumSize: Size(200, 50),
+                                  fixedSize: Size(180, 50),
                                   backgroundColor:
                                       Theme.of(context).primaryColor,
                                 ),
@@ -265,10 +273,10 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                   Navigator.pushNamed(context, '/detail');
                                 },
                                 child: Text(
-                                  "차량 상세 확인하기",
+                                  "차량 상세 확인",
                                   style: TextStyle(
-                                    color: Theme.of(context).primaryColorLight,
-                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -278,7 +286,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  minimumSize: Size(200, 50),
+                                  fixedSize: Size(180, 50),
                                   backgroundColor:
                                       Theme.of(context).primaryColorLight,
                                 ),
@@ -286,10 +294,11 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                   Navigator.pushNamed(context, '/home');
                                 },
                                 child: Text(
-                                  "메인 화면으로 돌아가기",
+                                  "메인 화면으로",
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
+                                    color: Theme.of(context)
+                                        .primaryColor,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -305,7 +314,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                             // 나열 방향
                             crossAxisAlignment: WrapCrossAlignment.center,
                             // 정렬 방식
-                            spacing: 24,
+                            spacing: 20,
                             // 좌우 간격
                             runSpacing: 10,
                             children: [
@@ -355,26 +364,57 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                   ),
                                 ],
                               ),
-                              Column(
-                                children: [
-                                  Text(
-                                    '정말 등록하시겠습니까?',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFFFF3F3F),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10,),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        DamageCountInfoBlock(
+                                          damageName: "앞범퍼/앞펜더/전조등",
+                                          damageCnt: front_count,
+                                        ),
+                                        DamageCountInfoBlock(
+                                          damageName: "뒷범퍼/뒷펜더/후미등",
+                                          damageCnt: back_count,
+                                        ),
+                                      ],
                                     ),
-                                    softWrap: true,
-                                  ),
-                                ],
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        DamageCountInfoBlock(
+                                          damageName: "옆면/사이드/스텝",
+                                          damageCnt: side_count,
+                                        ),
+                                        DamageCountInfoBlock(
+                                          damageName: "타이어/휠",
+                                          damageCnt: wheel_count,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                '정말 등록하시겠습니까?',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.redAccent,
+                                ),
+                                softWrap: true,
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  minimumSize: Size(200, 50),
+                                  minimumSize: Size(180, 50),
                                   backgroundColor: Color(0xFFE0426F),
                                 ),
                                 onPressed: () async {
@@ -409,7 +449,29 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                   "등록하기",
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 20,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  fixedSize: Size(180, 50),
+                                  backgroundColor:
+                                  Theme.of(context).primaryColorLight,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  "돌아가기",
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .primaryColor,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),

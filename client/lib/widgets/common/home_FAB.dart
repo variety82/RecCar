@@ -134,7 +134,7 @@ class _homeFABMenuState extends State<homeFABMenu>
           backgroundColor: Color(0xFFE0426F),
           labelBackgroundColor: Color(0xFFE0426F),
           onTap: () {
-            if (widget.currentCarVideo == 1) {
+            if (widget.currentCarVideo == 2) {
               showConfirmationDialog(
                 context,
                 '손상 등록 불가',
@@ -180,7 +180,7 @@ class _homeFABMenuState extends State<homeFABMenu>
           backgroundColor: Color(0xFFE0426F),
           labelBackgroundColor: Color(0xFFE0426F),
           onTap: () {
-            if (widget.currentCarVideo == 1) {
+            if (widget.currentCarVideo == 2) {
               showConfirmationDialog(
                 context,
                 '손상 등록 불가',
