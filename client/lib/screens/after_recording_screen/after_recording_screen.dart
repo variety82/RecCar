@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:client/services/analysis_car_damage_api.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_screen.dart';
-import 'package:client/screens/after_recording_screen/damage_count_info_block.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // 만약 애니메이션 효과 추가 시, 수정 필요
@@ -220,11 +219,8 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               maxWidth: 300,
                               maxHeight: 400,
                             ),
-                            child: FadeInImage(
-                              placeholder: AssetImage(
-                                  'lib/assets/images/loading_img/loading_gif.gif'),
-                              image: AssetImage(
-                                  'lib/assets/images/loading_img/loading_gif.gif'),
+                            child: Image.asset(
+                              'lib/assets/images/loading_img/loading_gif.gif',
                             ),
                           ),
                           // CircularProgressIndicator(
