@@ -47,23 +47,7 @@ void getSimpleDamageInfo({
   );
 }
 
-// 파손 상세 내역
-void getDetailDamageInfo({
-  required dynamic Function(dynamic) success,
-  required Function(String error) fail,
-  required int damageId,
-  Map<String, String>? body,
-}) {
-  apiInstance(
-    path: '/detection/${damageId}',
-    method: Method.get,
-    body: body,
-    success: success,
-    fail: fail,
-  );
-}
-
-// 파손 상세 내역
+// 회원 정보 초기화
 void deleteUserInfo({
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
@@ -72,6 +56,36 @@ void deleteUserInfo({
   apiInstance(
     path: '/user/delete',
     method: Method.delete,
+    body: body,
+    success: success,
+    fail: fail,
+  );
+}
+
+// 현재 대여중인 차량 조회
+void getRentedCarInfo({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+  Map<String, String>? body,
+}) {
+  apiInstance(
+    path: '/car',
+    method: Method.get,
+    body: body,
+    success: success,
+    fail: fail,
+  );
+}
+
+// 차량 정보 수정
+void putCarInfo({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+  Map<String, String>? body,
+}) {
+  apiInstance(
+    path: '/car',
+    method: Method.put,
     body: body,
     success: success,
     fail: fail,

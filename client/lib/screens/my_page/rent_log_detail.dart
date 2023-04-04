@@ -143,19 +143,25 @@ class _RentLogDetailState extends State<RentLogDetail> {
                   SizedBox(
                     height: 15,
                   ),
-                  RentLogLine(
-                    infoTitle: "대여 일자",
-                    info: simpleDamageInfo['rentalDate'] ?? "",
-                    space: 120,
-                  ),
+                  if (simpleDamageInfo['rentalDate'] != null)
+                    RentLogLine(
+                      infoTitle: "대여 일자",
+                      info: simpleDamageInfo['rentalDate']
+                          .toString()
+                          .substring(0, 10),
+                      space: 120,
+                    ),
                   SizedBox(
                     height: 5,
                   ),
-                  RentLogLine(
-                    infoTitle: "반납 일자",
-                    info: simpleDamageInfo['returnDate'] ?? "",
-                    space: 120,
-                  ),
+                  if (simpleDamageInfo['rentalDate'] != null)
+                    RentLogLine(
+                      infoTitle: "반납 일자",
+                      info: simpleDamageInfo['returnDate']
+                          .toString()
+                          .substring(0, 10),
+                      space: 120,
+                    ),
                   SizedBox(
                     height: 5,
                   ),
