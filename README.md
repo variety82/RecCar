@@ -26,7 +26,7 @@
       </td>
       <td align="center">
         <a href="">
-          <img src="./assets/sh.PNG" alt="원송희 프로필" width=120 height=120 />
+          <img src="./assets/sh.png" alt="원송희 프로필" width=120 height=120 />
         </a>
       </td>
       <td align="center">
@@ -102,11 +102,13 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 
 ### 📂디렉토리 구조
 
-```html
+
 <details>
-    <summary>
-    백엔드 디렉토리 구조
-    </summary>
+  <summary>
+  백엔드 디렉토리 구조
+  </summary>
+
+
     ├─main
     │  ├─java
     │  │  └─com
@@ -152,18 +154,53 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
     │  │          └─exception
     │  │              └─customException
     │  └─resources
-</details>
-```
 
-
-
-
+ </details>
 
 <details>
   <summary>
   프론트엔드 디렉토리 구조
   </summary>
+
+
+    ├─assets
+    │  ├─car_video
+    │  ├─fonts
+    │  └─images
+    │      ├─car_damage_img
+    │      └─loading_img
+    ├─provider
+    │  └─car_damage_info_provider
+    ├─screens
+    │  ├─after_check_damage_screen
+    │  ├─after_recording_screen
+    │  ├─before_recording_screen
+    │  ├─calendar_screen
+    │  ├─check_car_damage_screen
+    │  ├─check_video_screen
+    │  ├─detail
+    │  ├─home
+    │  ├─login_screen
+    │  ├─map_screen
+    │  ├─my_page
+    │  ├─register
+    │  ├─splash_screen
+    │  └─video_recording_screen
+    ├─services
+    ├─utils
+    └─widgets
+        ├─check_car_damage
+        ├─common
+        ├─detail
+        ├─main_page
+        ├─my_page
+        └─register
+
  </details>
+
+
+
+
 
 
 
@@ -173,7 +210,7 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 
 - AIHub 개방 데이터셋
 
-![Architecture](./assets/dataset.png)
+![Architecture](./assets/dataset.PNG)
 
 전체 이미지 개수 : 504,450 장 중 50,000장 사용(Train : 35,000장, Validation : 15,000장)
 
