@@ -23,6 +23,9 @@ class _MainPageBodyState extends State<MainPageBody> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        const SizedBox(
+          height: 50,
+        ),
         Stack(
             children: [
               Center(
@@ -44,15 +47,10 @@ class _MainPageBodyState extends State<MainPageBody> {
                       icon: const Icon(Icons.add_box_rounded)),
                       )
                     : null
-                ,
               ),
             ]
         ),
-        // const SizedBox(
-        //   height: 100,
-        // ),
-        Container(
-          height: 200,
+        Expanded(
           child: widget.mainContainter
         )
       ],

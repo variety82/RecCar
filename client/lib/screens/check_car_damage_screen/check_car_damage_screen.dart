@@ -217,6 +217,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       () {
         carDamagesAllList[indexValue]["selected"] = false;
         selectedIndexList.remove(indexValue);
+        _tabController.animateTo(0);
       },
     );
   }
@@ -355,7 +356,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         body: loading_video
             ? Container(
                 height: screenHeight,
@@ -366,242 +367,224 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                       onTap: () {
                         _watchVideoMenu();
                       },
-                      child: RotatedBox(
-                        quarterTurns: aspectRatio > 1 ? 0 : 3,
-                        child: AspectRatio(
-                          aspectRatio: aspectRatio,
-                          child: Stack(
-                            children: [
-                              VideoPlayer(_videoPlayerController),
-                              AspectRatio(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                        ),
+                        height: 240,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            AspectRatio(
                                 aspectRatio: aspectRatio,
-                                child: Container(
-                                  // height: screenHeight,
-                                  // width: screenWidth,
-                                  decoration: BoxDecoration(
-                                    color: _isVisible
-                                        ? Colors.black54
-                                        : Colors.black.withOpacity(0.0),
-                                  ),
-                                  child: RotatedBox(
-                                    quarterTurns: aspectRatio > 1 ? 0 : 1,
-                                    child: OverflowBox(
-                                      maxWidth: double.infinity,
-                                      maxHeight: double.infinity,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () {
-                                              _watchVideoMenu();
-                                            },
-                                            onDoubleTap: () {
-                                              setState(() {
-                                                _isVisibleSPBTN = false;
-                                                _isVisible = true;
-                                                _isbackTimeSkip = true;
-                                              });
-                                              _videoPlayerController.seekTo(
-                                                Duration(
-                                                    seconds:
-                                                        _videoPlayerController
-                                                                .value
-                                                                .position
-                                                                .inSeconds -
-                                                            10),
-                                              );
-                                              Future.delayed(
-                                                Duration(milliseconds: 200),
-                                                () {
-                                                  setState(() {
-                                                    _isVisible = false;
-                                                    _isbackTimeSkip = false;
-                                                  });
-                                                },
-                                              );
-                                            },
-                                            child: AnimatedOpacity(
-                                              opacity:
-                                                  _isbackTimeSkip ? 1.0 : 0.0,
-                                              duration:
-                                                  Duration(milliseconds: 200),
-                                              child: Stack(
-                                                children: [
-                                                  Icon(
-                                                    Icons.circle,
-                                                    color: Colors.black38,
-                                                    size: screenWidth,
-                                                  ),
-                                                  Positioned(
-                                                    right:
-                                                        (screenWidth / 4) + 10,
-                                                    top: (screenWidth / 2) - 10,
-                                                    child: Column(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.fast_rewind,
-                                                          color: Colors.white,
-                                                          size: 20,
-                                                        ),
-                                                        Text(
-                                                          '10초',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
+                                child: VideoPlayer(_videoPlayerController)),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: _isVisible
+                                    ? Colors.black54
+                                    : Colors.black.withOpacity(0.0),
+                              ),
+                              child: OverflowBox(
+                                maxWidth: double.infinity,
+                                maxHeight: double.infinity,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () {
+                                        _watchVideoMenu();
+                                      },
+                                      onDoubleTap: () {
+                                        setState(() {
+                                          _isVisibleSPBTN = false;
+                                          _isVisible = true;
+                                          _isbackTimeSkip = true;
+                                        });
+                                        _videoPlayerController.seekTo(
+                                          Duration(
+                                              seconds: _videoPlayerController
+                                                      .value
+                                                      .position
+                                                      .inSeconds -
+                                                  10),
+                                        );
+                                        Future.delayed(
+                                          Duration(milliseconds: 200),
+                                          () {
+                                            setState(() {
+                                              _isVisible = false;
+                                              _isbackTimeSkip = false;
+                                            });
+                                          },
+                                        );
+                                      },
+                                      child: AnimatedOpacity(
+                                        opacity: _isbackTimeSkip ? 1.0 : 0.0,
+                                        duration: Duration(milliseconds: 200),
+                                        child: Stack(
+                                          children: [
+                                            Icon(
+                                              Icons.circle,
+                                              color: Colors.black38,
+                                              size: screenWidth,
                                             ),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              if (_isVisible) {
-                                                if (video_pause) {
-                                                  _videoPlayerController.play();
-                                                  setState(() {
-                                                    video_pause = false;
-                                                  });
-                                                  _timeChecker();
-                                                } else {
-                                                  _videoPlayerController
-                                                      .pause();
-                                                  setState(() {
-                                                    video_pause = true;
-                                                  });
-                                                }
-                                              } else {
-                                                setState(() {
-                                                  _isVisible = true;
-                                                  _timeChecker();
-                                                });
-                                              }
-                                            },
-                                            child: _isVisibleSPBTN
-                                                ? Stack(
-                                                    alignment: Alignment.center,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.circle,
-                                                        color: Colors.black38,
-                                                        size: 80,
-                                                      ),
-                                                      _videoPlayerController
-                                                              .value.isPlaying
-                                                          ? Icon(
-                                                              Icons.pause,
-                                                              color:
-                                                                  Colors.white,
-                                                              size: 40,
-                                                            )
-                                                          : Icon(
-                                                              Icons.play_arrow,
-                                                              color:
-                                                                  Colors.white,
-                                                              size: 40,
-                                                            ),
-                                                    ],
-                                                  )
-                                                : Container(),
-                                          ),
-                                          AnimatedOpacity(
-                                            opacity:
-                                                _isforwardTimeSkip ? 1.0 : 0.0,
-                                            duration:
-                                                Duration(milliseconds: 200),
-                                            child: InkWell(
-                                              onTap: () {
-                                                _watchVideoMenu();
-                                              },
-                                              onDoubleTap: () {
-                                                setState(() {
-                                                  _isVisibleSPBTN = false;
-                                                  _isVisible = true;
-                                                  _isforwardTimeSkip = true;
-                                                });
-                                                _videoPlayerController.seekTo(
-                                                  Duration(
-                                                      seconds:
-                                                          _videoPlayerController
-                                                                  .value
-                                                                  .position
-                                                                  .inSeconds +
-                                                              10),
-                                                );
-                                                Future.delayed(
-                                                  Duration(milliseconds: 200),
-                                                  () {
-                                                    setState(() {
-                                                      _isVisible = false;
-                                                      _isforwardTimeSkip =
-                                                          false;
-                                                    });
-                                                  },
-                                                );
-                                              },
-                                              child: Stack(
+                                            Positioned(
+                                              right: (screenWidth / 4) + 10,
+                                              top: (screenWidth / 2) - 10,
+                                              child: Column(
                                                 children: [
                                                   Icon(
-                                                    Icons.circle,
-                                                    color: Colors.black38,
-                                                    size: screenWidth,
+                                                    Icons.fast_rewind,
+                                                    color: Colors.white,
+                                                    size: 20,
                                                   ),
-                                                  Positioned(
-                                                    left:
-                                                        (screenWidth / 4) + 10,
-                                                    top: (screenWidth / 2) - 10,
-                                                    child: Column(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.fast_forward,
-                                                          color: Colors.white,
-                                                          size: 20,
-                                                        ),
-                                                        Text(
-                                                          '10초',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    left: 12,
-                                                    bottom: 12,
-                                                    child: Row(
-                                                      children: [
-                                                        Text(
-                                                          'data',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                  Text(
+                                                    '10초',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                          ),
-                                        ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    InkWell(
+                                      onTap: () {
+                                        if (_isVisible) {
+                                          if (video_pause) {
+                                            _videoPlayerController.play();
+                                            setState(() {
+                                              video_pause = false;
+                                            });
+                                            _timeChecker();
+                                          } else {
+                                            _videoPlayerController.pause();
+                                            setState(() {
+                                              video_pause = true;
+                                            });
+                                          }
+                                        } else {
+                                          setState(() {
+                                            _isVisible = true;
+                                            _timeChecker();
+                                          });
+                                        }
+                                      },
+                                      child: _isVisibleSPBTN
+                                          ? Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.circle,
+                                                  color: Colors.black38,
+                                                  size: 80,
+                                                ),
+                                                _videoPlayerController
+                                                        .value.isPlaying
+                                                    ? Icon(
+                                                        Icons.pause,
+                                                        color: Colors.white,
+                                                        size: 40,
+                                                      )
+                                                    : Icon(
+                                                        Icons.play_arrow,
+                                                        color: Colors.white,
+                                                        size: 40,
+                                                      ),
+                                              ],
+                                            )
+                                          : Container(),
+                                    ),
+                                    AnimatedOpacity(
+                                      opacity: _isforwardTimeSkip ? 1.0 : 0.0,
+                                      duration: Duration(milliseconds: 200),
+                                      child: InkWell(
+                                        onTap: () {
+                                          _watchVideoMenu();
+                                        },
+                                        onDoubleTap: () {
+                                          setState(() {
+                                            _isVisibleSPBTN = false;
+                                            _isVisible = true;
+                                            _isforwardTimeSkip = true;
+                                          });
+                                          _videoPlayerController.seekTo(
+                                            Duration(
+                                                seconds: _videoPlayerController
+                                                        .value
+                                                        .position
+                                                        .inSeconds +
+                                                    10),
+                                          );
+                                          Future.delayed(
+                                            Duration(milliseconds: 200),
+                                            () {
+                                              setState(() {
+                                                _isVisible = false;
+                                                _isforwardTimeSkip = false;
+                                              });
+                                            },
+                                          );
+                                        },
+                                        child: Stack(
+                                          children: [
+                                            Icon(
+                                              Icons.circle,
+                                              color: Colors.black38,
+                                              size: screenWidth,
+                                            ),
+                                            Positioned(
+                                              left: (screenWidth / 4) + 10,
+                                              top: (screenWidth / 2) - 10,
+                                              child: Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.fast_forward,
+                                                    color: Colors.white,
+                                                    size: 20,
+                                                  ),
+                                                  Text(
+                                                    '10초',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 12,
+                                              bottom: 12,
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    'data',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -695,24 +678,37 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                           body: TabBarView(
                             controller: _tabController,
                             children: [
-                              CheckCarDamageContainer(
-                                carDamageList: carDamagesAllList,
-                                videoPlayerController: _videoPlayerController,
-                                changeDamageValue: changeDamageValue,
-                                selectedIndexList: selectedIndexList,
-                                isSelectedView: false,
-                                deleteDamageList: deleteDamageList,
-                                showConfirmationDialog: showConfirmationDialog,
-                              ),
-                              CheckCarDamageContainer(
-                                carDamageList: carDamagesAllList,
-                                videoPlayerController: _videoPlayerController,
-                                changeDamageValue: changeDamageValue,
-                                selectedIndexList: selectedIndexList,
-                                isSelectedView: true,
-                                deleteDamageList: deleteDamageList,
-                                showConfirmationDialog: showConfirmationDialog,
-                              ),
+                              selectedIndexList.length !=
+                                      carDamagesAllList.length
+                                  ? CheckCarDamageContainer(
+                                      carDamageList: carDamagesAllList,
+                                      videoPlayerController:
+                                          _videoPlayerController,
+                                      changeDamageValue: changeDamageValue,
+                                      selectedIndexList: selectedIndexList,
+                                      isSelectedView: false,
+                                      deleteDamageList: deleteDamageList,
+                                      showConfirmationDialog:
+                                          showConfirmationDialog,
+                                    )
+                                  : Center(
+                                      child: Text('현재 손상 데이터가 존재하지 않습니다.'),
+                                    ),
+                              selectedIndexList.length > 0
+                                  ? CheckCarDamageContainer(
+                                      carDamageList: carDamagesAllList,
+                                      videoPlayerController:
+                                          _videoPlayerController,
+                                      changeDamageValue: changeDamageValue,
+                                      selectedIndexList: selectedIndexList,
+                                      isSelectedView: true,
+                                      deleteDamageList: deleteDamageList,
+                                      showConfirmationDialog:
+                                          showConfirmationDialog,
+                                    )
+                                  : Center(
+                                      child: Text('현재 손상 데이터가 존재하지 않습니다.'),
+                                    ),
                             ],
                           ),
                         ),
@@ -838,20 +834,3 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     );
   }
 }
-
-// isSelectedView
-//     ? Icon(
-//         Icons.fact_check,
-//       )
-//     : Icon(
-//         Icons.fact_check_outlined,
-//       ),
-// Switch(
-//   value: isSelectedView,
-//   onChanged: (value) {
-//     setState(() {
-//       isSelectedView = !isSelectedView;
-//     });
-//   },
-//   activeColor: Color(0xFFE0426F),
-// ),
