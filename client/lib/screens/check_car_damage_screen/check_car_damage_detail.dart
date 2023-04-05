@@ -204,7 +204,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                             '스크래치',
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w500,
                               color: Color.fromRGBO(240, 15, 135, 0.75),
                             ),
                           )
@@ -225,7 +225,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                             '찌그러짐',
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w500,
                               color: Color.fromRGBO(64, 64, 64, 0.75),
                             ),
                           )
@@ -246,7 +246,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                             '파손',
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w500,
                               color: Color.fromRGBO(75, 150, 200, 0.75),
                             ),
                           )
