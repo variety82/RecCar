@@ -106,6 +106,8 @@ class _homeFABMenuState extends State<homeFABMenu>
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
+      activeBackgroundColor: Theme.of(context).disabledColor,
+      overlayColor: Colors.black38,
       openCloseDial: ValueNotifier(_isOpen),
       buttonSize: const Size(64, 64),
       overlayOpacity: 0.0,
