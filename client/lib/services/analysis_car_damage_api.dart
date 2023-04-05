@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -21,12 +19,7 @@ Future<dynamic> analysisCarDamageApi({
       'http://j8a102.p.ssafy.io:8081/ai-api/v1/damage?user_id=${encodedUserId}';
   // uri 형식으로 변경합니다
   final url = Uri.parse(URL);
-  print(url);
 
-  ByteData byteData = await rootBundle.load('lib/assets/car_video/video.mp4');
-  Uint8List uint8List = byteData.buffer.asUint8List();
-  String fileData = base64Encode(uint8List);
-  print(fileData);
   // 기본 headers
   Map<String, String> headers = {
     "accept": "application/json",

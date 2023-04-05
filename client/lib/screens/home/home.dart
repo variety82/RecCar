@@ -42,6 +42,7 @@ class _HomeState extends State<Home> {
     setState(() {
       userName = name;
       userProfileImg = img;
+
       userCarId = carId;
       // userCarId = '0';
       firstVideoInfo = videoInfo;

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../../screens/my_page/rent_log_detail.dart';
 import './rent_log_line.dart';
 
-class RentLogCard extends StatelessWidget {
+class RentLogCard extends StatefulWidget {
   final String startDate;
   final String endDate;
   final String company;
-  final String damage;
+  final int damage;
   final int carId;
 
   const RentLogCard({
@@ -19,15 +19,21 @@ class RentLogCard extends StatelessWidget {
   });
 
   @override
+  State<RentLogCard> createState() => _RentLogCardState();
+}
+
+class _RentLogCardState extends State<RentLogCard> {
+  @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => RentLogDetail(
-                    carId: carId,
-                  )),
+            builder: (context) => RentLogDetail(
+              carId: widget.carId,
+            ),
+          ),
         );
       },
       child: Container(
@@ -64,19 +70,35 @@ class RentLogCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        RentLogLine(infoTitle: "대여 일자", info: "${startDate}", space: 100,),
+                        RentLogLine(
+                          infoTitle: "대여 일자",
+                          info: "${widget.startDate}",
+                          space: 100,
+                        ),
                         SizedBox(
                           height: 5,
                         ),
-                        RentLogLine(infoTitle: "반납 일자", info: "${endDate}", space: 100,),
+                        RentLogLine(
+                          infoTitle: "반납 일자",
+                          info: "${widget.endDate}",
+                          space: 100,
+                        ),
                         SizedBox(
                           height: 5,
                         ),
-                        RentLogLine(infoTitle: "대여 업체", info: "${company}", space: 100,),
+                        RentLogLine(
+                          infoTitle: "대여 업체",
+                          info: "${widget.company}",
+                          space: 100,
+                        ),
                         SizedBox(
                           height: 5,
                         ),
-                        RentLogLine(infoTitle: "파손 개수", info: "${damage} 개", space: 100,),
+                        RentLogLine(
+                          infoTitle: "파손 개수",
+                          info: "${widget.damage} 개",
+                          space: 100,
+                        ),
                         Divider(
                           thickness: 1.5,
                         ),
@@ -84,13 +106,11 @@ class RentLogCard extends StatelessWidget {
                           height: 5,
                         ),
                         Center(
-                          child: Text(
-                            "자세히 보기",
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w600,
-                            )
-                          ),
+                          child: Text("자세히 보기",
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.w600,
+                              )),
                         ),
                       ],
                     ),

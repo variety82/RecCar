@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 final storage = FlutterSecureStorage();
-enum Method { get, post, put, delete }
+enum Method { get, post, put, delete, patch }
 
 // apiInstance를 만듭니다
 Future<dynamic> apiInstance({
@@ -61,6 +61,13 @@ Future<dynamic> apiInstance({
     case Method.delete:
       try {
         response = await http.delete(url, headers: headers, body: json.encode(body));
+      } catch(error) {
+        fail('HTTP 요청 처리 중 오류 발생: $error');
+      }
+      break;
+    case Method.patch:
+      try {
+        response = await http.patch(url, headers: headers, body: json.encode(body));
       } catch(error) {
         fail('HTTP 요청 처리 중 오류 발생: $error');
       }

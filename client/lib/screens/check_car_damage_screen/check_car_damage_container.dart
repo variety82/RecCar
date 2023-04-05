@@ -8,6 +8,7 @@ class CheckCarDamageContainer extends StatefulWidget {
   final VideoPlayerController videoPlayerController;
   final List<Map<String, dynamic>> carDamageList;
   final List<int> selectedIndexList;
+  final List<int> filteredDamagedIndex;
   final void Function(int, String, int, int, int, int, String)
       changeDamageValue;
   final void Function(int) deleteDamageList;
@@ -22,6 +23,7 @@ class CheckCarDamageContainer extends StatefulWidget {
     required this.isSelectedView,
     required this.deleteDamageList,
     required this.showConfirmationDialog,
+    required this.filteredDamagedIndex,
   });
 
   @override
@@ -49,7 +51,7 @@ class _CheckCarDamageContainerState extends State<CheckCarDamageContainer> {
         child: widget.isSelectedView
             ? ListView(
                 children: [
-                  Column(children: widget.carDamageList.where((damage) => damage['selected'] == true)
+                  Column(children: widget.carDamageList.where((damage) => damage['selected'] == true && widget.filteredDamagedIndex.contains(damage['index']))
                       .map((damage) => Padding(
                     padding: const EdgeInsets.all(12),
                     child: CheckCarDamagePart(
@@ -70,7 +72,7 @@ class _CheckCarDamageContainerState extends State<CheckCarDamageContainer> {
                     ? _selectedScrollController
                     : _scrollController,
                 children: widget.carDamageList
-            .where((damage) => damage['selected'] == false)
+            .where((damage) => damage['selected'] == false && widget.filteredDamagedIndex.contains(damage['index']))
           .map((damage) => Padding(
         padding: const EdgeInsets.all(12),
         child: CheckCarDamagePart(

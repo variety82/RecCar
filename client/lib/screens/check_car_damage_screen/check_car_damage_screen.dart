@@ -52,12 +52,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
   List<dynamic> carDamageInfo = [];
 
-  List<String> selected_categories = [
-    '스크래치',
-    '찌그러짐',
-    '파손',
-    '이격',
-  ];
+  List<String> selected_categories = [];
 
   List<String> damage_categories = [
     '스크래치',
@@ -326,6 +321,39 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     });
   }
 
+  // List<Map<String, dynamic>> filteredDamagedIndex = [];
+  List<int> filteredDamagedIndex = [];
+
+  void changeFilter() {
+    filteredDamagedIndex = [];
+    if (selected_categories.length == 0) {
+      print('히히');
+      carDamagesAllList.forEach((damage) {
+        print(damage['index']);
+        setState(() {
+          filteredDamagedIndex.add(damage['index']);
+        });
+      });
+    } else {
+      print('하하');
+      carDamagesAllList.forEach((damage) {
+        if (selected_categories.contains('스크래치') && damage['Scratch'] != 0 && !filteredDamagedIndex.contains(damage['index'])) {
+          filteredDamagedIndex.add(damage['index']);
+        } if (selected_categories.contains('찌그러짐') && damage['Crushed'] != 0 && !filteredDamagedIndex.contains(damage['index'])) {
+          filteredDamagedIndex.add(damage['index']);
+        } if (selected_categories.contains('파손') && damage['Breakage'] != 0 && !filteredDamagedIndex.contains(damage['index'])) {
+          filteredDamagedIndex.add(damage['index']);
+        } if (selected_categories.contains('이격') && damage['Separated'] != 0 && !filteredDamagedIndex.contains(damage['index'])) {
+          filteredDamagedIndex.add(damage['index']);
+        }
+      });
+    }
+    setState(() {
+      filteredDamagedIndex.sort((a, b) => a.compareTo(b));
+    });
+    print(filteredDamagedIndex);
+  }
+
   @override
   void initState() {
     _initVideoPlayer();
@@ -345,6 +373,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
         });
       }
     });
+    changeFilter();
     super.initState();
   }
 
@@ -356,9 +385,12 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         body: loading_video
             ? Container(
+          decoration: BoxDecoration(
+            color: Colors.black,
+          ),
                 height: screenHeight,
                 width: screenWidth,
                 child: Column(
@@ -679,7 +711,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                             controller: _tabController,
                             children: [
                               selectedIndexList.length !=
-                                      carDamagesAllList.length
+                                      carDamagesAllList.length || selected_categories.length != filteredDamagedIndex.length || filteredDamagedIndex.isNotEmpty
                                   ? CheckCarDamageContainer(
                                       carDamageList: carDamagesAllList,
                                       videoPlayerController:
@@ -690,9 +722,10 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       deleteDamageList: deleteDamageList,
                                       showConfirmationDialog:
                                           showConfirmationDialog,
+                                filteredDamagedIndex: filteredDamagedIndex,
                                     )
                                   : Center(
-                                      child: Text('현재 손상 데이터가 존재하지 않습니다.'),
+                                      child: Text('추가 전 손상이 존재하지 않습니다.'),
                                     ),
                               selectedIndexList.length > 0
                                   ? CheckCarDamageContainer(
@@ -705,9 +738,10 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       deleteDamageList: deleteDamageList,
                                       showConfirmationDialog:
                                           showConfirmationDialog,
+                                  filteredDamagedIndex: filteredDamagedIndex,
                                     )
                                   : Center(
-                                      child: Text('현재 손상 데이터가 존재하지 않습니다.'),
+                                      child: Text('추가 예정인 손상이 존재하지 않습니다.'),
                                     ),
                             ],
                           ),
@@ -789,6 +823,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                               },
                                             );
                                           }
+                                          changeFilter();
                                         },
                                         child: Chip(
                                             label: Text(
