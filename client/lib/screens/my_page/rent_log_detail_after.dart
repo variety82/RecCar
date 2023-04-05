@@ -32,7 +32,7 @@ class _AfterRentState extends State<AfterRent> {
                       "${info['damageImageUrl']}",
                       kindOfDamage: (info['scratch'] > 0 ? "스크래치 ":"") + (info['breakage'] > 0 ? "파손 " : "") + (info['crushed'] > 0 ? "찌그러짐 " : "") + (info['separated'] > 0 ? "이격 " : ""),
                       damageDate: "${info['damageDate']}",
-                      damageLocation: "${info['part']}",
+                      damageLocation: "${info['part']}" == 'front' ? "앞범퍼/펜더, 전조등" : "${info['part']}" == 'back' ? "뒷범퍼/펜더, 후미등" : "${info['part']}" == 'side' ? "옆면/사이드/스텝" : "${info['part']}" == 'wheel' ? "타이어/휠" : "",
                       damageId: info['detectionInfoId'],
                       memo: info['memo'],
                     ),

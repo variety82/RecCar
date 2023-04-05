@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/common/footer.dart';
@@ -40,7 +38,7 @@ class _CalendarState extends State<Calendar> {
           .format(_inputedCalendarDate!),
       "title": _inputedTitle,
       "memo": _inputedMemo,
-      "isAuto": false,
+      "auto": false,
     };
   }
 
@@ -51,7 +49,7 @@ class _CalendarState extends State<Calendar> {
           .format(_inputedCalendarDate),
       "title": _inputedTitle,
       "memo": _inputedMemo,
-      "isAuto": false,
+      "auto": false,
     };
   }
 
@@ -80,12 +78,12 @@ class _CalendarState extends State<Calendar> {
             var eventDate = DateTime.parse(temp);
             if (kEvents.containsKey(eventDate)) {
               kEvents[eventDate]!.add(Event(events[i]['calendarId'],
-                  events[i]['title'], events[i]['memo']));
+                  events[i]['title'], events[i]['memo'], events[i]['auto']));
             } else {
               kEvents.addAll({
                 eventDate: [
                   Event(events[i]['calendarId'], events[i]['title'],
-                      events[i]['memo']),
+                      events[i]['memo'], events[i]['auto']),
                 ]
               });
             }
@@ -245,12 +243,19 @@ class _CalendarState extends State<Calendar> {
                             ),
                             child: ListTile(
                               onTap: () => {
-                                showDetailCalender(value[index].id,
-                                    value[index].title, value[index].memo)
+                                showDetailCalender(
+                                    value[index].id,
+                                    value[index].title,
+                                    value[index].memo,
+                                    value[index].auto)
                               },
                               title: Text('${value[index].title}',
                                   style: TextStyle(color: Color(0xFF6A6A6A))),
-                              subtitle: Text('${value[index].memo}'),
+                              subtitle: "${value[index].memo}" != ""
+                                  ? Text('${value[index].memo}')
+                                  : Text('메모가 없습니다',
+                                      style:
+                                          TextStyle(color: Color(0xFFD9D9D9))),
                             ),
                           );
                         },
@@ -355,7 +360,8 @@ class _CalendarState extends State<Calendar> {
                                   ),
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Theme.of(context).secondaryHeaderColor,
+                                    color:
+                                        Theme.of(context).secondaryHeaderColor,
                                   ),
                                 ),
                               ),
@@ -381,7 +387,8 @@ class _CalendarState extends State<Calendar> {
                               //   print(args.value);
                               // },
                               controller: _dateController,
-                              todayHighlightColor: Theme.of(context).primaryColor,
+                              todayHighlightColor:
+                                  Theme.of(context).primaryColor,
                               selectionColor: Theme.of(context).primaryColor,
                               headerStyle: DateRangePickerHeaderStyle(
                                 textAlign: TextAlign.center,
@@ -506,21 +513,23 @@ class _CalendarState extends State<Calendar> {
     if (_inputedTitle != "" &&
         _inputedCalendarDate != DateTime.parse("0000-00-00 00:00:00.000Z")) {
       postEvent(
-        success: (dynamic response) {
+        success: (dynamic response) async {
           // 바로 반영이 안돼서 일단 딜레이 주기
-          sleep(const Duration(seconds: 2));
+          // sleep(const Duration(seconds: 2));
+          await Navigator.pushNamed(context, '/calendar');
         },
         fail: (error) {
           print('일정 등록 오류: $error');
         },
         body: _buildCalendarInfoBody(),
       );
-      Navigator.pushNamed(context, '/calendar');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         //SnackBar 구현하는법 context는 위에 BuildContext에 있는 객체를 그대로 가져오면 됨.
         SnackBar(
-          content: Center(child: Text("제목과 날짜는 필수 입력값입니다.", style: TextStyle(color: Colors.white))),
+          content: Center(
+              child: Text("제목과 날짜는 필수 입력값입니다.",
+                  style: TextStyle(color: Colors.white))),
           backgroundColor: Theme.of(context).primaryColor,
           duration: Duration(milliseconds: 1000),
           behavior: SnackBarBehavior.floating,
@@ -542,7 +551,7 @@ class _CalendarState extends State<Calendar> {
   }
 
   // 일정 상세보기 (수정, 삭제 기능 추가하기)
-  void showDetailCalender(int id, String title, String memo) {
+  void showDetailCalender(int id, String title, String memo, bool auto) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -573,6 +582,32 @@ class _CalendarState extends State<Calendar> {
                       margin: EdgeInsets.zero,
                       child: TextButton(
                         onPressed: () {
+                          deleteCalendar(id);
+                        },
+                        child: !auto
+                            ? Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  "삭제",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 11),
+                                ),
+                              )
+                            : Container(),
+                      ),
+                    ),
+                    Container(
+                      width: 55,
+                      margin: EdgeInsets.zero,
+                      child: TextButton(
+                        onPressed: () {
                           modifyCalendar(id, title, memo, _focusedDay);
                         },
                         child: Container(
@@ -582,33 +617,10 @@ class _CalendarState extends State<Calendar> {
                           ),
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
                             "수정",
-                            style: TextStyle(color: Colors.white, fontSize: 11),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 55,
-                      margin: EdgeInsets.zero,
-                      child: TextButton(
-                        onPressed: () {
-                          deleteCalendar(id);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            "삭제",
                             style: TextStyle(color: Colors.white, fontSize: 11),
                           ),
                         ),
@@ -696,7 +708,7 @@ class _CalendarState extends State<Calendar> {
                           horizontal: 3,
                         ),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(5),
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
@@ -929,31 +941,31 @@ class _CalendarState extends State<Calendar> {
       _inputedCalendarDate = _dateController.selectedDate ?? DateTime.now();
     });
     putEvent(
-      success: (dynamic response) {
+      success: (dynamic response) async {
         // 바로 반영이 안돼서 일단 딜레이 주기
-        sleep(const Duration(seconds: 2));
+        // sleep(const Duration(seconds: 2));
+        Navigator.pop(context);
+        await Navigator.pushNamed(context, '/calendar');
       },
       fail: (error) {
         print('일정 수정 오류: $error');
       },
       body: _buildCalendarInfoBody2(id),
     );
-    Navigator.pop(context);
-    Navigator.pushNamed(context, '/calendar');
   }
 
   void deleteCalendar(int id) {
     deleteEvent(
-      success: (dynamic response) {
+      success: (dynamic response) async {
         // 바로 반영이 안돼서 일단 딜레이 주기
-        sleep(const Duration(seconds: 2));
+        // sleep(const Duration(seconds: 2));
+        Navigator.pop(context);
+        await Navigator.pushNamed(context, '/calendar');
       },
       fail: (error) {
-        print('일정 수정 오류: $error');
+        print('일정 삭제 오류: $error');
       },
       calendarId: id,
     );
-    Navigator.pop(context);
-    Navigator.pushNamed(context, '/calendar');
   }
 }
