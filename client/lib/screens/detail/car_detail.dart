@@ -85,6 +85,57 @@ class _CarDetailState extends State<CarDetail>
     );
   }
 
+  void _showReturnModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(
+            '반납하시겠습니까?',
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).secondaryHeaderColor,
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                MaterialStateProperty.all(Theme.of(context).primaryColor),
+                minimumSize: MaterialStateProperty.all(const Size(60, 35)),
+              ),
+              onPressed: () {
+                getCarReturn(success: (dynamic response) async {
+                  await storage.write(
+                      key: "carId", value: '0'
+                  );
+                  await storage.write(
+                      key: "carVideoState", value: '0'
+                  );
+                  Navigator.pushNamed(context, '/home');
+                }, fail: (error) {
+                  print('차량 반납 요청 오류 : $error');
+                });
+              },
+              child: const Text('네'),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                MaterialStateProperty.all(Theme.of(context).primaryColor),
+                minimumSize: MaterialStateProperty.all(const Size(60, 35)),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('아니오'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showSelectModal(BuildContext context) {
     showDialog(
       context: context,
@@ -263,27 +314,21 @@ class _CarDetailState extends State<CarDetail>
                       clipBehavior: Clip.none,
                       alignment: AlignmentDirectional.topCenter,
                       children: [
-                        FloatingActionButton(
-                          onPressed: () {
-                            getCarReturn(success: (dynamic response) async {
-                              await storage.write(key: "carId", value: '0');
-                              await storage.write(
-                                  key: "carVideoState", value: '0');
-                            }, fail: (error) {
-                              print('차량 반납 요청 오류 : $error');
-                            });
-                          },
-                          mini: true,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(16.0), // 원하는 모서리 반경을 설정합니다.
+                          FloatingActionButton(
+                            onPressed: () {
+                              _showReturnModal(context);
+                            },
+                            mini: true,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(16.0), // 원하는 모서리 반경을 설정합니다.
+                              ),
+                            ),
+                            backgroundColor: Theme.of(context).primaryColor,
+                            child: const Icon(
+                              Icons.reply,
                             ),
                           ),
-                          backgroundColor: Theme.of(context).primaryColor,
-                          child: const Icon(
-                            Icons.reply,
-                          ),
-                        ),
                         Positioned(
                           top: 55,
                           child: Text(
