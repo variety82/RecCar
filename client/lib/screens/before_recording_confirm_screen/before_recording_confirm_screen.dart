@@ -184,17 +184,6 @@ class _BeforeRecordingConfirmScreenState
                               child: Container(
                                 width: 300,
                                 height: 300,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color(0xFF999999)
-                                            .withOpacity(0.5),
-                                        spreadRadius: 0.3,
-                                        blurRadius: 6,
-                                      )
-                                    ]),
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 20,
