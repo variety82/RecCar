@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:client/screens/detail/part_detail.dart';
 import 'package:client/widgets/common/footer.dart';
+import 'package:client/screens/before_recording_confirm_screen/before_recording_confirm_screen.dart';
 
 enum Part { front, side, back, wheel }
 
@@ -14,8 +15,8 @@ class CarDetail extends StatefulWidget {
   State<CarDetail> createState() => _CarDetailState();
 }
 
-class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMixin {
-
+class _CarDetailState extends State<CarDetail>
+    with SingleTickerProviderStateMixin {
   FlutterSecureStorage storage = const FlutterSecureStorage();
 
   TabController? _tabController;
@@ -28,11 +29,14 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
     _tabController?.addListener(_handleTabSelection);
     _fetchCarInfo();
   }
+
   int _previousTabIndex = 0;
 
   void _handleTabSelection() {
     if (_tabController?.indexIsChanging ?? false) {
-      if (_tabController?.index == 1 && currentCarVideo == '1' && _previousTabIndex == 0) {
+      if (_tabController?.index == 1 &&
+          currentCarVideo == '1' &&
+          _previousTabIndex == 0) {
         _tabController?.animateTo(0);
         _showModal(context);
       }
@@ -46,7 +50,7 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
       builder: (BuildContext context) {
         return AlertDialog(
           content: Text(
-              '반납 영상이 등록되지 않았습니다.',
+            '반납 영상이 등록되지 않았습니다.',
             style: TextStyle(
               fontSize: 14,
               color: Theme.of(context).secondaryHeaderColor,
@@ -55,8 +59,9 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
           actions: <Widget>[
             ElevatedButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-                minimumSize: MaterialStateProperty.all(const Size(60,35)),
+                backgroundColor:
+                    MaterialStateProperty.all(Theme.of(context).primaryColor),
+                minimumSize: MaterialStateProperty.all(const Size(60, 35)),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -65,13 +70,71 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
             ),
             ElevatedButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-                minimumSize: MaterialStateProperty.all(const Size(60,35)),
+                backgroundColor:
+                    MaterialStateProperty.all(Theme.of(context).primaryColor),
+                minimumSize: MaterialStateProperty.all(const Size(60, 35)),
               ),
               onPressed: () {
-                Navigator.pushNamed(
-                    context, '/before-recording');              },
+                _showSelectModal(context);
+              },
               child: const Text('등록'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSelectModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actionsAlignment: MainAxisAlignment.center,
+          content: Text(
+            '영상 등록 방법을 선택해주세요',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).secondaryHeaderColor,
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Theme.of(context).primaryColor),
+                minimumSize: MaterialStateProperty.all(const Size(60, 35)),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        BeforeRecordingConfirmScreen(videoCase: 'pick'),
+                  ),
+                );
+              },
+              child: const Text('기존 영상'),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Theme.of(context).primaryColor),
+                minimumSize: MaterialStateProperty.all(const Size(60, 35)),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        BeforeRecordingConfirmScreen(videoCase: 'take'),
+                  ),
+                );
+              },
+              child: const Text('신규 촬영'),
             ),
           ],
         );
@@ -82,18 +145,14 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
   Map<String, dynamic>? _detectionInfo;
 
   Future<void> _fetchCarInfo() async {
-    getCarInfo(
-      success: (dynamic response) {
-        setState(() {
-          _detectionInfo = response;
-        });
-      },
-      fail: (error) {
-        print('차량 파손 정보 호출 오류 : $error');
-      }
-    );
+    getCarInfo(success: (dynamic response) {
+      setState(() {
+        _detectionInfo = response;
+      });
+    }, fail: (error) {
+      print('차량 파손 정보 호출 오류 : $error');
+    });
   }
-
 
   @override
   void dispose() {
@@ -103,7 +162,8 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, String?>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, String?>?;
 
     if (args != null) {
       currentCarVideo = args['currentCarVideo'];
@@ -117,53 +177,65 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
       body: Stack(
         children: [
           Column(
-          children: [
-            SizedBox(
-              height: statusBarHeight,
-            ),
-            PreferredSize(
-              preferredSize: const Size.fromHeight(100),
-              child: TabBar(
+            children: [
+              SizedBox(
+                height: statusBarHeight,
+              ),
+              PreferredSize(
+                preferredSize: const Size.fromHeight(100),
+                child: TabBar(
+                    controller: _tabController,
+                    labelColor: Theme.of(context).secondaryHeaderColor,
+                    unselectedLabelColor: Theme.of(context).disabledColor,
+                    indicatorColor: Theme.of(context).primaryColor,
+                    indicatorWeight: 5,
+                    labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+                    unselectedLabelStyle:
+                        const TextStyle(fontWeight: FontWeight.w400),
+                    tabs: const [
+                      Tab(
+                        text: '대여',
+                      ),
+                      Tab(
+                        text: '반납',
+                      ),
+                    ]),
+              ),
+              Expanded(
+                child: TabBarView(
                   controller: _tabController,
-                  labelColor: Theme.of(context).secondaryHeaderColor,
-                  unselectedLabelColor: Theme.of(context).disabledColor,
-                  indicatorColor: Theme.of(context).primaryColor,
-                  indicatorWeight: 5,
-                  labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-                  unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
-                  tabs: const [
-                    Tab(
-                      text: '대여',
+                  physics: currentCarVideo == '1'
+                      ? const NeverScrollableScrollPhysics()
+                      : null,
+                  children: [
+                    partDetail(
+                      detectionInfos:
+                          _detectionInfo?['initialDetectionInfos'] ?? {},
+                      frontDamageCount:
+                          _detectionInfo?['initialFrontDamageCount'] ?? 0,
+                      sideDamageCount:
+                          _detectionInfo?['initialSideDamageCount'] ?? 0,
+                      backDamageCount:
+                          _detectionInfo?['initialBackDamageCount'] ?? 0,
+                      wheelDamageCount:
+                          _detectionInfo?['initialWheelDamageCount'] ?? 0,
                     ),
-                    Tab(
-                      text: '반납',
+                    partDetail(
+                      detectionInfos:
+                          _detectionInfo?['latterDetectionInfos'] ?? {},
+                      frontDamageCount:
+                          _detectionInfo?['latterFrontDamageCount'] ?? 0,
+                      sideDamageCount:
+                          _detectionInfo?['latterSideDamageCount'] ?? 0,
+                      backDamageCount:
+                          _detectionInfo?['latterBackDamageCount'] ?? 0,
+                      wheelDamageCount:
+                          _detectionInfo?['latterWheelDamageCount'] ?? 0,
                     ),
-                  ]
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                physics: currentCarVideo == '1' ? const NeverScrollableScrollPhysics() : null,
-                children: [
-                  partDetail(
-                    detectionInfos: _detectionInfo?['initialDetectionInfos'] ?? {},
-                    frontDamageCount: _detectionInfo?['initialFrontDamageCount'] ?? 0,
-                    sideDamageCount: _detectionInfo?['initialSideDamageCount'] ?? 0,
-                    backDamageCount: _detectionInfo?['initialBackDamageCount'] ?? 0,
-                    wheelDamageCount: _detectionInfo?['initialWheelDamageCount'] ?? 0,
-                  ),
-                  partDetail(
-                    detectionInfos: _detectionInfo?['latterDetectionInfos'] ?? {},
-                    frontDamageCount: _detectionInfo?['latterFrontDamageCount'] ?? 0,
-                    sideDamageCount: _detectionInfo?['latterSideDamageCount'] ?? 0,
-                    backDamageCount: _detectionInfo?['latterBackDamageCount'] ?? 0,
-                    wheelDamageCount: _detectionInfo?['latterWheelDamageCount'] ?? 0,
-                  ),
-                ],
-              ),
-            ),
-            const Footer()
+              const Footer()
             ],
           ),
           if (currentCarVideo == '2')
@@ -176,15 +248,12 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
                 children: [
                   FloatingActionButton(
                     onPressed: () {
-                      getCarReturn(
-                          success: (dynamic response) async {
-                            await storage.write(key: "carId", value: '0');
-                            await storage.write(key: "carVideoState", value: '0');
-                          },
-                          fail: (error) {
-                            print('차량 반납 요청 오류 : $error');
-                          }
-                      );
+                      getCarReturn(success: (dynamic response) async {
+                        await storage.write(key: "carId", value: '0');
+                        await storage.write(key: "carVideoState", value: '0');
+                      }, fail: (error) {
+                        print('차량 반납 요청 오류 : $error');
+                      });
                     },
                     mini: true,
                     shape: const RoundedRectangleBorder(
@@ -194,17 +263,16 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                     child: const Icon(
-                        Icons.reply,
+                      Icons.reply,
                     ),
                   ),
                   Positioned(
                     top: 55,
                     child: Text(
-                        '반납하기',
+                      '반납하기',
                       style: TextStyle(
-                        color: Theme.of(context).secondaryHeaderColor,
-                        fontWeight: FontWeight.w500
-                      ),
+                          color: Theme.of(context).secondaryHeaderColor,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
@@ -215,5 +283,3 @@ class _CarDetailState extends State<CarDetail> with SingleTickerProviderStateMix
     );
   }
 }
-
-
