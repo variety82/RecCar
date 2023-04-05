@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:client/widgets/common/footer.dart';
 import 'package:client/widgets/main_page/main_page_body.dart';
 import 'package:client/screens/before_recording_confirm_screen/before_recording_confirm_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -19,9 +20,6 @@ class _HomeState extends State<Home> {
   dynamic firstVideoInfo = true;
   dynamic firstCheckDamage = true;
   String? currentCarVideo;
-
-  // dynamic userName = '';
-  // dynamic userEmail = '';
 
   @override
   void initState() {
@@ -43,14 +41,10 @@ class _HomeState extends State<Home> {
     setState(() {
       userName = name;
       userProfileImg = img;
-
       userCarId = carId;
-      // userCarId = '0';
       firstVideoInfo = videoInfo;
       firstCheckDamage = checkDamage;
       currentCarVideo = carVideoState;
-      // currentCarVideo = '2';
-      // print(currentCarVideo);
     });
     if (userName == null) {
       Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
@@ -116,6 +110,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: userCarId == null || currentCarVideo == null
@@ -126,8 +122,25 @@ class _HomeState extends State<Home> {
             )
           : Column(
               children: [
-                const SizedBox(
-                  height: 100,
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 130,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: statusBarHeight,
+                        vertical: 0
+                      ),
+                      child:
+                      SvgPicture.asset(
+                        'lib/assets/images/logo/reccar_logo_horizontal.svg',
+                        height: 30,
+                      ),
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: userCarId == '0'
@@ -193,7 +206,7 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 3,
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -322,6 +335,7 @@ class _HomeState extends State<Home> {
                                     horizontal: 20,
                                   ),
                                   child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       GestureDetector(
                                         onTap: () {
@@ -394,7 +408,7 @@ class _HomeState extends State<Home> {
                                         ),
                                       ),
                                       const SizedBox(
-                                        height: 10,
+                                        height: 6,
                                       ),
                                       GestureDetector(
                                         onTap: () {
