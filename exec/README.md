@@ -170,7 +170,21 @@ aws_access_key_id = 엑세스 키 ID,
 aws_secret_access_key = 비밀 엑세스 키
 
 -------Front-End------------
+# android/app/key.properties
+storePassword={발급받은 서명키 비밀번호}
+keyPassword={발급받은 서명키 비밀번호}
+keyAlias={서명키 aliase 이름}
+storeFile={.jks 파일 저장 위치}
 
+# android/local.properties
+sdk.dir={안드로이드 sdk 경로}
+flutter.sdk={플러터 sdk 경로}
+flutter.buildMode={빌드 모드 debug 또는 release}
+flutter.versionName={버전 이름}
+flutter.versionCode={버전 코드}
+
+#.env
+TMAP_API_KEY={key}
 ```
 
 
