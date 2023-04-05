@@ -74,7 +74,7 @@ class _CarDetailState extends State<CarDetail>
                 minimumSize: MaterialStateProperty.all(const Size(60, 35)),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/before-recording');
+                Navigator.of(context).pop();
                 _showSelectModal(context);
               },
               child: const Text('등록'),
@@ -101,17 +101,13 @@ class _CarDetailState extends State<CarDetail>
             ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
-                MaterialStateProperty.all(Theme.of(context).primaryColor),
+                    MaterialStateProperty.all(Theme.of(context).primaryColor),
                 minimumSize: MaterialStateProperty.all(const Size(60, 35)),
               ),
               onPressed: () {
                 getCarReturn(success: (dynamic response) async {
-                  await storage.write(
-                      key: "carId", value: '0'
-                  );
-                  await storage.write(
-                      key: "carVideoState", value: '0'
-                  );
+                  await storage.write(key: "carId", value: '0');
+                  await storage.write(key: "carVideoState", value: '0');
                   Navigator.pushNamed(context, '/home');
                 }, fail: (error) {
                   print('차량 반납 요청 오류 : $error');
@@ -122,7 +118,7 @@ class _CarDetailState extends State<CarDetail>
             ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
-                MaterialStateProperty.all(Theme.of(context).primaryColor),
+                    MaterialStateProperty.all(Theme.of(context).primaryColor),
                 minimumSize: MaterialStateProperty.all(const Size(60, 35)),
               ),
               onPressed: () {
@@ -314,21 +310,21 @@ class _CarDetailState extends State<CarDetail>
                       clipBehavior: Clip.none,
                       alignment: AlignmentDirectional.topCenter,
                       children: [
-                          FloatingActionButton(
-                            onPressed: () {
-                              _showReturnModal(context);
-                            },
-                            mini: true,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(16.0), // 원하는 모서리 반경을 설정합니다.
-                              ),
-                            ),
-                            backgroundColor: Theme.of(context).primaryColor,
-                            child: const Icon(
-                              Icons.reply,
+                        FloatingActionButton(
+                          onPressed: () {
+                            _showReturnModal(context);
+                          },
+                          mini: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(16.0), // 원하는 모서리 반경을 설정합니다.
                             ),
                           ),
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: const Icon(
+                            Icons.reply,
+                          ),
+                        ),
                         Positioned(
                           top: 55,
                           child: Text(
