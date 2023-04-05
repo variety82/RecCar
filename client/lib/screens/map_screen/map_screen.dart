@@ -85,10 +85,10 @@ class _NaverMapTestState extends State<NaverMapTest> {
                       Text(
                         "검색 결과가 없습니다",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Theme.of(context).secondaryHeaderColor,
                           decoration: TextDecoration.none,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     if (!result[0].isEmpty)
@@ -167,15 +167,10 @@ class _NaverMapTestState extends State<NaverMapTest> {
         Expanded(
           child: Stack(
             children: [
-              Expanded(
-                child: Container(
-                  child: naver.NaverMap(
-                    onMapCreated: onMapCreated,
-                    markers: marker,
-
-                    // mapType: _mapType,
-                    // onMapTap: onMapTap,
-                  ),
+              Container(
+                child: naver.NaverMap(
+                  onMapCreated: onMapCreated,
+                  markers: marker,
                 ),
               ),
               Positioned(
@@ -464,11 +459,11 @@ class _NaverMapTestState extends State<NaverMapTest> {
                   var lat = double.parse(ret[j]["frontLat"]);
                   var lng = double.parse(ret[j]["frontLon"]);
                   var latLng = naver.LatLng(lat, lng);
-                    marker[100 * (i - 1) + j + 1] = (naver.Marker(
-                      markerId: "${ret[j]['name']}",
-                      position: latLng,
-                      infoWindow: "${ret[j]['name']}",
-                    ));
+                  marker[100 * (i - 1) + j + 1] = (naver.Marker(
+                    markerId: "${ret[j]['name']}",
+                    position: latLng,
+                    infoWindow: "${ret[j]['name']}",
+                  ));
                 }
               });
 
