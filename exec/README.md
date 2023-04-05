@@ -211,6 +211,10 @@ TMAP_API_KEY={key}
 개발용 => flutter build apk --debug
 ```
 
+### 프론트엔드 배포
+```jsx
+
+```
 
 
 ### 백엔드 빌드
@@ -226,7 +230,7 @@ build -t DockerHubID/DockerHubRepo:be-latest .
 build -t DockerHubID/DockerHubRepo:fastapi-latest .
 ```
 
-### 배포
+### 백엔드 배포
 
 ```jsx
 백엔드의 이미지를 풀 받은 후 컨테이너 실행
@@ -245,6 +249,26 @@ docekr run --rm -d -p 8081:8081 --name fastapi-latest 이미지ID
 
 ## 2. 외부 서비스 문서
 
+### Oauth2.0
+1. Oauth 프로젝트 생성
+    
+    - 상단 메뉴바에서 프로젝트 이름 클릭
+    - 모달에서 "새 프로젝트 생성" 버튼 클릭1
+
+2. Oauth 동의 화면 생성
+
+    - 생성한 프로젝트의 우측 메뉴 콘솔에서 "Oauth 동의 화면" 클릭
+    - UserType : 외부 -> 필수 항목 입력
+    - 범위: 기본, 개인정보, openId
+    - 생성
+
+3. Oauth 클라이언트 ID 생성 
+    - 우측 메뉴바 "사용자 인증 정보" 클릭
+    - 상단 "사용자 인증 정보 만들기" => "Oauth 클라이언트 ID" 클릭
+    - 애플리케이션 유형: "Android"
+    - 필수 항목 입력: 이름, 패키지 이름, SHA-1 인증서
+    - 만들기
+
 ### FireBase
 
 1. FireBase 프로젝트 생성
@@ -255,28 +279,28 @@ docekr run --rm -d -p 8081:8081 --name fastapi-latest 이미지ID
 2. SDK 설정
 
    - 해당 프로젝트 콘솔로 접속
-   - 웹 아이콘 (</>) 클릭
-     - 앱 닉네임 등록, firebase sdk 추가 (npm 사용 체크)
-     - 콘솔로 이동
+   - Flutter 아이콘 클릭
+   - Firebase CLI 설치 및 로그인 flutter sdk 설치(안되어 있을 경우)
+   - flutter 프로젝트의 루트 디렉토리에서 다음 명령어 실행
+    ```jsx
+     - dart pub global activate flutterfire_cli
+     - flutterfire configure {firebase 프로젝트 id}
+    ```
+   - flutter 프로젝트 main.dart에서 import하여 호출
 
-3. Authentication 설정
+3. 사용자 및 권한 설정
 
-   - 콘솔에서 Authentication 클릭 → 로그인 방법 설정 클릭
-   - 추가 제공업체 클릭 (구글)
-   - 사용설정 토글 on
-   - 프로젝트의 공개용 이름 설정(default 사용), 이메일 입력 ⇒ 저장
+   - 우측 메뉴바 프로젝트 개요 옆 톱니바퀴 클릭 => "사용자 및 권한" 클릭
+   - "일반" 탭 에서 지원 이메일 입력
+   - 하단 SHA-1 서명키에서 .jks로 발급받은 debug / release SHA-1 키 입력
+   - google-services.json => android/app 으로 copy
 
-4. 도메인 연결
+4. Authentication 설정
 
-   - Authentication 탭이동
-   - 승인된 도메인 탭 클릭
-   - 도메인 추가
+   - Authentication 탭 이동
+   - sign-in method 탭 이동
+   - 이메일/비밀번호 및 Google 추가
 
-5. Firebase package 설치
-
-   ```jsx
-   npm install firebase
-   ```
 
 ### S3
 
