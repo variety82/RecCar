@@ -18,19 +18,21 @@ class MainPageBody extends StatefulWidget {
 }
 
 class _MainPageBodyState extends State<MainPageBody> {
+
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(
-          height: 50,
-        ),
         Stack(
             children: [
               Center(
-                child: SvgPicture.asset(
-                  widget.imgRoute
+                child:
+                SvgPicture.asset(
+                  widget.imgRoute,
+                  height: screenHeight * 0.4,
                 ),
               ),
               Container(
@@ -51,7 +53,15 @@ class _MainPageBodyState extends State<MainPageBody> {
             ]
         ),
         Expanded(
-          child: widget.mainContainter
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              widget.mainContainter,
+              const SizedBox(
+                height: 60,
+              )
+            ],
+          )
         )
       ],
     );
