@@ -8,11 +8,13 @@ import com.heros.api.car.dto.response.CarResponse;
 import com.heros.api.car.entity.Car;
 import com.heros.api.car.entity.CarCatalog;
 import com.heros.api.car.repository.CarRepository;
+import com.heros.api.detectionInfo.repository.DetectionInfoRepository;
 import com.heros.api.user.entity.User;
 import com.heros.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import java.util.Map;
 public class CarService {
     private final CarRepository carRepository;
     private final UserRepository userRepository;
+    private final DetectionInfoRepository detectionInfoRepository;
 
     public Long createCar(CarCreate carCreate, User user) {
         Car car = Car.builder()
@@ -93,14 +96,16 @@ public class CarService {
 
         return result;
     }
-
+    @Transactional
     public void deleteCar(Long carId, User user) {
-        if (user.getCurrentCarId() == carId) {
+        Car car = carRepository.findById(carId).get();
+        detectionInfoRepository.deleteAllByCar(car);
+        carRepository.delete(car);
+        if (user.getCurrentCarId().equals(carId)) {
             user.setCurrentCarId(0L);
             user.setCurrentCarVideo(0);
             userRepository.save(user);
         }
-        carRepository.customDeleteCar(carId);
     }
 
     public CarResponse returnCar(User user) {
