@@ -203,7 +203,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       }
       selectedIndexList.sort((a, b) => a.compareTo(b));
       damageView(indexValue);
-      _tabController.animateTo(1);
+      // _tabController.animateTo(1);
     });
   }
 
@@ -212,7 +212,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       () {
         carDamagesAllList[indexValue]["selected"] = false;
         selectedIndexList.remove(indexValue);
-        _tabController.animateTo(0);
+        // _tabController.animateTo(0);
       },
     );
   }
@@ -337,13 +337,24 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     } else {
       print('하하');
       carDamagesAllList.forEach((damage) {
-        if (selected_categories.contains('스크래치') && damage['Scratch'] != 0 && !filteredDamagedIndex.contains(damage['index'])) {
+        if (selected_categories.contains('스크래치') &&
+            damage['Scratch'] != 0 &&
+            !filteredDamagedIndex.contains(damage['index'])) {
           filteredDamagedIndex.add(damage['index']);
-        } if (selected_categories.contains('찌그러짐') && damage['Crushed'] != 0 && !filteredDamagedIndex.contains(damage['index'])) {
+        }
+        if (selected_categories.contains('찌그러짐') &&
+            damage['Crushed'] != 0 &&
+            !filteredDamagedIndex.contains(damage['index'])) {
           filteredDamagedIndex.add(damage['index']);
-        } if (selected_categories.contains('파손') && damage['Breakage'] != 0 && !filteredDamagedIndex.contains(damage['index'])) {
+        }
+        if (selected_categories.contains('파손') &&
+            damage['Breakage'] != 0 &&
+            !filteredDamagedIndex.contains(damage['index'])) {
           filteredDamagedIndex.add(damage['index']);
-        } if (selected_categories.contains('이격') && damage['Separated'] != 0 && !filteredDamagedIndex.contains(damage['index'])) {
+        }
+        if (selected_categories.contains('이격') &&
+            damage['Separated'] != 0 &&
+            !filteredDamagedIndex.contains(damage['index'])) {
           filteredDamagedIndex.add(damage['index']);
         }
       });
@@ -388,9 +399,9 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
         backgroundColor: Colors.white,
         body: loading_video
             ? Container(
-          decoration: BoxDecoration(
-            color: Colors.black,
-          ),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                ),
                 height: screenHeight,
                 width: screenWidth,
                 child: Column(
@@ -711,7 +722,10 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                             controller: _tabController,
                             children: [
                               selectedIndexList.length !=
-                                      carDamagesAllList.length || selected_categories.length != filteredDamagedIndex.length || filteredDamagedIndex.isNotEmpty
+                                          carDamagesAllList.length ||
+                                      selected_categories.length !=
+                                          filteredDamagedIndex.length ||
+                                      filteredDamagedIndex.isNotEmpty
                                   ? CheckCarDamageContainer(
                                       carDamageList: carDamagesAllList,
                                       videoPlayerController:
@@ -722,7 +736,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       deleteDamageList: deleteDamageList,
                                       showConfirmationDialog:
                                           showConfirmationDialog,
-                                filteredDamagedIndex: filteredDamagedIndex,
+                                      filteredDamagedIndex:
+                                          filteredDamagedIndex,
                                     )
                                   : Center(
                                       child: Text('추가 전 손상이 존재하지 않습니다.'),
@@ -738,7 +753,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       deleteDamageList: deleteDamageList,
                                       showConfirmationDialog:
                                           showConfirmationDialog,
-                                  filteredDamagedIndex: filteredDamagedIndex,
+                                      filteredDamagedIndex:
+                                          filteredDamagedIndex,
                                     )
                                   : Center(
                                       child: Text('추가 예정인 손상이 존재하지 않습니다.'),
@@ -826,27 +842,29 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                           changeFilter();
                                         },
                                         child: Chip(
-                                            label: Text(
-                                              part_category,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: selected_categories
-                                                        .contains(part_category)
-                                                    ? Theme.of(context)
-                                                        .primaryColor
-                                                    : Colors.black,
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                          label: Text(
+                                            part_category,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: selected_categories
+                                                      .contains(part_category)
+                                                  ? Theme.of(context)
+                                                      .primaryColor
+                                                  : Theme.of(context)
+                                                      .disabledColor,
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                            labelPadding: EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                            ),
-                                            backgroundColor: selected_categories
-                                                    .contains(part_category)
-                                                ? Color(0xFFFBD5DC)
-                                                : Colors.grey
-                                            // deleteIconColor: Color(0xFFE0426F),
-                                            ),
+                                          ),
+                                          labelPadding: EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                          ),
+                                          backgroundColor: selected_categories
+                                                  .contains(part_category)
+                                              ? Theme.of(context)
+                                                  .primaryColorLight
+                                              : Theme.of(context).shadowColor,
+                                          // deleteIconColor: Color(0xFFE0426F),
+                                        ),
                                       ),
                                     );
                                   },
