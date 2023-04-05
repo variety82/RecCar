@@ -188,7 +188,13 @@ aws_secret_access_key = 비밀 엑세스 키
 ### 프론트엔드 빌드
 
 ```jsx
+# appbundle
+배포용 => flutter build appbundle --release
+개발용 => flutter build appbundle --debug
 
+# apk
+배포용 => flutter build apk --release
+개발용 => flutter build apk --debug
 ```
 
 
