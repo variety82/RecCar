@@ -149,11 +149,11 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
         child: Scaffold(
       // backgroundColor는 흰색으로 설정
       backgroundColor: Colors.white,
-          // appBar: (load_data || loading_api ) ? AppBar(
-          //   elevation: 0,
-          //   backgroundColor: Colors.white,
-          //   foregroundColor: Color(0xFFFF3F3F),
-          // ) : null,
+      // appBar: (load_data || loading_api ) ? AppBar(
+      //   elevation: 0,
+      //   backgroundColor: Colors.white,
+      //   foregroundColor: Color(0xFFFF3F3F),
+      // ) : null,
       // Column 정렬 이용해 화면 정가운데에 이하 요소들을 정렬
       body: load_data
           ? Center(
@@ -226,7 +226,8 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 child: Column(
                                   children: [
                                     Row(
@@ -296,8 +297,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                 child: Text(
                                   "메인 화면으로",
                                   style: TextStyle(
-                                    color: Theme.of(context)
-                                        .primaryColor,
+                                    color: Theme.of(context).primaryColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -314,7 +314,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                             // 나열 방향
                             crossAxisAlignment: WrapCrossAlignment.center,
                             // 정렬 방식
-                            spacing: 20,
+                            spacing: 10,
                             // 좌우 간격
                             runSpacing: 10,
                             children: [
@@ -365,12 +365,14 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10,),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                ),
                                 child: Column(
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         DamageCountInfoBlock(
                                           damageName: "앞범퍼/앞펜더/전조등",
@@ -384,7 +386,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         DamageCountInfoBlock(
                                           damageName: "옆면/사이드/스텝",
@@ -398,6 +400,9 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                     ),
                                   ],
                                 ),
+                              ),
+                              SizedBox(
+                                height: 10,
                               ),
                               Text(
                                 '정말 등록하시겠습니까?',
@@ -440,6 +445,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                   await storage.write(
                                       key: "carVideoState",
                                       value: currentCarVideo == 0 ? '1' : '2');
+                                  print(currentCarVideo);
                                   setState(() {
                                     load_data = true;
                                     loading_api = true;
@@ -461,7 +467,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                   ),
                                   fixedSize: Size(180, 50),
                                   backgroundColor:
-                                  Theme.of(context).primaryColorLight,
+                                      Theme.of(context).primaryColorLight,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).pop();
@@ -469,8 +475,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                 child: Text(
                                   "돌아가기",
                                   style: TextStyle(
-                                    color: Theme.of(context)
-                                        .primaryColor,
+                                    color: Theme.of(context).primaryColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),

@@ -46,7 +46,7 @@ class DamageCountInfoBlock extends StatelessWidget {
             Text(
               '${damageCnt}건',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: damageCnt == 0
                     ? Colors.black

@@ -93,6 +93,8 @@ class _homeFABMenuState extends State<homeFABMenu>
         Tween<double>(begin: 0.0, end: 0.5).animate(_animationController);
     _translateAnimation =
         Tween<double>(begin: 0.0, end: 80.0).animate(_animationController);
+    print(widget.currentCarVideo);
+    print(widget.currentCarId);
   }
 
   @override
