@@ -1,7 +1,12 @@
-import 'dart:math';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:client/services/my_page_api.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../screens/my_page/my_data_modify.dart';
 import '../../screens/my_page/car_info.dart';
 import '../../screens/my_page/rent_log.dart';
@@ -38,26 +43,68 @@ String convertCategoryNameToKor(CategoryName name) {
 }
 
 class _MyPageCategoryState extends State<MyPageCategory> {
-  // void clickCategory(context) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const MyDataModify()),
-  //   );
-  // }
   static final storage = FlutterSecureStorage();
-  dynamic userId = '';
-  dynamic userName = '';
-  dynamic userEmail = '';
+  String? userName;
+  String? userProfileImg;
+
+  FocusNode? _unUsedFocusNode;
+
+  var _modifiedName;
+  TextEditingController _userNameController = TextEditingController();
 
   @override
   void initState() {
-    super.initState();
-    // checkUserState();
-    // 비동기로 flutter secure storage 정보를 불러오는 작업
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      checkUserState();
+    setUserName().then((value) {
+      setState(() {
+        userName = value;
+      });
     });
+    setUserProfileImg().then((value) {
+      setState(() {
+        userProfileImg = value;
+      });
+    });
+
+    super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   setUser();
+    // });
   }
+
+  void modifyUser() {
+    File file = File(_pickedImg.path);
+    var path = file.path;
+    // List<int> imageBytes = file.readAsBytesSync();
+    // String base64Image = base64Encode(imageBytes);
+    // Uint8List decodedbytes = base64.decode(base64Image);
+    setState(() {
+      _modifiedName = _userNameController.text;
+    });
+    patchUserInfo(
+      success: (dynamic response) {
+        print(response);
+      },
+      fail: (error) {
+        print("사용자 수정 오류: ${error}");
+      },
+      nickname: "$_modifiedName",
+      profileImg: "$path",
+    );
+    logout();
+  }
+
+  Future<String?> setUserName() async {
+    final userName = await storage.read(key: 'nickName');
+    return userName;
+  }
+
+  Future<String?> setUserProfileImg() async {
+    final userImg = await storage.read(key: 'picture');
+    return userImg;
+  }
+
+  final ImagePicker _picker = ImagePicker();
+  XFile _pickedImg = XFile("");
 
   logout() async {
     await storage.deleteAll();
@@ -66,19 +113,19 @@ class _MyPageCategoryState extends State<MyPageCategory> {
     Navigator.pushNamed(context, '/login');
   }
 
-  checkUserState() async {
-    // var id = await storage.read(key: 'id');
-    var name = await storage.read(key: 'nickName');
-    // var email = await storage.read(key: 'email');
-    setState(() {
-      // userId = id;
-      userName = name;
-      // userEmail = email;
-    });
-    if (userId == null) {
-      Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
-    }
-  }
+  // checkUserState() async {
+  //   // var id = await storage.read(key: 'id');
+  //   var name = await storage.read(key: 'nickName');
+  //   // var email = await storage.read(key: 'email');
+  //   setState(() {
+  //     // userId = id;
+  //     userName = name;
+  //     // userEmail = email;
+  //   });
+  //   if (userId == null) {
+  //     Navigator.pushNamed(context, '/login'); // 로그인 페이지로 이동
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -113,44 +160,87 @@ class _MyPageCategoryState extends State<MyPageCategory> {
                         //   ),
                         // ),
                         SizedBox(
-                          height: 20,
+                          height: 30,
                         ),
-                        Container(
-                          width: 110,
-                          height: 110,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(
-                                color: Color(0xFFD9D9D9), width: 2.5),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large",
-                              ),
-                              fit: BoxFit.cover,
+                        TextButton(
+                          onPressed: () {
+                            _getPhotoLibraryImage();
+                          },
+                          child: Container(
+                            width: 110,
+                            height: 110,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              border: Border.all(
+                                  color: Color(0xFFD9D9D9), width: 2.5),
+                              image: userProfileImg == ""
+                                  ? DecorationImage(
+                                      image: NetworkImage(
+                                          "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"))
+                                  : DecorationImage(
+                                      image: FileImage(File(userProfileImg!)),
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
                         ),
                         Container(
                           padding: EdgeInsets.zero,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _getPhotoLibraryImage();
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.camera_alt_outlined,
-                                    color: Theme.of(context).primaryColor),
+                                Icon(Icons.photo_outlined,
+                                    color: Color(0xFF6A6A6A)),
                                 SizedBox(
                                   width: 3,
                                 ),
                                 Text(
                                   "사진 변경하기",
                                   style: TextStyle(
-                                      color: Theme.of(context).primaryColor),
+                                    color: Color(0xFF6A6A6A),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
+                        Container(
+                          width: 200,
+                          child: TextField(
+                            controller: _userNameController
+                              ..text = userName ?? "",
+                            onTapOutside: (PointerDownEvent event) {
+                              FocusScope.of(context)
+                                  .requestFocus(_unUsedFocusNode);
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(bottom: 3),
+                              isDense: true,
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                ),
+                              ),
+                            ),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).secondaryHeaderColor,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            modifyUser();
+                          },
+                          child: Text("수정하기",
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor)),
+                        )
                       ],
                     ),
                   ),
@@ -301,5 +391,27 @@ class _MyPageCategoryState extends State<MyPageCategory> {
       },
     );
     Navigator.pop(context);
+  }
+
+  _getPhotoLibraryImage() async {
+    final XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _pickedImg = pickedFile;
+        storage.write(key: 'picture', value: File(_pickedImg.path).path);
+      });
+      await setUserProfileImg().then((value) {
+        setState(() {
+          userProfileImg = value;
+        });
+      });
+
+      // setState(() {
+      //
+      // });
+    } else {
+      print('이미지 선택안함');
+    }
   }
 }

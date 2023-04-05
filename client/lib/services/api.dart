@@ -67,7 +67,7 @@ Future<dynamic> apiInstance({
       break;
     case Method.patch:
       try {
-        response = await http.delete(url, headers: headers, body: json.encode(body));
+        response = await http.patch(url, headers: headers, body: json.encode(body));
       } catch(error) {
         fail('HTTP 요청 처리 중 오류 발생: $error');
       }

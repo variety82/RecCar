@@ -45,8 +45,8 @@ class _MyPageState extends State<MyPage> {
   }
 
   Future<String?> setUserProfileImg() async {
-    final userName = await storage.read(key: 'picture');
-    return userName;
+    final userImg = await storage.read(key: 'picture');
+    return userImg;
   }
 
   @override
@@ -98,14 +98,20 @@ class _MyPageState extends State<MyPage> {
                       border: Border.all(
                           color: Theme.of(context).primaryColor, width: 2.5),
                       color: Colors.white,
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          "${userProfileImg}" == ""
-                              ? "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"
-                              : userProfileImg.toString(),
-                        ),
-                        fit: BoxFit.cover,
-                      ),
+                      image: userProfileImg == ""
+                          ? DecorationImage(
+                              image: NetworkImage(
+                                  "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"))
+                          : DecorationImage(
+                              image: FileImage(File(userProfileImg!)),
+                              // image: DecorationImage(
+                              //   image: NetworkImage(
+                              //     "${userProfileImg}" == ""
+                              //         ? "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"
+                              //         : userProfileImg.toString(),
+                              //   ),
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                 ),
@@ -223,14 +229,4 @@ class _MyPageState extends State<MyPage> {
       print('이미지 선택안함');
     }
   }
-
-// showUserModifyModal() {
-//   return showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return Dialog(
-//           child: Text("HI"),
-//         );
-//       });
-// }
 }

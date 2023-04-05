@@ -66,10 +66,12 @@ void getUserInfo({
 void patchUserInfo({
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
-  Map<String, String>? body,
+  Map<String, dynamic>? body,
+  required String nickname,
+  required String profileImg,
 }) {
   apiInstance(
-    path: '/user/modify',
+    path: '/user/modify?nickName=$nickname&picture=$profileImg',
     method: Method.patch,
     body: body,
     success: success,
