@@ -90,6 +90,7 @@ flutter:
     - lib/assets/images/loading_img/
     - lib/assets/images/empty_garage.svg
     - lib/assets/images/car_garage.svg
+    - lib/assets/images/logo/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
