@@ -122,7 +122,7 @@ class _RentLogState extends State<RentLog> {
                           .toString()
                           .substring(0, 10),
                       company: info['rentalCompany'],
-                      damage: info['damage'],
+                      damage: info['damage'] < 0 ? 0 : info['damage'],
                       carId: info['carId'],
                     ),
                 ],

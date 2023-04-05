@@ -166,7 +166,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
                   child: Text(
-                    '* 사진을 클릭하면 확대됩니다 *',
+                    '사진을 클릭하면 확대됩니다',
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ),
@@ -204,7 +204,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                             '스크래치',
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w500,
                               color: Color.fromRGBO(240, 15, 135, 0.75),
                             ),
                           )
@@ -225,7 +225,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                             '찌그러짐',
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w500,
                               color: Color.fromRGBO(64, 64, 64, 0.75),
                             ),
                           )
@@ -246,7 +246,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                             '파손',
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w500,
                               color: Color.fromRGBO(75, 150, 200, 0.75),
                             ),
                           )
@@ -263,19 +263,24 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                     color: Colors.black,
                   ),
                 ),
-                (scratch_count +
-                            breakage_count +
-                            crushed_count +
-                            separated_count) ==
-                        0
-                    ? Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Text(
-                          '* 최소 하나 이상의 손상 종류를 설정해주세요 *',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                      )
+                widget.modalCase != "차량 손상 상세 확인"
+                    ? (scratch_count +
+                                breakage_count +
+                                crushed_count +
+                                separated_count) ==
+                            0
+                        ? Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              '최소 하나 이상의 손상 종류를 설정해주세요',
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                          )
+                        : SizedBox(
+                            height: 25,
+                            width: 20,
+                          )
                     : Container(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -301,7 +306,8 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                             fontSize: 12,
                                             color: scratch_count > 0
                                                 ? Theme.of(context).primaryColor
-                                                : Colors.black,
+                                                : Theme.of(context)
+                                                    .disabledColor,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -311,7 +317,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                         backgroundColor: scratch_count > 0
                                             ? Theme.of(context)
                                                 .primaryColorLight
-                                            : Colors.grey,
+                                            : Theme.of(context).shadowColor,
                                         // deleteIconColor: Color(0xFFE0426F),
                                       ),
                                       Text(
@@ -337,7 +343,8 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                             fontSize: 12,
                                             color: crushed_count > 0
                                                 ? Theme.of(context).primaryColor
-                                                : Colors.black,
+                                                : Theme.of(context)
+                                                    .disabledColor,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -347,7 +354,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                         backgroundColor: crushed_count > 0
                                             ? Theme.of(context)
                                                 .primaryColorLight
-                                            : Colors.grey,
+                                            : Theme.of(context).shadowColor,
                                         // deleteIconColor: Color(0xFFE0426F),
                                       ),
                                       Text(
@@ -373,7 +380,8 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                             fontSize: 12,
                                             color: breakage_count > 0
                                                 ? Theme.of(context).primaryColor
-                                                : Colors.black,
+                                                : Theme.of(context)
+                                                    .disabledColor,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -383,7 +391,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                         backgroundColor: breakage_count > 0
                                             ? Theme.of(context)
                                                 .primaryColorLight
-                                            : Colors.grey,
+                                            : Theme.of(context).shadowColor,
                                         // deleteIconColor: Color(0xFFE0426F),
                                       ),
                                       Text(
@@ -409,7 +417,8 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                             fontSize: 12,
                                             color: separated_count > 0
                                                 ? Theme.of(context).primaryColor
-                                                : Colors.black,
+                                                : Theme.of(context)
+                                                    .disabledColor,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -419,7 +428,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                         backgroundColor: separated_count > 0
                                             ? Theme.of(context)
                                                 .primaryColorLight
-                                            : Colors.grey,
+                                            : Theme.of(context).shadowColor,
                                         // deleteIconColor: Color(0xFFE0426F),
                                       ),
                                       Text(
@@ -493,15 +502,20 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                           color: Colors.black,
                         ),
                       ),
-                      partInput == ''
-                          ? Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                '* 차량 부위를 선택해주세요 *',
-                                style: TextStyle(
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                            )
+                      widget.modalCase != "차량 손상 상세 확인"
+                          ? partInput == ''
+                              ? Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Text(
+                                    '차량 부위를 선택해주세요',
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: 25,
+                                  width: 20,
+                                )
                           : Container(),
                       Center(
                         child: widget.modalCase == "차량 손상 상세 확인"
@@ -543,27 +557,26 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                         }
                                       },
                                       child: Chip(
-                                          label: Text(
-                                            part_category,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color:
-                                                  (partInput == part_category)
-                                                      ? Theme.of(context)
-                                                          .primaryColor
-                                                      : Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                        label: Text(
+                                          part_category,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: (partInput == part_category)
+                                                ? Theme.of(context).primaryColor
+                                                : Theme.of(context)
+                                                    .disabledColor,
+                                            fontWeight: FontWeight.w600,
                                           ),
-                                          labelPadding: EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                          ),
-                                          backgroundColor:
-                                              (partInput == part_category)
-                                                  ? Color(0xFFFBD5DC)
-                                                  : Colors.grey
-                                          // deleteIconColor: Color(0xFFE0426F),
-                                          ),
+                                        ),
+                                        labelPadding: EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                        ),
+                                        backgroundColor:
+                                            (partInput == part_category)
+                                                ? Color(0xFFFBD5DC)
+                                                : Theme.of(context).shadowColor,
+                                        // deleteIconColor: Color(0xFFE0426F),
+                                      ),
                                     );
                                   },
                                 ).toList(),
@@ -598,32 +611,34 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                 ),
                               ),
                             )
-                          : Container(
-                              height: 90,
-                              child: TextField(
-                                controller: memoController,
-                                maxLines: 3,
-                                onTapOutside: (PointerDownEvent event) {
-                                  FocusScope.of(context)
-                                      .requestFocus(_unUsedFocusNode);
-                                },
-                                onChanged: (text) {
-                                  setState(
-                                    () {
-                                      memoInput = text;
-                                    },
-                                  );
-                                },
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .secondaryHeaderColor)),
-                                  labelText: '',
-                                  hintText: '메모를 입력해주세요.',
-                                ),
-                                style: TextStyle(
-                                  fontSize: 14,
+                          : SingleChildScrollView(
+                              child: Container(
+                                height: 90,
+                                child: TextField(
+                                  controller: memoController,
+                                  maxLines: 3,
+                                  onTapOutside: (PointerDownEvent event) {
+                                    FocusScope.of(context)
+                                        .requestFocus(_unUsedFocusNode);
+                                  },
+                                  onChanged: (text) {
+                                    setState(
+                                      () {
+                                        memoInput = text;
+                                      },
+                                    );
+                                  },
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .secondaryHeaderColor)),
+                                    labelText: '',
+                                    hintText: '메모를 입력해주세요.',
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ),
                             ),
@@ -729,7 +744,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                                   separated_count) ==
                                               0 ||
                                           partInput == '')
-                                      ? Theme.of(context).disabledColor
+                                      ? Theme.of(context).shadowColor
                                       : Theme.of(context).primaryColor),
                               child: Text(
                                 widget.modalCase == "차량 손상 상세 수정" ? "수정" : "추가",
@@ -740,7 +755,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
                                                   separated_count) ==
                                               0 ||
                                           partInput == '')
-                                      ? Colors.black
+                                      ? Theme.of(context).disabledColor
                                       : Colors.white,
                                   fontWeight: FontWeight.w600,
                                 ),

@@ -108,30 +108,48 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: Stack(
-                              alignment: AlignmentDirectional.center,
-                              children: [
-                                Icon(
-                                  Icons.circle_outlined,
-                                  size: 100.0,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                Icon(
-                                  Icons.done_outline_outlined,
-                                  size: 40.0,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ],
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 140,
+                                maxHeight: 140,
+                              ),
+                              child: Image.asset(
+                                'lib/assets/images/loading_img/complete.gif.gif',
+                              ),
                             ),
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
+                          // Padding(
+                          //   padding: const EdgeInsets.all(24.0),
+                          //   child: Stack(
+                          //     alignment: AlignmentDirectional.center,
+                          //     children: [
+                          //       Icon(
+                          //         Icons.circle_outlined,
+                          //         size: 100.0,
+                          //         color: Theme.of(context).primaryColor,
+                          //       ),
+                          //       Icon(
+                          //         Icons.done_outline_outlined,
+                          //         size: 40.0,
+                          //         color: Theme.of(context).primaryColor,
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(
+                                    width: 1.0,
+                                    style: BorderStyle.solid,
+                                    color: Theme.of(context).primaryColor),
                               ),
                               fixedSize: Size(180, 50),
-                              backgroundColor: Color(0xFFE0426F),
+                              backgroundColor: Colors.white,
+                              foregroundColor: Theme.of(context).primaryColor,
+                              shadowColor: Theme.of(context).shadowColor,
                             ),
                             onPressed: () {
                               Navigator.push(
@@ -148,7 +166,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                             child: Text(
                               "확인하기",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).primaryColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -217,19 +235,19 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ),
                             ],
                           ),
-                          Container(
-                            constraints: BoxConstraints(
-                              maxWidth: 300,
-                              maxHeight: 400,
-                            ),
-                            child: Image.asset(
-                              'lib/assets/images/loading_img/loading_gif.gif',
-                            ),
-                          ),
-                          // CircularProgressIndicator(
-                          //   color: Color(0xFFE0426F),
-                          //   // strokeWidth: 8,
+                          // Container(
+                          //   constraints: BoxConstraints(
+                          //     maxWidth: 300,
+                          //     maxHeight: 400,
+                          //   ),
+                          //   child: Image.asset(
+                          //     'lib/assets/images/loading_img/car_running.gif',
+                          //   ),
                           // ),
+                          CircularProgressIndicator(
+                            color: Color(0xFFE0426F),
+                            // strokeWidth: 8,
+                          ),
                         ],
                       ),
                     ),
