@@ -87,7 +87,7 @@ class _DamageLogCardState extends State<DamageLogCard> {
                                 image: NetworkImage("${widget.imageUrl}")),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 5),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,7 +95,7 @@ class _DamageLogCardState extends State<DamageLogCard> {
                             RentLogLine(
                               infoTitle: "파손 일자",
                               info: widget.damageDate.toString().substring(0, 10),
-                              space: 70,
+                              space: 50,
                             ),
                             SizedBox(
                               height: 5,
@@ -103,7 +103,7 @@ class _DamageLogCardState extends State<DamageLogCard> {
                             RentLogLine(
                               infoTitle: "파손 부위",
                               info: "${widget.damageLocation}",
-                              space: 70,
+                              space: 50,
                             ),
                             Divider(
                               thickness: 1.5,
