@@ -132,10 +132,8 @@ class _MyPageCategoryState extends State<MyPageCategory> {
     return Expanded(
       child: TextButton(
         style: ButtonStyle(
-          fixedSize: MaterialStatePropertyAll(
-            Size(1000, 40),
-          ),
-          alignment: Alignment.centerLeft,
+          fixedSize: MaterialStatePropertyAll(Size(1000, 0)),
+          alignment: Alignment.topLeft,
         ),
         onPressed: () {
           if (widget.category ==
