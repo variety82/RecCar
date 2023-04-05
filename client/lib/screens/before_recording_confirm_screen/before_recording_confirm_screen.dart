@@ -98,11 +98,13 @@ class _BeforeRecordingConfirmScreenState
       child: Scaffold(
         // backgroundColor는 흰색으로 설정
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          foregroundColor: Color(0xFFFF3F3F),
-        ),
+        appBar: _isLoading
+            ? null
+            : AppBar(
+                elevation: 0,
+                backgroundColor: Colors.white,
+                foregroundColor: Color(0xFFFF3F3F),
+              ),
         // Column 정렬 이용해 화면 정가운데에 이하 요소들을 정렬
         body: _isLoading
             ? Center(
@@ -172,7 +174,7 @@ class _BeforeRecordingConfirmScreenState
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w600,
-                                        color: Colors.redAccent,
+                                        color: Theme.of(context).primaryColor,
                                       ),
                                     ),
                                   ],
@@ -180,39 +182,48 @@ class _BeforeRecordingConfirmScreenState
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: Container(
-                                width: 300,
-                                height: 300,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color(0xFF999999)
-                                            .withOpacity(0.5),
-                                        spreadRadius: 0.3,
-                                        blurRadius: 6,
-                                      )
-                                    ]),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 20,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Container(
+                                          width: 120,
+                                          height: 130,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                width: 2,
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: const Color(0xFF999999)
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 0.3,
+                                                  blurRadius: 6,
+                                                )
+                                              ]),
+                                          child: Padding(
                                             padding: EdgeInsets.symmetric(
-                                              vertical: 14,
+                                              vertical: 16,
+                                              horizontal: 8,
                                             ),
                                             child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Icon(
                                                   Icons.light_mode,
@@ -227,6 +238,8 @@ class _BeforeRecordingConfirmScreenState
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w700,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -251,11 +264,37 @@ class _BeforeRecordingConfirmScreenState
                                               ],
                                             ),
                                           ),
-                                          Padding(
+                                        ),
+                                        Container(
+                                          width: 120,
+                                          height: 130,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                width: 2,
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: const Color(0xFF999999)
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 0.3,
+                                                  blurRadius: 6,
+                                                )
+                                              ]),
+                                          child: Padding(
                                             padding: EdgeInsets.symmetric(
-                                              vertical: 14,
+                                              vertical: 16,
+                                              horizontal: 8,
                                             ),
                                             child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Icon(
                                                   Icons.car_crash,
@@ -270,6 +309,8 @@ class _BeforeRecordingConfirmScreenState
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w700,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -294,21 +335,49 @@ class _BeforeRecordingConfirmScreenState
                                               ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Padding(
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Container(
+                                          width: 120,
+                                          height: 130,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                width: 2,
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: const Color(0xFF999999)
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 0.3,
+                                                  blurRadius: 6,
+                                                )
+                                              ]),
+                                          child: Padding(
                                             padding: EdgeInsets.symmetric(
-                                              vertical: 14,
+                                              vertical: 16,
+                                              horizontal: 12,
                                             ),
                                             child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Icon(
-                                                  Icons
-                                                      .airline_seat_flat_angled,
+                                                  Icons.text_rotation_angleup,
                                                   size: 24,
                                                 ),
                                                 SizedBox(
@@ -320,6 +389,8 @@ class _BeforeRecordingConfirmScreenState
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w700,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -344,11 +415,37 @@ class _BeforeRecordingConfirmScreenState
                                               ],
                                             ),
                                           ),
-                                          Padding(
+                                        ),
+                                        Container(
+                                          width: 120,
+                                          height: 130,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                width: 2,
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: const Color(0xFF999999)
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 0.3,
+                                                  blurRadius: 6,
+                                                )
+                                              ]),
+                                          child: Padding(
                                             padding: EdgeInsets.symmetric(
-                                              vertical: 14,
+                                              vertical: 16,
+                                              horizontal: 8,
                                             ),
                                             child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Icon(
                                                   Icons.flash_off_outlined,
@@ -363,6 +460,8 @@ class _BeforeRecordingConfirmScreenState
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w700,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -387,10 +486,10 @@ class _BeforeRecordingConfirmScreenState
                                               ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

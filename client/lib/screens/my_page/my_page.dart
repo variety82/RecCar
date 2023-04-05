@@ -103,7 +103,7 @@ class _MyPageState extends State<MyPage> {
                               image: NetworkImage(
                                   "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"))
                           : DecorationImage(
-                              image: FileImage(File(userProfileImg!)),
+                              image: NetworkImage('${userProfileImg}'),
                               // image: DecorationImage(
                               //   image: NetworkImage(
                               //     "${userProfileImg}" == ""

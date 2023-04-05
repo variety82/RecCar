@@ -10,12 +10,12 @@ import 'package:video_player/video_player.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_container.dart';
 import 'package:client/screens/after_check_damage_screen/after_check_damage_screen.dart';
 
-class CheckCarDamageScreen extends StatefulWidget {
+class VideoFullScreen extends StatefulWidget {
   final String filePath;
   final List<Map<String, dynamic>> carDamagesAllList;
   final List<int> selectedIndexList;
 
-  const CheckCarDamageScreen({
+  const VideoFullScreen({
     Key? key,
     required this.filePath,
     required this.carDamagesAllList,
@@ -23,10 +23,10 @@ class CheckCarDamageScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CheckCarDamageScreen> createState() => _CheckCarDamageScreenState();
+  State<VideoFullScreen> createState() => _VideoFullScreenState();
 }
 
-class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
+class _VideoFullScreenState extends State<VideoFullScreen>
     with TickerProviderStateMixin {
   late VideoPlayerController _videoPlayerController;
   late TabController _tabController;
@@ -69,18 +69,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     _timer?.cancel();
     _videoPlayerController.dispose();
     super.dispose();
-  }
-
-  void addCategories(String categoryName) {
-    setState(() {
-      selected_categories.add(categoryName);
-    });
-  }
-
-  void removeCategories(String categoryName) {
-    setState(() {
-      selected_categories.remove(categoryName);
-    });
   }
 
   Future _initVideoPlayer() async {

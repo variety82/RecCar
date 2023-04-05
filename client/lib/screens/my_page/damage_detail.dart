@@ -25,6 +25,7 @@ class DamageDetail extends StatefulWidget {
 
 class _DamageDetailState extends State<DamageDetail> {
   Map<String, dynamic> detailDamageInfo = {};
+
   // @override
   // void initState() {
   //   super.initState();
@@ -62,8 +63,7 @@ class _DamageDetailState extends State<DamageDetail> {
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
                           fit: BoxFit.fill,
-                          image: NetworkImage(
-                              "${widget.damageImageUrl}")),
+                          image: NetworkImage("${widget.damageImageUrl}")),
                     ),
                   ),
                   // const Divider(
@@ -91,8 +91,10 @@ class _DamageDetailState extends State<DamageDetail> {
                           )
                         ],
                       ),
-                      margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                      margin:
+                          EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                       width: 1000,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,11 +137,41 @@ class _DamageDetailState extends State<DamageDetail> {
                           SizedBox(
                             height: 5,
                           ),
-                          RentLogLine(
-                            infoTitle: "메모",
-                            info: "${widget.memo}",
-                            space: 100,
-                          ),
+                          if ("${widget.memo}" != "")
+                            RentLogLine(
+                              infoTitle: "메모",
+                              info: "${widget.memo}",
+                              space: 100,
+                            ),
+                          if ("${widget.memo}" == "")
+                            Row(
+                              children: [
+                                Container(
+                                  width: 100,
+                                  child: Text(
+                                    "메모",
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor,
+                                      fontSize: 12,
+                                      decoration: TextDecoration.none,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Text(
+                                    "메모가 없습니다",
+                                    style: TextStyle(
+                                      color: Color(0xFFD9D9D9),
+                                      fontSize: 13,
+                                      decoration: TextDecoration.none,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                     ),

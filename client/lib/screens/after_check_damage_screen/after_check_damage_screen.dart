@@ -69,8 +69,6 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
         });
       }
     });
-    print(currentCarVideo);
-    print(formerState);
   }
 
   String checkDamagePart(Map<String, dynamic> damage) {
@@ -149,11 +147,6 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
         child: Scaffold(
       // backgroundColor는 흰색으로 설정
       backgroundColor: Colors.white,
-      // appBar: (load_data || loading_api ) ? AppBar(
-      //   elevation: 0,
-      //   backgroundColor: Colors.white,
-      //   foregroundColor: Color(0xFFFF3F3F),
-      // ) : null,
       // Column 정렬 이용해 화면 정가운데에 이하 요소들을 정렬
       body: load_data
           ? Center(
@@ -204,104 +197,116 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                       text: '총 ',
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 20,
+                                        fontSize: 16,
                                       ),
                                     ),
                                     TextSpan(
-                                      text: damageInfoList.length.toString(),
+                                      // text: damageInfoList.length.toString(),
+                                      text: (scratch_count +
+                                              separated_count +
+                                              crushed_count +
+                                              breakage_count)
+                                          .toInt()
+                                          .toString(),
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.w700,
-                                        color: Color(0xFFFF3F3F),
+                                        color: Theme.of(context).primaryColor,
                                       ),
                                     ),
                                     TextSpan(
                                       text: '건의 손상이 등록되었습니다',
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 16,
                                         color: Colors.black,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        DamageCountInfoBlock(
-                                          damageName: "앞범퍼/앞펜더/전조등",
-                                          damageCnt: front_count,
-                                        ),
-                                        DamageCountInfoBlock(
-                                          damageName: "뒷범퍼/뒷펜더/후미등",
-                                          damageCnt: back_count,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        DamageCountInfoBlock(
-                                          damageName: "옆면/사이드/스텝",
-                                          damageCnt: side_count,
-                                        ),
-                                        DamageCountInfoBlock(
-                                          damageName: "타이어/휠",
-                                          damageCnt: wheel_count,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                              Container(
+                                constraints: BoxConstraints(
+                                  maxWidth: 120,
+                                  maxHeight: 120,
+                                ),
+                                child: Image.asset(
+                                  'lib/assets/images/loading_img/loading_done_gif.gif',
                                 ),
                               ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        fixedSize: Size(80, 80),
+                                        backgroundColor: Theme.of(context)
+                                            .secondaryHeaderColor,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/detail',
+                                          arguments: {
+                                            'currentCarVideo':
+                                                currentCarVideo.toString(),
+                                          },
+                                        );
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.car_crash),
+                                          Text(
+                                            "차량 상세",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  fixedSize: Size(180, 50),
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
-                                ),
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/detail');
-                                },
-                                child: Text(
-                                  "차량 상세 확인",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                  Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        fixedSize: Size(80, 80),
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
+                                      ),
+                                      onPressed: () async {
+                                        Navigator.pushNamed(context, '/home');
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.home),
+                                          Text(
+                                            "메인 화면",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  fixedSize: Size(180, 50),
-                                  backgroundColor:
-                                      Theme.of(context).primaryColorLight,
-                                ),
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/home');
-                                },
-                                child: Text(
-                                  "메인 화면으로",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
@@ -332,8 +337,14 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                           ),
                                         ),
                                         TextSpan(
-                                          text:
-                                              damageInfoList.length.toString(),
+                                          text: (scratch_count +
+                                                  separated_count +
+                                                  crushed_count +
+                                                  breakage_count)
+                                              .toInt()
+                                              .toString(),
+                                          // text:
+                                          //     damageInfoList.length.toString(),
                                           style: TextStyle(
                                             fontSize: 32,
                                             fontWeight: FontWeight.w900,
@@ -365,9 +376,8 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 child: Column(
                                   children: [
                                     Row(
@@ -375,12 +385,12 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         DamageCountInfoBlock(
-                                          damageName: "앞범퍼/앞펜더/전조등",
-                                          damageCnt: front_count,
+                                          damageName: "스크래치",
+                                          damageCnt: scratch_count.toInt(),
                                         ),
                                         DamageCountInfoBlock(
-                                          damageName: "뒷범퍼/뒷펜더/후미등",
-                                          damageCnt: back_count,
+                                          damageName: "찌그러짐",
+                                          damageCnt: crushed_count.toInt(),
                                         ),
                                       ],
                                     ),
@@ -389,20 +399,17 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         DamageCountInfoBlock(
-                                          damageName: "옆면/사이드/스텝",
-                                          damageCnt: side_count,
+                                          damageName: "파손",
+                                          damageCnt: breakage_count.toInt(),
                                         ),
                                         DamageCountInfoBlock(
-                                          damageName: "타이어/휠",
-                                          damageCnt: wheel_count,
+                                          damageName: "이격",
+                                          damageCnt: separated_count.toInt(),
                                         ),
                                       ],
                                     ),
                                   ],
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
                               ),
                               Text(
                                 '정말 등록하시겠습니까?',
@@ -414,72 +421,101 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                 ),
                                 softWrap: true,
                               ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        fixedSize: Size(80, 80),
+                                        backgroundColor: Theme.of(context)
+                                            .secondaryHeaderColor,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.keyboard_backspace),
+                                          Text(
+                                            "돌아가기",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  minimumSize: Size(180, 50),
-                                  backgroundColor: Color(0xFFE0426F),
-                                ),
-                                onPressed: () async {
-                                  setState(() {
-                                    load_data = false;
-                                  });
-                                  postCarDamageInfo(
-                                    success: (dynamic response) {
-                                      setState(() {
-                                        loading_api = true;
-                                      });
-                                    },
-                                    fail: (error) {
-                                      print('차량 손상 분석 오류: $error');
-                                      setState(
-                                        () {
+                                  Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        fixedSize: Size(80, 80),
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
+                                      ),
+                                      onPressed: () async {
+                                        setState(() {
+                                          load_data = false;
+                                        });
+                                        postCarDamageInfo(
+                                          success: (dynamic response) {
+                                            setState(() {
+                                              loading_api = true;
+                                            });
+                                          },
+                                          fail: (error) {
+                                            print('차량 손상 분석 오류: $error');
+                                            setState(
+                                              () {
+                                                loading_api = true;
+                                              },
+                                            );
+                                          },
+                                          bodyList: damageInfoList,
+                                        );
+                                        await storage.write(
+                                            key: "carVideoState",
+                                            value: currentCarVideo == 0
+                                                ? '1'
+                                                : '2');
+                                        print(currentCarVideo);
+                                        setState(() {
+                                          load_data = true;
                                           loading_api = true;
-                                        },
-                                      );
-                                    },
-                                    bodyList: damageInfoList,
-                                  );
-                                  await storage.write(
-                                      key: "carVideoState",
-                                      value: currentCarVideo == 0 ? '1' : '2');
-                                  print(currentCarVideo);
-                                  setState(() {
-                                    load_data = true;
-                                    loading_api = true;
-                                  });
-                                },
-                                child: Text(
-                                  "등록하기",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                        });
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.save_as),
+                                          Text(
+                                            "등록하기",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  fixedSize: Size(180, 50),
-                                  backgroundColor:
-                                      Theme.of(context).primaryColorLight,
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  "돌아가기",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
