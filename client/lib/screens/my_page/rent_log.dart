@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/common/footer.dart';
 import '../../widgets/my_page/rent_log_card.dart';
-import './rent_log_detail.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:client/services/my_page_api.dart';
 
@@ -17,7 +15,7 @@ class _RentLogState extends State<RentLog> {
   static final storage = FlutterSecureStorage();
   // dynamic userId = '';
   dynamic userName = '';
-  dynamic userProfileImg = '';
+  // dynamic userProfileImg = '';
   dynamic simpleRentInfo = [];
 
   @override
@@ -114,18 +112,18 @@ class _RentLogState extends State<RentLog> {
               child: Column(
                 children: [
                   // 렌트 내역을 리스트로 출력
-                  for (int i = 0; i < simpleRentInfo.length; i++)
+                  for (var info in simpleRentInfo)
                     // RentLogCard 위젯에 데이터를 넘겨줌
                     RentLogCard(
-                      startDate: simpleRentInfo[i]['rentalDate']
+                      startDate: info['rentalDate']
                           .toString()
                           .substring(0, 10),
-                      endDate: simpleRentInfo[i]['returnDate']
+                      endDate: info['returnDate']
                           .toString()
                           .substring(0, 10),
-                      company: simpleRentInfo[i]['rentalCompany'],
-                      damage: "0",
-                      carId: simpleRentInfo[i]['carId'],
+                      company: info['rentalCompany'],
+                      damage: info['damage'],
+                      carId: info['carId'],
                     ),
                 ],
               ),

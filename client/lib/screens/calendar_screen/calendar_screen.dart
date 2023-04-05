@@ -520,7 +520,7 @@ class _CalendarState extends State<Calendar> {
       ScaffoldMessenger.of(context).showSnackBar(
         //SnackBar 구현하는법 context는 위에 BuildContext에 있는 객체를 그대로 가져오면 됨.
         SnackBar(
-          content: Center(child: Text("제목과 날짜 필수 입력값입니다.", style: TextStyle(color: Colors.white))),
+          content: Center(child: Text("제목과 날짜는 필수 입력값입니다.", style: TextStyle(color: Colors.white))),
           backgroundColor: Theme.of(context).primaryColor,
           duration: Duration(milliseconds: 1000),
           behavior: SnackBarBehavior.floating,

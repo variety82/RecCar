@@ -7,8 +7,8 @@ void getSimpleRentInfo({
   Map<String, String>? body,
 }) {
   apiInstance(
-    path : '/car/history',
-    method : Method.get,
+    path: '/car/history',
+    method: Method.get,
     body: body,
     success: success,
     fail: fail,
@@ -19,11 +19,11 @@ void getSimpleRentInfo({
 void getDetailRentInfo({
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
+  Map<String, dynamic>? body,
   required int carId,
-  Map<String, String>? body,
 }) {
   apiInstance(
-    path: '/detection/rental?carId=${carId}',
+    path: '/detection?carId=${carId}',
     method: Method.get,
     body: body,
     success: success,
@@ -35,8 +35,8 @@ void getDetailRentInfo({
 void getSimpleDamageInfo({
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
+  Map<String, dynamic>? body,
   required int carId,
-  Map<String, String>? body,
 }) {
   apiInstance(
     path: '/detection?carId=${carId}',
@@ -47,23 +47,39 @@ void getSimpleDamageInfo({
   );
 }
 
-// 파손 상세 내역
-void getDetailDamageInfo({
+// 회원 정보 불러오기
+void getUserInfo({
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
-  required int damageId,
   Map<String, String>? body,
 }) {
   apiInstance(
-    path: '/detection/${damageId}',
-    method: Method.get,
+    path: '/user/tokenLogin',
+    method: Method.post,
     body: body,
     success: success,
     fail: fail,
   );
 }
 
-// 파손 상세 내역
+// 회원 정보 수정하기
+void patchUserInfo({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+  Map<String, dynamic>? body,
+  required String nickname,
+  required String profileImg,
+}) {
+  apiInstance(
+    path: '/user/modify?nickName=$nickname&picture=$profileImg',
+    method: Method.patch,
+    body: body,
+    success: success,
+    fail: fail,
+  );
+}
+
+// 회원 정보 초기화
 void deleteUserInfo({
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
@@ -71,6 +87,52 @@ void deleteUserInfo({
 }) {
   apiInstance(
     path: '/user/delete',
+    method: Method.delete,
+    body: body,
+    success: success,
+    fail: fail,
+  );
+}
+
+// 현재 대여중인 차량 조회
+void getRentedCarInfo({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+  Map<String, String>? body,
+}) {
+  apiInstance(
+    path: '/car/current',
+    method: Method.get,
+    body: body,
+    success: success,
+    fail: fail,
+  );
+}
+
+// 차량 정보 수정
+void putCarInfo({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+  Map<String, dynamic>? body,
+}) {
+  apiInstance(
+    path: '/car/',
+    method: Method.put,
+    body: body,
+    success: success,
+    fail: fail,
+  );
+}
+
+// 차량 정보 삭제
+void deleteCarInfo({
+  required dynamic Function(dynamic) success,
+  required Function(String error) fail,
+  Map<String, dynamic>? body,
+  required int carId,
+}) {
+  apiInstance(
+    path: '/car/${carId}',
     method: Method.delete,
     body: body,
     success: success,
