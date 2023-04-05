@@ -107,27 +107,30 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ),
                             ],
                           ),
-                          Stack(
-                            alignment: AlignmentDirectional.center,
-                            children: [
-                              Icon(
-                                Icons.circle_outlined,
-                                size: 150.0,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              Icon(
-                                Icons.done_outline_outlined,
-                                size: 50.0,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Stack(
+                              alignment: AlignmentDirectional.center,
+                              children: [
+                                Icon(
+                                  Icons.circle_outlined,
+                                  size: 100.0,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                Icon(
+                                  Icons.done_outline_outlined,
+                                  size: 40.0,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ],
+                            ),
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              minimumSize: Size(200, 50),
+                              fixedSize: Size(180, 50),
                               backgroundColor: Color(0xFFE0426F),
                             ),
                             onPressed: () {
@@ -146,7 +149,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               "확인하기",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
