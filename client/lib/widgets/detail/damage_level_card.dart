@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:client/widgets/detail/damage_detail.dart';
+import 'dart:math';
 
 class DamageLevelCard extends StatefulWidget {
   final int damageLevel;
@@ -82,11 +83,11 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
                               margin: const EdgeInsets.only(
                                 top: 10,
                               ),
-                              width: 180 * (widget.damageLevel / 4),
+                              width: 180 * min((widget.damageLevel / 20), 1),
                               height: 13,
                               decoration: BoxDecoration(
                                 borderRadius:
-                                  widget.damageLevel == 4
+                                  widget.damageLevel >= 20
                                     ? BorderRadius.circular(5)
                                     : const BorderRadius.only(
                                         topLeft: Radius.circular(5),
