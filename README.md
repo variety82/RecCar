@@ -92,9 +92,9 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 이후 exec폴더의 포팅메뉴얼을 따라 진행
 ```
 
-### 개발환경
+### 개발환경 및 기술 스택
 
-
+![개발환경](./assets/stack.png)
 
 ## Product Flow
 

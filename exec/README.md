@@ -16,7 +16,7 @@
 
 ### 개발환경
 
-
+![개발환경](../assets/stack.png)
 
 ### Docker 설치
 
@@ -193,7 +193,7 @@ TMAP_API_KEY={key}
 
 - Spring : application-db.yml (main/resources/applicaion-db.yml)
 - FastAPI: .env (최상단 디렉토리)
-- Flutter: 
+- Flutter: ./env
 
 
 
@@ -277,7 +277,7 @@ docekr run --rm -d -p 8081:8081 --name fastapi-latest 이미지ID
 
 ### Oauth2.0
 1. Oauth 프로젝트 생성
-    
+   
     - 상단 메뉴바에서 프로젝트 이름 클릭
     - 모달에서 "새 프로젝트 생성" 버튼 클릭1
 
