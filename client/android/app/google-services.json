@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "241391269143-e8o2ps827j6bmhi98km7g3t836q2j5kk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hero.client",
+            "certificate_hash": "3a7538012d817d925474e10a03f05a81eb2b6d6e"
+          }
+        },
+        {
           "client_id": "241391269143-ktqal1n0da01qprn78euuv2fs2bog0fl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
