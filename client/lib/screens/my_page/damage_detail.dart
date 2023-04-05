@@ -4,11 +4,19 @@ import '../../widgets/common/footer.dart';
 import '../../services/my_page_api.dart';
 
 class DamageDetail extends StatefulWidget {
-  final int damageId;
+  final damageImageUrl;
+  final damageDate;
+  final kindOfDamage;
+  final damagaLocation;
+  final memo;
 
   const DamageDetail({
     super.key,
-    required this.damageId,
+    required this.damageImageUrl,
+    required this.damageDate,
+    required this.kindOfDamage,
+    required this.damagaLocation,
+    required this.memo,
   });
 
   @override
@@ -17,22 +25,22 @@ class DamageDetail extends StatefulWidget {
 
 class _DamageDetailState extends State<DamageDetail> {
   Map<String, dynamic> detailDamageInfo = {};
-  @override
-  void initState() {
-    super.initState();
-    getDetailDamageInfo(
-      success: (dynamic response) {
-        setState(() {
-          detailDamageInfo = response;
-        });
-        print(response);
-      },
-      fail: (error) {
-        print('렌트 내역 호출 오류: $error');
-      },
-      damageId: widget.damageId,
-    );
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getDetailDamageInfo(
+  //     success: (dynamic response) {
+  //       setState(() {
+  //         detailDamageInfo = response;
+  //       });
+  //       print(response);
+  //     },
+  //     fail: (error) {
+  //       print('렌트 내역 호출 오류: $error');
+  //     },
+  //     damageId: widget.damageId,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +63,7 @@ class _DamageDetailState extends State<DamageDetail> {
                       image: DecorationImage(
                           fit: BoxFit.fill,
                           image: NetworkImage(
-                              "${detailDamageInfo['damageImageUrl']}")),
+                              "${widget.damageImageUrl}")),
                     ),
                   ),
                   // const Divider(
@@ -94,8 +102,9 @@ class _DamageDetailState extends State<DamageDetail> {
                             "손상 정보",
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor,
+                              color: Theme.of(context).primaryColor,
                               fontSize: 14,
+                              fontWeight: FontWeight.normal,
                               decoration: TextDecoration.none,
                             ),
                           ),
@@ -104,32 +113,32 @@ class _DamageDetailState extends State<DamageDetail> {
                           ),
                           RentLogLine(
                             infoTitle: "파손 일자",
-                            info: detailDamageInfo['damageDate'].toString().characters.take(10).toString(),
-                            space: 120,
+                            info: widget.damageDate.toString().substring(0, 10),
+                            space: 100,
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           RentLogLine(
                             infoTitle: "파손 종류",
-                            info: "${detailDamageInfo['damage']}",
-                            space: 120,
+                            info: "${widget.kindOfDamage}",
+                            space: 100,
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           RentLogLine(
                             infoTitle: "파손 부위",
-                            info: "${detailDamageInfo['part']}",
-                            space: 120,
+                            info: "${widget.damagaLocation}",
+                            space: 100,
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           RentLogLine(
                             infoTitle: "메모",
-                            info: "${detailDamageInfo['memo']}",
-                            space: 120,
+                            info: "${widget.memo}",
+                            space: 100,
                           ),
                         ],
                       ),

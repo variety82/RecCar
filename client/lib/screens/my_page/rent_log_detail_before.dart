@@ -14,6 +14,11 @@ class BeforeRent extends StatefulWidget {
 }
 
 class _BeforeRentState extends State<BeforeRent> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -24,15 +29,17 @@ class _BeforeRentState extends State<BeforeRent> {
             child: Column(
               children: [
                 if (widget.before.length == 0)
-                  Container(child: Text("손상 정보가 없습니다"),),
+                  Container(child: Text("손상 정보가 없습니다"), alignment: Alignment.center, color: Colors.red, height: 600),
                 if (widget.before.length != 0)
                   for (var info in widget.before)
                     DamageLogCard(
                       imageUrl:
                           "${info['damageImageUrl']}",
-                      kindOfDamage: "${info['damage']}",
+                      kindOfDamage: (info['scratch'] > 0 ? "스크래치 ":"") + (info['breakage'] > 0 ? "파손 " : "") + (info['crushed'] > 0 ? "찌그러짐 " : "") + (info['separated'] > 0 ? "이격 " : ""),
+                      damageDate: "${info['damageDate']}",
                       damageLocation: "${info['part']}",
                       damageId: info['detectionInfoId'],
+                      memo: info['memo'],
                     ),
               ],
             ),
