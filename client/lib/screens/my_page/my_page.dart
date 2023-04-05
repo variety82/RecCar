@@ -172,43 +172,25 @@ class _MyPageState extends State<MyPage> {
                 SizedBox(
                   height: 100,
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "내 정보 수정",
-                      textColor: Theme.of(context).secondaryHeaderColor),
-                ),
+                MyPageCategory(
+                    category: "내 정보 수정",
+                    textColor: Theme.of(context).secondaryHeaderColor),
                 // 메뉴 카테고리
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "차량 정보 조회",
-                      textColor: Theme.of(context).secondaryHeaderColor),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "렌트 내역",
-                      textColor: Theme.of(context).secondaryHeaderColor),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "알림 설정",
-                      textColor: Theme.of(context).secondaryHeaderColor),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "로그아웃",
-                      textColor: Theme.of(context).secondaryHeaderColor),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "회원 정보 초기화",
-                      textColor: Theme.of(context).primaryColor),
-                ),
+                MyPageCategory(
+                    category: "차량 정보 조회",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "렌트 내역",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "알림 설정",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "로그아웃",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "회원 정보 초기화",
+                    textColor: Theme.of(context).primaryColor),
               ],
             ),
           ),
