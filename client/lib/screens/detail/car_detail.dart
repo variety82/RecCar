@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:client/screens/detail/part_detail.dart';
 import 'package:client/widgets/common/footer.dart';
+import 'package:client/screens/before_recording_confirm_screen/before_recording_confirm_screen.dart';
 
 enum Part { front, side, back, wheel }
 
@@ -74,8 +75,66 @@ class _CarDetailState extends State<CarDetail>
               ),
               onPressed: () {
                 Navigator.pushNamed(context, '/before-recording');
+                _showSelectModal(context);
               },
               child: const Text('등록'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSelectModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actionsAlignment: MainAxisAlignment.center,
+          content: Text(
+            '영상 등록 방법을 선택해주세요',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).secondaryHeaderColor,
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Theme.of(context).primaryColor),
+                minimumSize: MaterialStateProperty.all(const Size(60, 35)),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const BeforeRecordingConfirmScreen(videoCase: 'pick'),
+                  ),
+                );
+              },
+              child: const Text('기존 영상'),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Theme.of(context).primaryColor),
+                minimumSize: MaterialStateProperty.all(const Size(60, 35)),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const BeforeRecordingConfirmScreen(videoCase: 'take'),
+                  ),
+                );
+              },
+              child: const Text('신규 촬영'),
             ),
           ],
         );
