@@ -392,30 +392,29 @@ docekr run --rm -d -p 8081:8081 --name fastapi-latest 이미지ID
 
    
 
-   ## 3. 시연 시나리오
+## 3. 시연 시나리오
 
    
 
-   #### 로그인 & 로그아웃(구글OAuth)
+### 로그인 & 로그아웃(구글OAuth)
 
-   - 로그인 버튼을 누른 후 소셜 로그인을 진행할 수 있습니다
+- 로그인 버튼을 누른 후 소셜 로그인을 진행할 수 있습니다
    
-
+<div align="center">
 ​	![로그인](../assets/login.gif)
+</div>
 
 ### 근처 렌트카존 찾기
-
-![지도](../assets/map.gif)
-
-
+<div align="center">
+    ![지도](../assets/map.gif)
+</div>
 
 ### 일정관리(차량 대여 및 반납 일자)
-
+<div align="center">
 ![일정관리](../assets/calander.gif)
-
-
+</div>
 
 ### 차량 영상 등록
-
+<div align="center">
 ![차량등록](../assets/regist.gif)
-
+</div>
