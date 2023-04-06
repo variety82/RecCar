@@ -253,7 +253,8 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                           '/detail',
                                           arguments: {
                                             'currentCarVideo':
-                                                currentCarVideo.toString(),
+                                                (currentCarVideo! + 1)
+                                                    .toString(),
                                           },
                                         );
                                       },
