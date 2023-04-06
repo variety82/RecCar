@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'package:client/widgets/register/register_line.dart';
-import 'package:client/widgets/register/register_title.dart';
 import 'package:client/screens/before_recording_confirm_screen/before_recording_confirm_screen.dart';
-import 'package:client/screens/check_car_damage_screen/check_car_damage_filter_modal.dart';
-import 'package:client/screens/check_car_damage_screen/check_car_damage_filter.dart';
 
 class homeFABMenu extends StatefulWidget {
   final int? currentCarId;
