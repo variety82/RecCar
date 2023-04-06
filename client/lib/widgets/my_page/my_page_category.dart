@@ -279,7 +279,7 @@ class _MyPageCategoryState extends State<MyPageCategory> {
             builder: (BuildContext context) {
               return Dialog(
                 child: Container(
-                  height: 190,
+                  height: 200,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
                     vertical: 15,

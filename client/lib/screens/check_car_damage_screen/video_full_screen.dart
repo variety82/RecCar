@@ -12,15 +12,11 @@ import 'package:client/screens/after_check_damage_screen/after_check_damage_scre
 
 class VideoFullScreen extends StatefulWidget {
   final String filePath;
-  final List<Map<String, dynamic>> carDamagesAllList;
-  final List<int> selectedIndexList;
   final Duration timeStamp;
 
   const VideoFullScreen({
     Key? key,
     required this.filePath,
-    required this.carDamagesAllList,
-    required this.selectedIndexList,
     required this.timeStamp,
   }) : super(key: key);
 
@@ -162,86 +158,9 @@ class _VideoFullScreenState extends State<VideoFullScreen>
     }
   }
 
-  void goOtherScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AfterCheckDamageScreen(
-          filePath: widget.filePath,
-          carDamagesAllList: widget.carDamagesAllList,
-        ),
-      ),
-    );
-  }
-
-  void showConfirmationDialog(BuildContext context, Function func, String title,
-      String content, String yesText, String noText,
-      {dynamic data}) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          content: Text(content),
-          actions: <Widget>[
-            TextButton(
-              child: Text(
-                yesText,
-                style: TextStyle(
-                    fontSize: 14, color: Theme.of(context).primaryColor),
-              ),
-              onPressed: () {
-                // Yes 버튼을 눌렀을 때 수행할 작업
-                Navigator.of(context).pop(true);
-              },
-            ),
-            TextButton(
-              child: Text(
-                noText,
-                style: TextStyle(
-                    fontSize: 14, color: Theme.of(context).primaryColor),
-              ),
-              onPressed: () {
-                // No 버튼을 눌렀을 때 수행할 작업
-                Navigator.of(context).pop(false);
-              },
-            ),
-          ],
-        );
-      },
-    ).then((value) {
-      if (value == true) {
-        if (data != null) {
-          func(data);
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AfterCheckDamageScreen(
-                filePath: widget.filePath,
-                carDamagesAllList: widget.carDamagesAllList,
-              ),
-            ),
-          );
-        }
-      } else if (value == false) {
-        // No 버튼을 눌렀을 때 수행할 작업
-      }
-    });
-  }
-
   @override
   void initState() {
     _initVideoPlayer();
-
-    carDamagesAllList = widget.carDamagesAllList;
-    selectedIndexList = widget.selectedIndexList;
     super.initState();
   }
 
