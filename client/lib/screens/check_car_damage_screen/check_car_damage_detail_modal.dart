@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:client/widgets/register/category_title.dart';
-import 'package:client/widgets/register/maker_item.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_detail.dart';
 
 class CheckCarDamageDetailModal extends StatefulWidget {
@@ -45,14 +43,14 @@ class _CheckCarDamageDetailModalState extends State<CheckCarDamageDetailModal> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // CategoryTitle(title: '필터링 설정', isSelected: true),
               Text(
                 widget.modalCase,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                   color: Colors.black,
@@ -76,6 +74,11 @@ class _CheckCarDamageDetailModalState extends State<CheckCarDamageDetailModal> {
             modalCase: widget.modalCase,
           ),
         ),
+        Container(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+        )
       ],
     );
   }

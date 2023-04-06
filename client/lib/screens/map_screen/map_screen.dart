@@ -11,6 +11,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 String TmapApiKey = dotenv.env['TMAP_API_KEY']!;
 
 class NaverMapTest extends StatefulWidget {
+  const NaverMapTest({super.key});
+
   @override
   _NaverMapTestState createState() => _NaverMapTestState();
 }
@@ -25,8 +27,8 @@ class _NaverMapTestState extends State<NaverMapTest> {
   List<Map<String, dynamic>> result =
       List<Map<String, dynamic>>.filled(2000, {});
   bool beforeSearch = true;
-  List<naver.Marker> marker = List<naver.Marker>.filled(
-      2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+  List<naver.Marker> marker = List<naver.Marker>.filled(2001,
+      naver.Marker(markerId: "marker", position: const naver.LatLng(0, 0)),
       growable: true);
 
   Widget _previewWidget() {
@@ -40,7 +42,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
       ),
       child: Column(
         children: <Widget>[
-          Divider(
+          const Divider(
             color: Color(0xFF6A6A6A),
             indent: 160,
             endIndent: 160,
@@ -66,7 +68,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
       ),
       child: Column(
         children: [
-          Divider(
+          const Divider(
             color: Color(0xFF6A6A6A),
             indent: 160,
             endIndent: 160,
@@ -76,7 +78,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
           const SizedBox(height: 10),
           Expanded(
             child: SingleChildScrollView(
-              child: Container(
+              child: SizedBox(
                 width: 800,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -91,20 +93,20 @@ class _NaverMapTestState extends State<NaverMapTest> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                    if (!result[0].isEmpty)
+                    if (result[0].isNotEmpty)
                       for (int i = 0; i < result.length; i++)
-                        if (!result[i].isEmpty)
+                        if (result[i].isNotEmpty)
                           TextButton(
                             onPressed: () => move(i),
                             child: Container(
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 border: Border(
                                   bottom: BorderSide(
                                     color: Color(0xFFD9D9D9),
                                   ),
                                 ),
                               ),
-                              padding: EdgeInsetsDirectional.only(
+                              padding: const EdgeInsetsDirectional.only(
                                 bottom: 10,
                               ),
                               child: Row(
@@ -114,7 +116,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
                                 children: [
                                   Expanded(
                                     child: Container(
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                         horizontal: 5,
                                       ),
                                       child: Text(
@@ -132,12 +134,12 @@ class _NaverMapTestState extends State<NaverMapTest> {
                                   ),
                                   Expanded(
                                     child: Container(
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                         horizontal: 5,
                                       ),
                                       child: Text(
                                         "${result[i]['upperAddrName']} ${result[i]['middleAddrName']} ${result[i]['lowerAddrName']} ${result[i]['detailAddrName']}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Color(0xFF8B8B8B),
                                           // decoration: TextDecoration.none,
                                           // fontSize: 15,
@@ -174,6 +176,9 @@ class _NaverMapTestState extends State<NaverMapTest> {
                 ),
               ),
               Positioned(
+                top: 40,
+                left: 50,
+                right: 50,
                 child: Container(
                   width: 300,
                   height: 42,
@@ -190,11 +195,10 @@ class _NaverMapTestState extends State<NaverMapTest> {
                     ),
                   ),
                 ),
-                top: 40,
-                left: 50,
-                right: 50,
               ),
               Positioned(
+                bottom: 70,
+                left: 75,
                 child: Row(
                   children: [
                     Container(
@@ -274,10 +278,10 @@ class _NaverMapTestState extends State<NaverMapTest> {
                     ),
                   ],
                 ),
-                bottom: 70,
-                left: 75,
               ),
               Positioned(
+                bottom: 70,
+                left: 15,
                 child: TextButton(
                   onPressed: getCurrentLocation,
                   child: Container(
@@ -299,8 +303,6 @@ class _NaverMapTestState extends State<NaverMapTest> {
                     ),
                   ),
                 ),
-                bottom: 70,
-                left: 15,
               )
             ],
           ),
@@ -336,7 +338,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
             ],
           ),
         ),
-        Footer(),
+        const Footer(),
       ],
     );
   }
@@ -358,11 +360,6 @@ class _NaverMapTestState extends State<NaverMapTest> {
     });
     getCurrentLocation();
   }
-
-  // void onMapTap(naver.LatLng latLng) {
-  //   search("주유소");
-  //   print("id: " + result[0]['id']);
-  // }
 
   void move(int i) {
     var lat = double.parse(result[i]["frontLat"]);
@@ -398,7 +395,6 @@ class _NaverMapTestState extends State<NaverMapTest> {
   //   );
   //   var jsonData = response.body;
   //   var ret = jsonDecode(jsonData);
-  //   print(ret);
   //   // 유가 정보 API 이용은 1일 1회만 무료래용......
   // }
 
@@ -408,7 +404,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
     };
     Response response = await get(
       Uri.parse(
-          "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=${keyword}&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100"),
+          "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=$keyword&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100"),
       headers: headers,
     );
     var jsonData = response.body;
@@ -425,8 +421,8 @@ class _NaverMapTestState extends State<NaverMapTest> {
     setState(() {
       isSocarTouched = !isSocarTouched;
       isGreencarTouched = false;
-      marker = List<naver.Marker>.filled(
-          2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+      marker = List<naver.Marker>.filled(2001,
+          naver.Marker(markerId: "marker", position: const naver.LatLng(0, 0)),
           growable: true);
     });
     if (isSocarTouched) {
@@ -437,7 +433,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
       for (int i = 1; i <= 20; i++) {
         Response response = await get(
           Uri.parse(
-              "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=쏘카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=${i}"),
+              "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=쏘카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=$i"),
           headers: headers,
         );
         var jsonData = response.body;
@@ -466,22 +462,6 @@ class _NaverMapTestState extends State<NaverMapTest> {
                   ));
                 }
               });
-
-              // walkTime = howToGo(latLng).then((walkTime) => {
-              //       marker[100 * (i - 1) + j + 1] = naver.Marker(
-              //         markerId: "${result[i]["name"]}",
-              //         position: latLng,
-              //         infoWindow: "${result[i]["name"]}",
-              //         captionText: walkTime,
-              //         captionTextSize: 12,
-              //       )
-              //     });
-              // marker[100 * (i - 1) + j + 1] = (naver.Marker(
-              //   markerId: "${ret[j]['name']}",
-              //   position: latLng,
-              //   infoWindow: "${ret[j]['name']}\n${howToGo(latLng)}",
-              //   onMarkerTab: (marker, iconSize) => howToGo(latLng),
-              // ));
             }
           },
         );
@@ -491,20 +471,6 @@ class _NaverMapTestState extends State<NaverMapTest> {
         marker.clear();
       });
     }
-    print(marker);
-    // Response response = await get(
-    //   Uri.parse(
-    //       "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=쏘카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=20"),
-    //   headers: headers,
-    // );
-    // var jsonData = response.body;
-    // var ret = jsonDecode(jsonData)["searchPoiInfo"]['pois']['poi'];
-    //
-    // setState(() {
-    //   for (int i = 0; i < ret.length; i++) {
-    //     result[i] = ret[i];
-    //   }
-    // });
   }
 
   Future<void> searchGreencar() async {
@@ -516,14 +482,14 @@ class _NaverMapTestState extends State<NaverMapTest> {
       Map<String, String> headers = {
         "appkey": TmapApiKey,
       };
-      marker = List<naver.Marker>.filled(
-          2001, naver.Marker(markerId: "marker", position: naver.LatLng(0, 0)),
+      marker = List<naver.Marker>.filled(2001,
+          naver.Marker(markerId: "marker", position: const naver.LatLng(0, 0)),
           growable: true);
       LocationPermission permission = LocationPermission.always;
       for (int i = 1; i <= 20; i++) {
         Response response = await get(
           Uri.parse(
-              "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=그린카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=${i}"),
+              "https://apis.openapi.sk.com/tmap/pois?version=1&format=json&callback=result&searchKeyword=그린카존&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=100&page=$i"),
           headers: headers,
         );
         var jsonData = response.body;
@@ -559,7 +525,6 @@ class _NaverMapTestState extends State<NaverMapTest> {
             // ));
           }
         });
-        print(marker);
       }
     } else {
       setState(() {
@@ -598,8 +563,8 @@ class _NaverMapTestState extends State<NaverMapTest> {
             "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1"),
         headers: headers,
         body: {
-          'startX': "${curLng}",
-          'startY': "${curLat}",
+          'startX': "$curLng",
+          'startY': "$curLat",
           'endX': "${latLng.longitude}",
           'endY': "${latLng.latitude}",
           "reqCoordType": "WGS84GEO",
@@ -612,7 +577,7 @@ class _NaverMapTestState extends State<NaverMapTest> {
     } else {
       jsonResponse = {};
     }
-    var minute = await int.parse(
+    var minute = int.parse(
         (jsonResponse['features'][0]['properties']['totalTime'] / 60)
             .toString()
             .split(".")[0]);
@@ -623,16 +588,9 @@ class _NaverMapTestState extends State<NaverMapTest> {
       });
     } else {
       setState(() {
-        walkTime = "도보 약 ${minute}분";
+        walkTime = "도보 약 $minute분";
       });
     }
     return walkTime;
-    // if (minute >= 60) {
-    //   print("도보로 약 ${minute ~/ 60}시간 ${minute % 60}분 소요");
-    //   return await "도보 약 ${minute ~/ 60}시간 ${minute % 60}분 ";
-    // } else {
-    //   print("도보로 약 ${minute}분 소요");
-    //   return await "도보 약 ${minute}분";
-    // }
   }
 }

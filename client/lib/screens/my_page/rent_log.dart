@@ -12,7 +12,7 @@ class RentLog extends StatefulWidget {
 }
 
 class _RentLogState extends State<RentLog> {
-  static final storage = FlutterSecureStorage();
+  static final storage = const FlutterSecureStorage();
   // dynamic userId = '';
   dynamic userName = '';
   // dynamic userProfileImg = '';
@@ -30,6 +30,14 @@ class _RentLogState extends State<RentLog> {
       },
       fail: (error) {
         print('렌트 내역 호출 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
     );
     // 비동기로 flutter secure storage 정보를 불러오는 작업
@@ -63,7 +71,7 @@ class _RentLogState extends State<RentLog> {
           Container(
             color: Colors.white,
             height: 80,
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: 24,
             ),
             child: Row(
@@ -74,7 +82,7 @@ class _RentLogState extends State<RentLog> {
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text: '총 ',
                         style: TextStyle(
                           color: Colors.black,
@@ -89,7 +97,7 @@ class _RentLogState extends State<RentLog> {
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
-                      TextSpan(
+                      const TextSpan(
                         text: '건의 렌트 내역',
                         style: TextStyle(
                           fontSize: 16,
@@ -103,7 +111,7 @@ class _RentLogState extends State<RentLog> {
             ),
           ),
           // 간격
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Expanded(
@@ -115,12 +123,8 @@ class _RentLogState extends State<RentLog> {
                   for (var info in simpleRentInfo)
                     // RentLogCard 위젯에 데이터를 넘겨줌
                     RentLogCard(
-                      startDate: info['rentalDate']
-                          .toString()
-                          .substring(0, 10),
-                      endDate: info['returnDate']
-                          .toString()
-                          .substring(0, 10),
+                      startDate: info['rentalDate'].toString().substring(0, 10),
+                      endDate: info['returnDate'].toString().substring(0, 10),
                       company: info['rentalCompany'],
                       damage: info['damage'] < 0 ? 0 : info['damage'],
                       carId: info['carId'],
@@ -129,7 +133,7 @@ class _RentLogState extends State<RentLog> {
               ),
             ),
           ),
-          Footer(),
+          const Footer(),
         ],
       ),
     );

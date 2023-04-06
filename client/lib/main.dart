@@ -8,6 +8,7 @@ import 'screens/my_page/my_page.dart';
 import 'screens/map_screen/map_screen.dart';
 import 'screens/before_recording_screen/before_recording_screen.dart';
 import 'package:client/screens/video_recording_screen/video_recording_screen.dart';
+import 'package:client/screens/error_screen/error_screen.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'screens/detail/car_detail.dart';
 import 'screens/calendar_screen/calendar_screen.dart';
@@ -22,8 +23,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await dotenv.load(fileName: '.env');
-  // 앱 처음 실행 시 flutter 엔진 초기화 메소드 호출
-  // flutter 자체의 렌더링 엔진을 사용할 때 필요한 기본적인 설정들을 수행하는 메소드라고 생각하면 됨
+
   // 세로 방향으로 고정
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -48,11 +48,12 @@ void main() async {
         '/register': (context) => const CarRegister(),
         '/detail': (context) => const CarDetail(),
         '/my-page': (context) => const MyPage(),
-        '/station': (context) => NaverMapTest(),
+        '/station': (context) => const NaverMapTest(),
         '/login': (context) => const Login(),
         '/before-recording': (context) => const BeforeRecordingScreen(),
         '/recording': (context) => const VideoRecordingScreen(),
         '/calendar': (context) => const Calendar(),
+        '/error': (context) => const ErrorScreen(),
       },
     ),
   );

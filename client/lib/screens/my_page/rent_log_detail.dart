@@ -31,6 +31,14 @@ class _RentLogDetailState extends State<RentLogDetail> {
       },
       fail: (error) {
         print('파손 상세 내역 호출 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
       carId: widget.carId,
     );
@@ -42,6 +50,14 @@ class _RentLogDetailState extends State<RentLogDetail> {
       },
       fail: (error) {
         print('렌트 상세 내역 호출 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
       carId: widget.carId,
     );
@@ -61,16 +77,16 @@ class _RentLogDetailState extends State<RentLogDetail> {
                 toolbarHeight: 10,
                 backgroundColor: Colors.white,
                 bottom: TabBar(
-                  labelColor: Color(0xFFE0426F),
-                  unselectedLabelColor: Color(0xFF989696),
-                  indicatorColor: Color(0xFFE0426F),
+                  labelColor: const Color(0xFFE0426F),
+                  unselectedLabelColor: const Color(0xFF989696),
+                  indicatorColor: const Color(0xFFE0426F),
                   indicatorWeight: 3,
                   tabs: [
                     Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 10,
                         ),
-                        child: Text(
+                        child: const Text(
                           "대여 이전",
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -78,10 +94,10 @@ class _RentLogDetailState extends State<RentLogDetail> {
                           ),
                         )),
                     Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 10,
                         ),
-                        child: Text(
+                        child: const Text(
                           "대여 이후",
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -123,8 +139,8 @@ class _RentLogDetailState extends State<RentLogDetail> {
                   )
                 ],
               ),
-              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               width: 1000,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,7 +156,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   if (simpleDamageInfo['rentalDate'] != null)
@@ -151,7 +167,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
                           .substring(0, 10),
                       space: 120,
                     ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   if (simpleDamageInfo['rentalDate'] != null)
@@ -162,7 +178,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
                           .substring(0, 10),
                       space: 120,
                     ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   RentLogLine(
@@ -170,7 +186,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
                     info: simpleDamageInfo['rentalCompany'] ?? "",
                     space: 120,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   RentLogLine(
@@ -178,7 +194,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
                     info: simpleDamageInfo['carManufacturer'] ?? "",
                     space: 120,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   RentLogLine(
@@ -186,7 +202,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
                     info: simpleDamageInfo['carModel'] ?? "",
                     space: 120,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   RentLogLine(
@@ -199,7 +215,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
             ),
           ),
         ),
-        Footer(),
+        const Footer(),
       ],
     );
   }

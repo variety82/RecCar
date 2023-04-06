@@ -1,17 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:client/services/my_page_api.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../screens/my_page/my_data_modify.dart';
 import '../../screens/my_page/car_info.dart';
 import '../../screens/my_page/rent_log.dart';
 import '../../screens/my_page/alarm_setting.dart';
-import '../../screens/login_screen/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -43,14 +37,14 @@ String convertCategoryNameToKor(CategoryName name) {
 }
 
 class _MyPageCategoryState extends State<MyPageCategory> {
-  static final storage = const FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
   String? userName;
   String? userProfileImg;
 
   FocusNode? _unUsedFocusNode;
 
   var _modifiedName;
-  TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
 
   @override
   void initState() {
@@ -85,10 +79,18 @@ class _MyPageCategoryState extends State<MyPageCategory> {
         print(response);
       },
       fail: (error) {
-        print("사용자 수정 오류: ${error}");
+        print("사용자 수정 오류: $error");
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
       nickname: "$_modifiedName",
-      profileImg: "$path",
+      profileImg: path,
     );
     logout();
   }
@@ -108,8 +110,8 @@ class _MyPageCategoryState extends State<MyPageCategory> {
 
   logout() async {
     await storage.deleteAll();
-    final GoogleSignIn _googleSignIn = new GoogleSignIn();
-    _googleSignIn.signOut();
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    googleSignIn.signOut();
     Navigator.pushNamed(context, '/login');
   }
 
@@ -131,7 +133,8 @@ class _MyPageCategoryState extends State<MyPageCategory> {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        fixedSize: MaterialStatePropertyAll(Size(MediaQuery.of(context).size.width, 50)),
+        fixedSize: MaterialStatePropertyAll(
+            Size(MediaQuery.of(context).size.width, 50)),
         alignment: Alignment.centerLeft,
       ),
       onPressed: () {
@@ -141,7 +144,7 @@ class _MyPageCategoryState extends State<MyPageCategory> {
             context: context,
             builder: (BuildContext context) {
               return Dialog(
-                child: Container(
+                child: SizedBox(
                   height: 300,
                   child: Column(
                     children: [
@@ -205,7 +208,7 @@ class _MyPageCategoryState extends State<MyPageCategory> {
                           ),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: 200,
                         child: TextField(
                           controller: _userNameController
@@ -286,7 +289,7 @@ class _MyPageCategoryState extends State<MyPageCategory> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${userName} 님",
+                        "$userName 님",
                         style: const TextStyle(
                           height: 2,
                           fontWeight: FontWeight.w600,
@@ -368,7 +371,7 @@ class _MyPageCategoryState extends State<MyPageCategory> {
         ),
         height: 30,
         child: Text(
-          "${widget.category}",
+          widget.category,
           style: TextStyle(
             color: widget.textColor,
             fontSize: 15,
@@ -385,6 +388,14 @@ class _MyPageCategoryState extends State<MyPageCategory> {
       success: (dynamic response) {},
       fail: (error) {
         print('사용자 정보 초기화 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
     );
     Navigator.pop(context);
@@ -403,10 +414,6 @@ class _MyPageCategoryState extends State<MyPageCategory> {
           userProfileImg = value;
         });
       });
-
-      // setState(() {
-      //
-      // });
     } else {
       print('이미지 선택안함');
     }
