@@ -23,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-labels = ['Scratch_0', 'Breakage_3', 'Crushed_2']
+labels = ['Scratch', 'Breakage', 'Crushed']
 
 @app.on_event("startup")
 def startup_event():

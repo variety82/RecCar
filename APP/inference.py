@@ -17,7 +17,7 @@ def load_model(labels):
     models = []
     for label in labels:
 
-        weight_path = f'./models/[DAMAGE][{label}]Unet.pt'
+        weight_path = f'./models/[DAMAGE][{label}].pt'
         #Load pretrained model
         model = Unet(encoder='resnet34', pre_weight='imagenet', num_classes=n_classes).to(device)
 
