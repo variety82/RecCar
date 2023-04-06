@@ -403,18 +403,19 @@ docekr run --rm -d -p 8081:8081 --name fastapi-latest 이미지ID
 
 ​	![로그인](../assets/login.gif)
 
-		### 		지도 
+### 근처 렌트카존 찾기
+
+![지도](../assets/map.gif)
 
 
 
-​		![지도](../assets/map.gif)
-
-
-
-### 일정관리
+### 일정관리(차량 대여 및 반납 일자)
 
 ![일정관리](../assets/calander.gif)
+
+
 
 ### 차량 영상 등록
 
 ![차량등록](../assets/regist.gif)
+
