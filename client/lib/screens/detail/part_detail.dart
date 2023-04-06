@@ -34,11 +34,11 @@ class partDetail extends StatelessWidget {
     int evaluateDamageLevel(int damageCount) {
       if (damageCount == 0) {
         return 0;
-      } else if (damageCount <= 5) {
+      } else if (damageCount <= 3) {
         return 1;
-      } else if (damageCount <= 10) {
+      } else if (damageCount <= 6) {
         return 2;
-      } else if (damageCount <= 15) {
+      } else if (damageCount <= 9) {
         return 3;
       } else {
         return 4;
