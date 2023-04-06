@@ -83,11 +83,11 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
                               margin: const EdgeInsets.only(
                                 top: 10,
                               ),
-                              width: 180 * min((widget.damageLevel / 20), 1),
+                              width: 180 * min((widget.damageLevel / 12), 1),
                               height: 13,
                               decoration: BoxDecoration(
                                 borderRadius:
-                                  widget.damageLevel >= 20
+                                  widget.damageLevel >= 12
                                     ? BorderRadius.circular(5)
                                     : const BorderRadius.only(
                                         topLeft: Radius.circular(5),
