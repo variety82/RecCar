@@ -31,14 +31,14 @@ class _RentLogDetailState extends State<RentLogDetail> {
       },
       fail: (error) {
         print('파손 상세 내역 호출 오류: $error');
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/error',
-          arguments: {
-            'errorText': error,
-          },
-          ModalRoute.withName('/home'),
-        );
+        // Navigator.pushNamedAndRemoveUntil(
+        //   context,
+        //   '/error',
+        //   arguments: {
+        //     'errorText': error,
+        //   },
+        //   ModalRoute.withName('/home'),
+        // );
       },
       carId: widget.carId,
     );
@@ -50,14 +50,14 @@ class _RentLogDetailState extends State<RentLogDetail> {
       },
       fail: (error) {
         print('렌트 상세 내역 호출 오류: $error');
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/error',
-          arguments: {
-            'errorText': error,
-          },
-          ModalRoute.withName('/home'),
-        );
+        // Navigator.pushNamedAndRemoveUntil(
+        //   context,
+        //   '/error',
+        //   arguments: {
+        //     'errorText': error,
+        //   },
+        //   ModalRoute.withName('/home'),
+        // );
       },
       carId: widget.carId,
     );

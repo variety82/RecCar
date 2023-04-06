@@ -111,14 +111,14 @@ class _CarDetailState extends State<CarDetail>
                   Navigator.pushNamed(context, '/home');
                 }, fail: (error) {
                   print('차량 반납 요청 오류 : $error');
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/error',
-                    arguments: {
-                      'errorText': error,
-                    },
-                    ModalRoute.withName('/home'),
-                  );
+                  // Navigator.pushNamedAndRemoveUntil(
+                  //   context,
+                  //   '/error',
+                  //   arguments: {
+                  //     'errorText': error,
+                  //   },
+                  //   ModalRoute.withName('/home'),
+                  // );
                 });
               },
               child: const Text('네'),
@@ -213,14 +213,14 @@ class _CarDetailState extends State<CarDetail>
       });
     }, fail: (error) {
       print('차량 파손 정보 호출 오류 : $error');
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/error',
-        arguments: {
-          'errorText': error,
-        },
-        ModalRoute.withName('/home'),
-      );
+      // Navigator.pushNamedAndRemoveUntil(
+      //   context,
+      //   '/error',
+      //   arguments: {
+      //     'errorText': error,
+      //   },
+      //   ModalRoute.withName('/home'),
+      // );
     });
   }
 

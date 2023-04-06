@@ -31,6 +31,7 @@ Future<dynamic> analysisCarDamageApi({
   File file = File(filePath);
 
   request.files.add(await http.MultipartFile.fromPath("file", filePath));
+  print(request);
   var response = await request.send();
 
   if (200 <= response.statusCode && response.statusCode < 300) {

@@ -195,14 +195,14 @@ class _CarInfoState extends State<CarInfo> {
                                           },
                                           fail: (error) {
                                             print('차량 삭제 호출 오류: $error');
-                                            Navigator.pushNamedAndRemoveUntil(
-                                              context,
-                                              '/error',
-                                              arguments: {
-                                                'errorText': error,
-                                              },
-                                              ModalRoute.withName('/home'),
-                                            );
+                                            // Navigator.pushNamedAndRemoveUntil(
+                                            //   context,
+                                            //   '/error',
+                                            //   arguments: {
+                                            //     'errorText': error,
+                                            //   },
+                                            //   ModalRoute.withName('/home'),
+                                            // );
                                           },
                                           carId: rentedCar['carId']);
                                       Navigator.pushNamed(context, '/my-page');

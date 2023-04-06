@@ -30,14 +30,14 @@ class _RentLogState extends State<RentLog> {
       },
       fail: (error) {
         print('렌트 내역 호출 오류: $error');
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/error',
-          arguments: {
-            'errorText': error,
-          },
-          ModalRoute.withName('/home'),
-        );
+        // Navigator.pushNamedAndRemoveUntil(
+        //   context,
+        //   '/error',
+        //   arguments: {
+        //     'errorText': error,
+        //   },
+        //   ModalRoute.withName('/home'),
+        // );
       },
     );
     // 비동기로 flutter secure storage 정보를 불러오는 작업
