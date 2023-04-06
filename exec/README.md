@@ -405,4 +405,4 @@ docekr run --rm -d -p 8081:8081 --name fastapi-latest 이미지ID
 
 		### 		지도 
 
-​		![지도](../assets/지도.gif)
+​		![지도](../assets/map.gif)
