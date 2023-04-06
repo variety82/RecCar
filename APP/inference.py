@@ -63,6 +63,9 @@ def save_image(org_img, img_output, output_name):
             os.makedirs("./dataset/output_images")
 
     plt.savefig(f'./dataset/output_images/{output_name}', dpi=50)
+    plt.cla()
+    plt.clf()
+    plt.close()
     return output_name
 
 def inference_img(model, img_input):
