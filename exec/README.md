@@ -400,11 +400,11 @@ docekr run --rm -d -p 8081:8081 --name fastapi-latest 이미지ID
 
    - 로그인 버튼을 누른 후 소셜 로그인을 진행할 수 있습니다
    
-<center><img src="../assets/로그인.gif" width="300" height="300"></center>
 
 
 
-![로그인.gif](../assets/로그인.gif)
+![로그인.gif](../assets/login1.gif)
 
 
 
+![로그인.gif](../assets/login2.gif)
