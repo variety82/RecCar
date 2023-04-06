@@ -505,7 +505,8 @@ class _BeforeRecordingConfirmScreenState
                                       Theme.of(context).primaryColor,
                                 ),
                                 onPressed: () {
-                                  _takeVideo(context);
+                                  // _takeVideo(context);
+                                  Navigator.pushNamed(context, '/recording');
                                 },
                                 child: const Row(
                                   mainAxisAlignment:
@@ -647,7 +648,9 @@ class _BeforeRecordingConfirmScreenState
                                             Theme.of(context).primaryColor,
                                       ),
                                       onPressed: () {
-                                        _takeVideo(context);
+                                        // _takeVideo(context);
+                                        Navigator.pushNamed(
+                                            context, '/recording');
                                       },
                                       child: const Row(
                                         mainAxisAlignment:
