@@ -80,7 +80,7 @@ class _SelectReturnDateState extends State<SelectReturnDate> {
             top: 0,
           ),
           child: Text(
-            '대여 일자를 선택해주세요.',
+            '반납 일자를 선택해주세요.',
             style: TextStyle(
               color: Theme.of(context).secondaryHeaderColor,
               fontSize: 18,
