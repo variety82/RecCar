@@ -24,7 +24,6 @@ class _MainPageBodyState extends State<MainPageBody> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Stack(
             children: [
@@ -57,8 +56,8 @@ class _MainPageBodyState extends State<MainPageBody> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               widget.mainContainter,
-              const SizedBox(
-                height: 60,
+              SizedBox(
+                height: screenHeight * 0.04,
               )
             ],
           )
