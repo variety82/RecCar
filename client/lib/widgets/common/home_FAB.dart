@@ -19,13 +19,13 @@ class homeFABMenu extends StatefulWidget {
 
 class _homeFABMenuState extends State<homeFABMenu>
     with SingleTickerProviderStateMixin {
-  bool _isOpen = false;
+  final bool _isOpen = false;
   late AnimationController _animationController;
   late Animation<double> _rotateAnimation;
   late Animation<double> _translateAnimation;
 
   void showConfirmationDialog(BuildContext context, String title,
-      String content, String yes_text, String no_text,
+      String content, String yesText, String noText,
       {String? route, dynamic data}) {
     showDialog(
       context: context,
@@ -33,7 +33,7 @@ class _homeFABMenuState extends State<homeFABMenu>
         return AlertDialog(
           title: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
             ),
@@ -42,7 +42,7 @@ class _homeFABMenuState extends State<homeFABMenu>
           actions: <Widget>[
             TextButton(
               child: Text(
-                yes_text,
+                yesText,
                 style: TextStyle(
                     fontSize: 14, color: Theme.of(context).primaryColor),
               ),
@@ -53,7 +53,7 @@ class _homeFABMenuState extends State<homeFABMenu>
             ),
             TextButton(
               child: Text(
-                no_text,
+                noText,
                 style: TextStyle(
                     fontSize: 14, color: Theme.of(context).primaryColor),
               ),
@@ -83,14 +83,12 @@ class _homeFABMenuState extends State<homeFABMenu>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
     _rotateAnimation =
         Tween<double>(begin: 0.0, end: 0.5).animate(_animationController);
     _translateAnimation =
         Tween<double>(begin: 0.0, end: 80.0).animate(_animationController);
-    print(widget.currentCarVideo);
-    print(widget.currentCarId);
   }
 
   @override
@@ -106,17 +104,10 @@ class _homeFABMenuState extends State<homeFABMenu>
       openCloseDial: ValueNotifier(_isOpen),
       buttonSize: const Size(64, 64),
       overlayOpacity: 0.0,
-      child: Center(
-        child: Icon(
-          Icons.camera_alt_outlined,
-          size: 30,
-          // color: Theme.of(context).primaryColorLight,
-        ),
-      ),
       activeIcon: Icons.close,
       curve: Curves.bounceIn,
       direction: SpeedDialDirection.up,
-      backgroundColor: Color(0xFFE0426F),
+      backgroundColor: const Color(0xFFE0426F),
       children: [
         SpeedDialChild(
           child: const Icon(
@@ -129,8 +120,8 @@ class _homeFABMenuState extends State<homeFABMenu>
             color: Colors.white,
             fontSize: 13.0,
           ),
-          backgroundColor: Color(0xFFE0426F),
-          labelBackgroundColor: Color(0xFFE0426F),
+          backgroundColor: const Color(0xFFE0426F),
+          labelBackgroundColor: const Color(0xFFE0426F),
           onTap: () {
             if (widget.currentCarVideo == 2) {
               showConfirmationDialog(
@@ -157,7 +148,7 @@ class _homeFABMenuState extends State<homeFABMenu>
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        BeforeRecordingConfirmScreen(videoCase: 'take'),
+                        const BeforeRecordingConfirmScreen(videoCase: 'take'),
                   ),
                 );
               }
@@ -175,8 +166,8 @@ class _homeFABMenuState extends State<homeFABMenu>
             color: Colors.white,
             fontSize: 13.0,
           ),
-          backgroundColor: Color(0xFFE0426F),
-          labelBackgroundColor: Color(0xFFE0426F),
+          backgroundColor: const Color(0xFFE0426F),
+          labelBackgroundColor: const Color(0xFFE0426F),
           onTap: () {
             if (widget.currentCarVideo == 2) {
               showConfirmationDialog(
@@ -204,7 +195,7 @@ class _homeFABMenuState extends State<homeFABMenu>
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BeforeRecordingConfirmScreen(
+                      builder: (context) => const BeforeRecordingConfirmScreen(
                         videoCase: 'pick',
                       ),
                     ),
@@ -215,6 +206,13 @@ class _homeFABMenuState extends State<homeFABMenu>
           },
         ),
       ],
+      child: Center(
+        child: Icon(
+          Icons.camera_alt_outlined,
+          size: 30,
+          // color: Theme.of(context).primaryColorLight,
+        ),
+      ),
     );
   }
 }

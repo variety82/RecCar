@@ -1,12 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_detail_modal.dart';
-import 'package:client/screens/after_check_damage_screen/after_check_damage_screen.dart';
-import 'package:client/widgets/common/image_go_detail.dart';
 
 class CheckCarDamagePart extends StatefulWidget {
   final String imageUrl;
@@ -20,6 +15,7 @@ class CheckCarDamagePart extends StatefulWidget {
   final String damageView;
 
   const CheckCarDamagePart({
+    super.key,
     required this.imageUrl,
     required this.videoPlayerController,
     required this.carDamage,
@@ -72,13 +68,13 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Container(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                 maxWidth: 300,
                 maxHeight: 200,
               ),
               child: FadeInImage(
-                placeholder:
-                    AssetImage('lib/assets/images/loading_img/loading_gif.gif'),
+                placeholder: const AssetImage(
+                    'lib/assets/images/loading_img/loading_gif.gif'),
                 image: NetworkImage(widget.imageUrl),
               ),
             ),
@@ -91,7 +87,7 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
               children: [
                 Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(
                           Icons.timer,
@@ -106,7 +102,7 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     InkWell(
@@ -118,8 +114,9 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                         await widget.videoPlayerController.play();
                       },
                       child: Text(
-                        "${_durationToString(Duration(seconds: widget.carDamage["timeStamp"]))}",
-                        style: TextStyle(
+                        _durationToString(
+                            Duration(seconds: widget.carDamage["timeStamp"])),
+                        style: const TextStyle(
                           color: Colors.blueAccent,
                           decoration: TextDecoration.underline,
                           fontWeight: FontWeight.w600,
@@ -131,7 +128,7 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                 ),
                 Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(
                           Icons.broken_image,
@@ -146,18 +143,18 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Text(
                       widget.damageView,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
                 Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(
                           Icons.car_crash,
@@ -172,14 +169,14 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Text(
                       widget.carDamage["part"] != ""
                           ? widget.carDamage["part"]
                           : '미정',
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
@@ -377,7 +374,7 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                         Container(
                           width: double.infinity,
                           height: 20,
-                          color: Color(0xFFFBD5DC),
+                          color: const Color(0xFFFBD5DC),
                         ),
                         Container(
                           height: double.infinity,

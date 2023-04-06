@@ -19,15 +19,15 @@ class _CalendarState extends State<Calendar> {
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by longpressing a date
   DateTime _focusedDay = DateTime.parse(
-      DateTime.now().toString().substring(0, 11) + "00:00:00.000Z");
+      "${DateTime.now().toString().substring(0, 11)}00:00:00.000Z");
   DateTime _selectedDay = DateTime.parse(
-      DateTime.now().toString().substring(0, 11) + "00:00:00.000Z");
+      "${DateTime.now().toString().substring(0, 11)}00:00:00.000Z");
   dynamic events = [];
   Map<DateTime, List<Event>> kEvents = {};
 
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _memoController = TextEditingController();
-  DateRangePickerController _dateController = DateRangePickerController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _memoController = TextEditingController();
+  final DateRangePickerController _dateController = DateRangePickerController();
   DateTime _inputedCalendarDate = DateTime.parse("0000-00-00 00:00:00.000Z");
   String _inputedTitle = "";
   String _inputedMemo = "";
@@ -35,7 +35,7 @@ class _CalendarState extends State<Calendar> {
   Map<String, dynamic> _buildCalendarInfoBody() {
     return {
       "calendarDate": DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-          .format(_inputedCalendarDate!),
+          .format(_inputedCalendarDate),
       "title": _inputedTitle,
       "memo": _inputedMemo,
       "auto": false,
@@ -58,11 +58,11 @@ class _CalendarState extends State<Calendar> {
     super.initState();
     setState(() {
       _focusedDay = DateTime.parse(
-          DateTime.now().toString().substring(0, 11) + "00:00:00.000Z");
+          "${DateTime.now().toString().substring(0, 11)}00:00:00.000Z");
     });
     setState(() {
       _selectedDay = DateTime.parse(
-          DateTime.now().toString().substring(0, 11) + "00:00:00.000Z");
+          "${DateTime.now().toString().substring(0, 11)}00:00:00.000Z");
     });
     // 일정 불러오기
     getEvents(
@@ -70,11 +70,8 @@ class _CalendarState extends State<Calendar> {
         setState(() {
           events = response;
           for (int i = 0; i < events.length; i++) {
-            var temp = (DateTime.parse(events[i]['calendarDate'])
-                        .add(const Duration(hours: 9)))
-                    .toString()
-                    .substring(0, 11) +
-                "00:00:00.000Z";
+            var temp =
+                "${(DateTime.parse(events[i]['calendarDate']).add(const Duration(hours: 9))).toString().substring(0, 11)}00:00:00.000Z";
             var eventDate = DateTime.parse(temp);
             if (kEvents.containsKey(eventDate)) {
               kEvents[eventDate]!.add(Event(events[i]['calendarId'],
@@ -92,6 +89,14 @@ class _CalendarState extends State<Calendar> {
       },
       fail: (error) {
         print('캘린더 내역 호출 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
     );
     _selectedDay = _focusedDay;
@@ -120,7 +125,7 @@ class _CalendarState extends State<Calendar> {
           color: Colors.white,
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 80,
               ),
               Expanded(
@@ -130,13 +135,11 @@ class _CalendarState extends State<Calendar> {
                   child: Card(
                     elevation: 0,
                     child: TableCalendar(
-                      headerStyle: HeaderStyle(
+                      headerStyle: const HeaderStyle(
                         formatButtonVisible: false,
                         titleCentered: true,
-                        leftChevronIcon:
-                            const Icon(Icons.arrow_back_ios_rounded),
-                        rightChevronIcon:
-                            const Icon(Icons.arrow_forward_ios_rounded),
+                        leftChevronIcon: Icon(Icons.arrow_back_ios_rounded),
+                        rightChevronIcon: Icon(Icons.arrow_forward_ios_rounded),
                       ),
                       firstDay: kFirstDay,
                       lastDay: kLastDay,
@@ -170,16 +173,16 @@ class _CalendarState extends State<Calendar> {
                         markersAlignment: Alignment.bottomCenter,
                         markersMaxCount: 4,
                         selectedDecoration: ShapeDecoration(
-                            shape: CircleBorder(side: BorderSide.none),
+                            shape: const CircleBorder(side: BorderSide.none),
                             color: Theme.of(context).primaryColor),
                         markerDecoration: ShapeDecoration(
-                            shape: CircleBorder(side: BorderSide.none),
+                            shape: const CircleBorder(side: BorderSide.none),
                             color: Theme.of(context).primaryColor),
                         todayDecoration: ShapeDecoration(
-                            shape: CircleBorder(side: BorderSide.none),
+                            shape: const CircleBorder(side: BorderSide.none),
                             color: Theme.of(context).primaryColorLight),
                         // holidayTextStyle: TextStyle(color: Colors.red,),
-                        weekendTextStyle: TextStyle(
+                        weekendTextStyle: const TextStyle(
                           color: Colors.red,
                         ),
                         outsideDaysVisible: false,
@@ -208,7 +211,7 @@ class _CalendarState extends State<Calendar> {
                   ),
                 ),
               ),
-              Divider(
+              const Divider(
                 height: 0,
                 thickness: 1.1,
                 indent: 10,
@@ -221,13 +224,14 @@ class _CalendarState extends State<Calendar> {
                   child: ValueListenableBuilder<List<Event>>(
                     valueListenable: _selectedEvents,
                     builder: (context, value, _) {
-                      if (value.length == 0)
-                        return Center(child: Text("일정이 없습니다"));
+                      if (value.isEmpty) {
+                        return const Center(child: Text("일정이 없습니다"));
+                      }
                       return ListView.builder(
                         itemCount: value.length,
                         itemBuilder: (context, index) {
                           return Container(
-                            margin: EdgeInsets.only(
+                            margin: const EdgeInsets.only(
                                 bottom: 15, left: 10, right: 10),
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -249,11 +253,12 @@ class _CalendarState extends State<Calendar> {
                                     value[index].memo,
                                     value[index].auto)
                               },
-                              title: Text('${value[index].title}',
-                                  style: TextStyle(color: Color(0xFF6A6A6A))),
-                              subtitle: "${value[index].memo}" != ""
-                                  ? Text('${value[index].memo}')
-                                  : Text('메모가 없습니다',
+                              title: Text(value[index].title,
+                                  style: const TextStyle(
+                                      color: Color(0xFF6A6A6A))),
+                              subtitle: value[index].memo != ""
+                                  ? Text(value[index].memo)
+                                  : const Text('메모가 없습니다',
                                       style:
                                           TextStyle(color: Color(0xFFD9D9D9))),
                             ),
@@ -264,11 +269,13 @@ class _CalendarState extends State<Calendar> {
                   ),
                 ),
               ),
-              Footer(),
+              const Footer(),
             ],
           ),
         ),
         Positioned(
+          bottom: 70,
+          right: 15,
           child: TextButton(
             onPressed: () {
               addEvent();
@@ -279,30 +286,28 @@ class _CalendarState extends State<Calendar> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 color: Theme.of(context).primaryColor,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Color(0xFF6A6A6A),
                     blurRadius: 1.5,
                   ),
                 ],
               ),
-              padding: EdgeInsets.all(10),
-              child: Icon(
+              padding: const EdgeInsets.all(10),
+              child: const Icon(
                 Icons.add,
                 color: Colors.white,
                 size: 35,
               ),
             ),
           ),
-          bottom: 70,
-          right: 15,
         ),
       ],
     );
   }
 
   void addEvent() {
-    FocusNode _unUsedFocusNode = FocusNode();
+    FocusNode unUsedFocusNode = FocusNode();
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -312,7 +317,7 @@ class _CalendarState extends State<Calendar> {
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: Container(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 30,
                     ),
@@ -320,13 +325,13 @@ class _CalendarState extends State<Calendar> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
+                        const Center(
                             child: Text(
                           "일정 등록",
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w500),
                         )),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
@@ -338,17 +343,17 @@ class _CalendarState extends State<Calendar> {
                                 color: Theme.of(context).secondaryHeaderColor,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 15,
                             ),
                             Expanded(
-                              child: Container(
+                              child: SizedBox(
                                 height: 30,
                                 child: TextField(
                                   controller: _titleController,
                                   onTapOutside: (PointerDownEvent event) {
                                     FocusScope.of(context)
-                                        .requestFocus(_unUsedFocusNode);
+                                        .requestFocus(unUsedFocusNode);
                                   },
                                   decoration: InputDecoration(
                                     border: UnderlineInputBorder(
@@ -368,7 +373,7 @@ class _CalendarState extends State<Calendar> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 40),
+                        const SizedBox(height: 40),
                         Text(
                           "DATE ",
                           style: TextStyle(
@@ -382,10 +387,6 @@ class _CalendarState extends State<Calendar> {
                               monthViewSettings:
                                   const DateRangePickerMonthViewSettings(
                                       firstDayOfWeek: 7),
-                              // onSelectionChanged:
-                              //     (DateRangePickerSelectionChangedArgs args) {
-                              //   print(args.value);
-                              // },
                               controller: _dateController,
                               todayHighlightColor:
                                   Theme.of(context).primaryColor,
@@ -405,7 +406,7 @@ class _CalendarState extends State<Calendar> {
                               selectionTextStyle:
                                   const TextStyle(fontWeight: FontWeight.w700)),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Text("MEMO",
@@ -413,17 +414,17 @@ class _CalendarState extends State<Calendar> {
                               fontSize: 12,
                               color: Theme.of(context).secondaryHeaderColor,
                             )),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Container(
+                        SizedBox(
                           height: 90,
                           child: TextField(
                             controller: _memoController,
                             maxLines: 3,
                             onTapOutside: (PointerDownEvent event) {
                               FocusScope.of(context)
-                                  .requestFocus(_unUsedFocusNode);
+                                  .requestFocus(unUsedFocusNode);
                             },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
@@ -432,7 +433,7 @@ class _CalendarState extends State<Calendar> {
                                           .secondaryHeaderColor)),
                               labelText: '',
                             ),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
                             ),
                           ),
@@ -444,7 +445,7 @@ class _CalendarState extends State<Calendar> {
                               onPressed: () => {Navigator.pop(context)},
                               child: Container(
                                 alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   vertical: 5,
                                   horizontal: 13,
                                 ),
@@ -459,7 +460,7 @@ class _CalendarState extends State<Calendar> {
                                     )
                                   ],
                                 ),
-                                child: Text(
+                                child: const Text(
                                   "취소",
                                   style: TextStyle(
                                     color: Color(0xFF453F52),
@@ -471,14 +472,14 @@ class _CalendarState extends State<Calendar> {
                               onPressed: () => {addCalendar()},
                               child: Container(
                                 alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   vertical: 5,
                                   horizontal: 13,
                                 ),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: Color(0xFFE0426F)),
-                                child: Text(
+                                    color: const Color(0xFFE0426F)),
+                                child: const Text(
                                   "등록",
                                   style: TextStyle(
                                     color: Colors.white,
@@ -520,6 +521,14 @@ class _CalendarState extends State<Calendar> {
         },
         fail: (error) {
           print('일정 등록 오류: $error');
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/error',
+            arguments: {
+              'errorText': error,
+            },
+            ModalRoute.withName('/home'),
+          );
         },
         body: _buildCalendarInfoBody(),
       );
@@ -527,11 +536,11 @@ class _CalendarState extends State<Calendar> {
       ScaffoldMessenger.of(context).showSnackBar(
         //SnackBar 구현하는법 context는 위에 BuildContext에 있는 객체를 그대로 가져오면 됨.
         SnackBar(
-          content: Center(
+          content: const Center(
               child: Text("제목과 날짜는 필수 입력값입니다.",
                   style: TextStyle(color: Colors.white))),
           backgroundColor: Theme.of(context).primaryColor,
-          duration: Duration(milliseconds: 1000),
+          duration: const Duration(milliseconds: 1000),
           behavior: SnackBarBehavior.floating,
           // action: SnackBarAction(
           //   label: '닫기',
@@ -558,7 +567,7 @@ class _CalendarState extends State<Calendar> {
         return Dialog(
           child: Container(
             height: 200,
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: 15,
               vertical: 10,
             ),
@@ -586,7 +595,7 @@ class _CalendarState extends State<Calendar> {
                         },
                         child: !auto
                             ? Container(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   horizontal: 8,
                                   vertical: 5,
                                 ),
@@ -594,7 +603,7 @@ class _CalendarState extends State<Calendar> {
                                   color: Theme.of(context).primaryColor,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: Text(
+                                child: const Text(
                                   "삭제",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 11),
@@ -611,7 +620,7 @@ class _CalendarState extends State<Calendar> {
                           modifyCalendar(id, title, memo, _focusedDay);
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 8,
                             vertical: 5,
                           ),
@@ -619,7 +628,7 @@ class _CalendarState extends State<Calendar> {
                             color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: Text(
+                          child: const Text(
                             "수정",
                             style: TextStyle(color: Colors.white, fontSize: 11),
                           ),
@@ -628,16 +637,16 @@ class _CalendarState extends State<Calendar> {
                     ),
                   ],
                 ),
-                Divider(
+                const Divider(
                   thickness: 1.5,
                   height: 0,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: 50,
                       child: Text(
                         "TITLE",
@@ -647,23 +656,23 @@ class _CalendarState extends State<Calendar> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
                       title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xFF6A6A6A),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: 50,
                       child: Text(
                         "MEMO",
@@ -673,11 +682,11 @@ class _CalendarState extends State<Calendar> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     if (memo == "")
-                      Text(
+                      const Text(
                         "메모가 없습니다",
                         style: TextStyle(
                           color: Color(0xFFD9D9D9),
@@ -686,13 +695,13 @@ class _CalendarState extends State<Calendar> {
                     if (memo != "")
                       Text(
                         memo,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xFF6A6A6A),
                         ),
                       ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Row(
@@ -703,7 +712,7 @@ class _CalendarState extends State<Calendar> {
                       child: Container(
                         alignment: Alignment.center,
                         width: 50,
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 5,
                           horizontal: 3,
                         ),
@@ -718,7 +727,7 @@ class _CalendarState extends State<Calendar> {
                             )
                           ],
                         ),
-                        child: Text(
+                        child: const Text(
                           "닫기",
                           style: TextStyle(
                             color: Color(0xFF453F52),
@@ -738,7 +747,7 @@ class _CalendarState extends State<Calendar> {
   }
 
   void modifyCalendar(int id, String title, String memo, DateTime date) {
-    FocusNode _unUsedFocusNode = FocusNode();
+    FocusNode unUsedFocusNode = FocusNode();
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -746,7 +755,7 @@ class _CalendarState extends State<Calendar> {
             child: SafeArea(
               child: SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 30,
                   ),
@@ -754,13 +763,13 @@ class _CalendarState extends State<Calendar> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(
+                      const Center(
                           child: Text(
                         "일정 수정",
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w500),
                       )),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(
@@ -772,17 +781,17 @@ class _CalendarState extends State<Calendar> {
                               color: Theme.of(context).secondaryHeaderColor,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 15,
                           ),
                           Expanded(
-                            child: Container(
+                            child: SizedBox(
                               height: 30,
                               child: TextField(
                                 controller: _titleController..text = title,
                                 onTapOutside: (PointerDownEvent event) {
                                   FocusScope.of(context)
-                                      .requestFocus(_unUsedFocusNode);
+                                      .requestFocus(unUsedFocusNode);
                                 },
                                 decoration: InputDecoration(
                                   border: UnderlineInputBorder(
@@ -801,7 +810,7 @@ class _CalendarState extends State<Calendar> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
                       Text(
                         "DATE ",
                         style: TextStyle(
@@ -815,10 +824,6 @@ class _CalendarState extends State<Calendar> {
                             monthViewSettings:
                                 const DateRangePickerMonthViewSettings(
                                     firstDayOfWeek: 7),
-                            // onSelectionChanged:
-                            //     (DateRangePickerSelectionChangedArgs args) {
-                            //   print(args.value);
-                            // },
                             controller: _dateController..selectedDate = date,
                             todayHighlightColor: Theme.of(context).primaryColor,
                             selectionColor: Theme.of(context).primaryColor,
@@ -837,7 +842,7 @@ class _CalendarState extends State<Calendar> {
                             selectionTextStyle:
                                 const TextStyle(fontWeight: FontWeight.w700)),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text("MEMO",
@@ -845,17 +850,17 @@ class _CalendarState extends State<Calendar> {
                             fontSize: 12,
                             color: Theme.of(context).secondaryHeaderColor,
                           )),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
-                      Container(
+                      SizedBox(
                         height: 90,
                         child: TextField(
                           controller: _memoController..text = memo,
                           maxLines: 3,
                           onTapOutside: (PointerDownEvent event) {
                             FocusScope.of(context)
-                                .requestFocus(_unUsedFocusNode);
+                                .requestFocus(unUsedFocusNode);
                           },
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -864,7 +869,7 @@ class _CalendarState extends State<Calendar> {
                                         .secondaryHeaderColor)),
                             labelText: '',
                           ),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                           ),
                         ),
@@ -876,7 +881,7 @@ class _CalendarState extends State<Calendar> {
                             onPressed: () => {Navigator.pop(context)},
                             child: Container(
                               alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 5,
                                 horizontal: 13,
                               ),
@@ -891,7 +896,7 @@ class _CalendarState extends State<Calendar> {
                                   )
                                 ],
                               ),
-                              child: Text(
+                              child: const Text(
                                 "취소",
                                 style: TextStyle(
                                   color: Color(0xFF453F52),
@@ -903,14 +908,14 @@ class _CalendarState extends State<Calendar> {
                             onPressed: () => {putCalendar(id)},
                             child: Container(
                               alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 5,
                                 horizontal: 13,
                               ),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Color(0xFFE0426F)),
-                              child: Text(
+                                  color: const Color(0xFFE0426F)),
+                              child: const Text(
                                 "수정",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -949,6 +954,14 @@ class _CalendarState extends State<Calendar> {
       },
       fail: (error) {
         print('일정 수정 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
       body: _buildCalendarInfoBody2(id),
     );
@@ -964,6 +977,14 @@ class _CalendarState extends State<Calendar> {
       },
       fail: (error) {
         print('일정 삭제 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
       calendarId: id,
     );

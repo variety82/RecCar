@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'package:client/widgets/register/register_line.dart';
-import 'package:client/widgets/register/register_title.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_filter_modal.dart';
-import 'package:client/screens/check_car_damage_screen/check_car_damage_filter.dart';
 
 class MyFABMenu extends StatefulWidget {
   final void Function(String) addCategories;
@@ -30,7 +27,7 @@ class MyFABMenu extends StatefulWidget {
 
 class _MyFABMenuState extends State<MyFABMenu>
     with SingleTickerProviderStateMixin {
-  bool _isMenuOpen = false;
+  final bool _isMenuOpen = false;
   late AnimationController _animationController;
   late Animation<double> _rotateAnimation;
   late Animation<double> _translateAnimation;
@@ -40,7 +37,7 @@ class _MyFABMenuState extends State<MyFABMenu>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
     _rotateAnimation =
         Tween<double>(begin: 0.0, end: 0.5).animate(_animationController);
@@ -61,7 +58,7 @@ class _MyFABMenuState extends State<MyFABMenu>
       animatedIcon: AnimatedIcons.menu_close,
       visible: true,
       curve: Curves.bounceIn,
-      backgroundColor: Color(0xFFE0426F),
+      backgroundColor: const Color(0xFFE0426F),
       children: [
         SpeedDialChild(
           child: const Icon(
@@ -74,8 +71,10 @@ class _MyFABMenuState extends State<MyFABMenu>
             color: Colors.white,
             fontSize: 13.0,
           ),
-          backgroundColor: widget.selectedIndexList.length > 0 ? Color(0xFFE0426F) : Theme.of(context).disabledColor,
-          labelBackgroundColor: Color(0xFFE0426F),
+          backgroundColor: widget.selectedIndexList.isNotEmpty
+              ? const Color(0xFFE0426F)
+              : Theme.of(context).disabledColor,
+          labelBackgroundColor: const Color(0xFFE0426F),
           onTap: () {},
         ),
         SpeedDialChild(
@@ -89,8 +88,8 @@ class _MyFABMenuState extends State<MyFABMenu>
             color: Colors.white,
             fontSize: 13.0,
           ),
-          backgroundColor: Color(0xFFE0426F),
-          labelBackgroundColor: Color(0xFFE0426F),
+          backgroundColor: const Color(0xFFE0426F),
+          labelBackgroundColor: const Color(0xFFE0426F),
           onTap: () {},
         ),
         SpeedDialChild(
@@ -104,8 +103,8 @@ class _MyFABMenuState extends State<MyFABMenu>
             color: Colors.white,
             fontSize: 13.0,
           ),
-          backgroundColor: Color(0xFFE0426F),
-          labelBackgroundColor: Color(0xFFE0426F),
+          backgroundColor: const Color(0xFFE0426F),
+          labelBackgroundColor: const Color(0xFFE0426F),
           onTap: () {
             showModalBottomSheet(
               context: context,

@@ -1,10 +1,7 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_container.dart';
@@ -32,8 +29,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
   late VideoPlayerController _videoPlayerController;
   late TabController _tabController;
   final List<Widget> _tabs = [
-    Text('전체 보기'),
-    Text('리스트만 보기'),
+    const Text('전체 보기'),
+    const Text('리스트만 보기'),
   ];
   bool loading_api = true;
   bool loading_video = false;
@@ -76,7 +73,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _timer.cancel();
     _videoPlayerController.dispose();
     super.dispose();
   }
@@ -155,7 +152,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
   void _resetTimer() {
     if (_isVisible) {
-      _timer?.cancel(); // 기존 타이머 취소
+      _timer.cancel(); // 기존 타이머 취소
       _timeChecker(); // 새로운 타이머 시작
     }
   }
@@ -171,7 +168,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       // 첫번째 탭을 눌렀을 때의 동작
       _timeChecker();
       _isSecondTap = true;
-      Future.delayed(Duration(milliseconds: 250), () {
+      Future.delayed(const Duration(milliseconds: 250), () {
         _isSecondTap = false;
       });
     }
@@ -180,19 +177,18 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
   void changeDamageValue(
     int indexValue,
     String partValue,
-    int scratch_count,
-    int crushed_count,
-    int breakage_count,
-    int separated_count,
+    int scratchCount,
+    int crushedCount,
+    int breakageCount,
+    int separatedCount,
     String memoValue,
   ) {
     setState(() {
-      // print(indexValue);
       carDamagesAllList[indexValue]["part"] = partValue;
-      carDamagesAllList[indexValue]["Scratch"] = scratch_count;
-      carDamagesAllList[indexValue]["Crushed"] = crushed_count;
-      carDamagesAllList[indexValue]["Breakage"] = breakage_count;
-      carDamagesAllList[indexValue]["Separated"] = separated_count;
+      carDamagesAllList[indexValue]["Scratch"] = scratchCount;
+      carDamagesAllList[indexValue]["Crushed"] = crushedCount;
+      carDamagesAllList[indexValue]["Breakage"] = breakageCount;
+      carDamagesAllList[indexValue]["Separated"] = separatedCount;
       carDamagesAllList[indexValue]["memo"] = memoValue;
       carDamagesAllList[indexValue]["selected"] = true;
 
@@ -236,9 +232,9 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
         carDamagesAllList[indexValue]["damageView"] =
             '${damagedParts[0]} 외 ${damagedParts.length - 1}건';
       });
-    } else if (damagedParts.length > 0) {
+    } else if (damagedParts.isNotEmpty) {
       setState(() {
-        carDamagesAllList[indexValue]["damageView"] = damagedParts[0]!;
+        carDamagesAllList[indexValue]["damageView"] = damagedParts[0];
       });
     } else {
       //
@@ -258,7 +254,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
   }
 
   void showConfirmationDialog(BuildContext context, Function func, String title,
-      String content, String yes_text, String no_text,
+      String content, String yesText, String noText,
       {dynamic data}) {
     showDialog(
       context: context,
@@ -266,7 +262,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
         return AlertDialog(
           title: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
             ),
@@ -275,7 +271,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
           actions: <Widget>[
             TextButton(
               child: Text(
-                yes_text,
+                yesText,
                 style: TextStyle(
                     fontSize: 14, color: Theme.of(context).primaryColor),
               ),
@@ -286,7 +282,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
             ),
             TextButton(
               child: Text(
-                no_text,
+                noText,
                 style: TextStyle(
                     fontSize: 14, color: Theme.of(context).primaryColor),
               ),
@@ -324,17 +320,14 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
   void changeFilter() {
     filteredDamagedIndex = [];
-    if (selected_categories.length == 0) {
-      print('히히');
-      carDamagesAllList.forEach((damage) {
-        print(damage['index']);
+    if (selected_categories.isEmpty) {
+      for (var damage in carDamagesAllList) {
         setState(() {
           filteredDamagedIndex.add(damage['index']);
         });
-      });
+      }
     } else {
-      print('하하');
-      carDamagesAllList.forEach((damage) {
+      for (var damage in carDamagesAllList) {
         if (selected_categories.contains('스크래치') &&
             damage['Scratch'] != 0 &&
             !filteredDamagedIndex.contains(damage['index'])) {
@@ -355,12 +348,11 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
             !filteredDamagedIndex.contains(damage['index'])) {
           filteredDamagedIndex.add(damage['index']);
         }
-      });
+      }
     }
     setState(() {
       filteredDamagedIndex.sort((a, b) => a.compareTo(b));
     });
-    print(filteredDamagedIndex);
   }
 
   // timer 시, 분, 초 단위로 표시 전환해줌
@@ -379,13 +371,13 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     selectedIndexList = widget.selectedIndexList;
 
     _tabController = TabController(vsync: this, length: 2); // 탭 수에 따라 length 변경
-    int _selectedTabIndex = 0; // 기본값은 첫 번째 탭
+    int selectedTabIndex = 0; // 기본값은 첫 번째 탭
 
     _tabController.addListener(() {
       final newIndex = _tabController.index;
-      if (newIndex != _selectedTabIndex) {
+      if (newIndex != selectedTabIndex) {
         setState(() {
-          _selectedTabIndex = newIndex;
+          selectedTabIndex = newIndex;
           isSelectedView = !isSelectedView;
         });
       }
@@ -405,7 +397,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
         backgroundColor: Colors.white,
         body: loading_video
             ? Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.black,
                 ),
                 height: screenHeight,
@@ -417,7 +409,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                         _watchVideoMenu();
                       },
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.black,
                         ),
                         height: 240,
@@ -462,7 +454,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                                   10),
                                         );
                                         Future.delayed(
-                                          Duration(milliseconds: 200),
+                                          const Duration(milliseconds: 200),
                                           () {
                                             setState(() {
                                               _isVisible = false;
@@ -473,7 +465,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       },
                                       child: AnimatedOpacity(
                                         opacity: _isbackTimeSkip ? 1.0 : 0.0,
-                                        duration: Duration(milliseconds: 200),
+                                        duration:
+                                            const Duration(milliseconds: 200),
                                         child: Stack(
                                           children: [
                                             Icon(
@@ -484,7 +477,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                             Positioned(
                                               right: (screenWidth / 4) + 10,
                                               top: (screenWidth / 2) - 10,
-                                              child: Column(
+                                              child: const Column(
                                                 children: [
                                                   Icon(
                                                     Icons.fast_rewind,
@@ -531,19 +524,19 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                           ? Stack(
                                               alignment: Alignment.center,
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Icons.circle,
                                                   color: Colors.black38,
                                                   size: 80,
                                                 ),
                                                 _videoPlayerController
                                                         .value.isPlaying
-                                                    ? Icon(
+                                                    ? const Icon(
                                                         Icons.pause,
                                                         color: Colors.white,
                                                         size: 40,
                                                       )
-                                                    : Icon(
+                                                    : const Icon(
                                                         Icons.play_arrow,
                                                         color: Colors.white,
                                                         size: 40,
@@ -554,7 +547,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                     ),
                                     AnimatedOpacity(
                                       opacity: _isforwardTimeSkip ? 1.0 : 0.0,
-                                      duration: Duration(milliseconds: 200),
+                                      duration:
+                                          const Duration(milliseconds: 200),
                                       child: InkWell(
                                         onTap: () {
                                           _watchVideoMenu();
@@ -574,7 +568,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                                     10),
                                           );
                                           Future.delayed(
-                                            Duration(milliseconds: 200),
+                                            const Duration(milliseconds: 200),
                                             () {
                                               setState(() {
                                                 _isVisible = false;
@@ -593,7 +587,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                             Positioned(
                                               left: (screenWidth / 4) + 10,
                                               top: (screenWidth / 2) - 10,
-                                              child: Column(
+                                              child: const Column(
                                                 children: [
                                                   Icon(
                                                     Icons.fast_forward,
@@ -610,7 +604,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                                 ],
                                               ),
                                             ),
-                                            Positioned(
+                                            const Positioned(
                                               left: 12,
                                               bottom: 12,
                                               child: Row(
@@ -647,7 +641,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                     ),
                                   ),
                                   Text(
-                                    "${_durationToString(_videoPlayerController.value.duration)}",
+                                    _durationToString(
+                                        _videoPlayerController.value.duration),
                                     style: TextStyle(
                                       color: _isVisible
                                           ? Colors.white.withOpacity(0.75)
@@ -691,16 +686,16 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                     Container(
                       height: 16,
                       width: double.infinity,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.black,
                       ),
                       child: VideoProgressIndicator(
                         _videoPlayerController,
                         allowScrubbing: true,
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 5,
                         ),
-                        colors: VideoProgressColors(
+                        colors: const VideoProgressColors(
                           backgroundColor: Color(0xFF453F52),
                           bufferedColor: Color(0xFFEFEFEF),
                           playedColor: Color(0xFFE0426F),
@@ -714,22 +709,37 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                         length: 2,
                         child: Scaffold(
                           floatingActionButton: FloatingActionButton(
-                            onPressed: selectedIndexList.length > 0
-                                ? () {
-                                    showConfirmationDialog(
-                                        context,
-                                        goOtherScreen,
-                                        '손상 등록',
-                                        '손상을 등록합니다. 정말 괜찮으시겠습니까?',
-                                        '예',
-                                        '아니오');
-                                  }
-                                : null,
-                            backgroundColor: selectedIndexList.length > 0
-                                ? Theme.of(context).primaryColor
-                                : Theme.of(context).disabledColor,
+                            onPressed: () {
+                              selectedIndexList.isNotEmpty
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            AfterCheckDamageScreen(
+                                          filePath: widget.filePath,
+                                          carDamagesAllList:
+                                              widget.carDamagesAllList,
+                                        ),
+                                      ),
+                                    )
+                                  // ? showConfirmationDialog(
+                                  //     context,
+                                  //     goOtherScreen,
+                                  //     '손상 등록',
+                                  //     '손상을 등록합니다. 정말 괜찮으시겠습니까?',
+                                  //     '예',
+                                  //     '아니오')
+                                  : showConfirmationDialog(
+                                      context,
+                                      goOtherScreen,
+                                      '선택한 손상 없음',
+                                      '현재 선택하신 손상이 존재하지 않는 상태입니다. 정말 괜찮으시겠습니까?',
+                                      '예',
+                                      '아니오');
+                            },
+                            backgroundColor: Theme.of(context).primaryColor,
                             tooltip: '손상을 저장할 수 있습니다.',
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
@@ -744,16 +754,16 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                             backgroundColor: Colors.white,
                             bottom: TabBar(
                               controller: _tabController,
-                              labelColor: Color(0xFFE0426F),
-                              unselectedLabelColor: Color(0xFF989696),
-                              indicatorColor: Color(0xFFE0426F),
+                              labelColor: const Color(0xFFE0426F),
+                              unselectedLabelColor: const Color(0xFF989696),
+                              indicatorColor: const Color(0xFFE0426F),
                               indicatorWeight: 3,
                               tabs: [
                                 Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       vertical: 4,
                                     ),
-                                    child: Text(
+                                    child: const Text(
                                       "추가 전 손상",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
@@ -761,11 +771,11 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       ),
                                     )),
                                 Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       vertical: 4,
                                     ),
-                                    child: Text(
-                                      "추가할 손상",
+                                    child: const Text(
+                                      "추가 후 손상",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
@@ -795,10 +805,10 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       filteredDamagedIndex:
                                           filteredDamagedIndex,
                                     )
-                                  : Center(
+                                  : const Center(
                                       child: Text('추가 전 손상이 존재하지 않습니다.'),
                                     ),
-                              selectedIndexList.length > 0
+                              selectedIndexList.isNotEmpty
                                   ? CheckCarDamageContainer(
                                       carDamageList: carDamagesAllList,
                                       videoPlayerController:
@@ -812,7 +822,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       filteredDamagedIndex:
                                           filteredDamagedIndex,
                                     )
-                                  : Center(
+                                  : const Center(
                                       child: Text('추가 예정인 손상이 존재하지 않습니다.'),
                                     ),
                             ],
@@ -842,7 +852,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                   children: [
                                     Row(
                                       children: [
-                                        Text(
+                                        const Text(
                                           '현재 개수',
                                           style: TextStyle(
                                             color: Colors.black,
@@ -850,7 +860,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                             fontSize: 14,
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 5,
                                         ),
                                         Text(
@@ -860,7 +870,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                               : (carDamagesAllList.length -
                                                       selectedIndexList.length)
                                                   .toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Color(0xFFE0426F),
                                             fontWeight: FontWeight.w700,
                                             fontSize: 14,
@@ -875,7 +885,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: damage_categories.map(
-                                  (part_category) {
+                                  (partCategory) {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 4,
@@ -884,14 +894,14 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                         borderRadius: BorderRadius.circular(10),
                                         onTap: () {
                                           if (selected_categories
-                                              .contains(part_category)) {
+                                              .contains(partCategory)) {
                                             setState(() {
-                                              removeCategories(part_category);
+                                              removeCategories(partCategory);
                                             });
                                           } else {
                                             setState(
                                               () {
-                                                addCategories(part_category);
+                                                addCategories(partCategory);
                                               },
                                             );
                                           }
@@ -899,11 +909,11 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                         },
                                         child: Chip(
                                           label: Text(
-                                            part_category,
+                                            partCategory,
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: selected_categories
-                                                      .contains(part_category)
+                                                      .contains(partCategory)
                                                   ? Theme.of(context)
                                                       .primaryColor
                                                   : Theme.of(context)
@@ -911,11 +921,12 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
-                                          labelPadding: EdgeInsets.symmetric(
+                                          labelPadding:
+                                              const EdgeInsets.symmetric(
                                             horizontal: 8,
                                           ),
                                           backgroundColor: selected_categories
-                                                  .contains(part_category)
+                                                  .contains(partCategory)
                                               ? Theme.of(context)
                                                   .primaryColorLight
                                               : Theme.of(context).shadowColor,
@@ -934,7 +945,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                   ],
                 ),
               )
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(
                   color: Color(0xFFE0426F),
                 ),

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:client/widgets/register/category_title.dart';
-import 'package:client/widgets/register/maker_item.dart';
 import 'package:client/screens/check_car_damage_screen/check_car_damage_filter.dart';
 
 class CheckCarDamageFilterModal extends StatefulWidget {
@@ -23,7 +21,7 @@ class CheckCarDamageFilterModal extends StatefulWidget {
 class _CheckCarDamageFilterModalState extends State<CheckCarDamageFilterModal> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 100,
       child: Column(
         children: [
@@ -61,7 +59,7 @@ class _CheckCarDamageFilterModalState extends State<CheckCarDamageFilterModal> {
             height: 1,
             color: const Color(0xFFEFEFEF),
           ),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: CheckCarDamagefilter(
               selected_categories: widget.selected_categories,
