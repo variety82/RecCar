@@ -126,7 +126,7 @@ class _MyPageState extends State<MyPage> {
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "${userName}",
+                    userName ?? "",
                     style: TextStyle(
                       color: Theme.of(context).secondaryHeaderColor,
                       fontSize: 16,
