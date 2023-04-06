@@ -528,12 +528,12 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                               _nowRecording
                                   ? InkWell(
                                       onTap: () async {},
-                                      child: const Stack(
+                                      child: Stack(
                                         alignment: Alignment.center,
                                         children: [
                                           Icon(
                                             Icons.circle,
-                                            color: Colors.black38,
+                                            color: Colors.black38.withOpacity(0),
                                             size: 60,
                                           ),
                                           // Icon(
@@ -543,7 +543,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                           // ),
                                           Icon(
                                             Icons.camera,
-                                            color: Colors.white,
+                                            color: Colors.white.withOpacity(0),
                                             size: 30,
                                           )
                                         ],
@@ -551,21 +551,21 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                     )
                                   : InkWell(
                                       onTap: () {
-                                        changeCameraDirection();
+                                        // changeCameraDirection();
                                       },
                                       child: Stack(
                                         alignment: Alignment.center,
                                         children: [
-                                          const Icon(
+                                          Icon(
                                             Icons.circle,
-                                            color: Colors.black38,
+                                            color: Colors.black38.withOpacity(0),
                                             size: 60,
                                           ),
                                           Icon(
                                             !_nowSelectFrontCamera
                                                 ? Icons.camera_front
                                                 : Icons.camera_rear,
-                                            color: Colors.white,
+                                            color: Colors.white.withOpacity(0),
                                             size: 30,
                                           ),
                                         ],

@@ -115,7 +115,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 maxHeight: 140,
                               ),
                               child: Image.asset(
-                                'lib/assets/images/loading_img/complete.gif.gif',
+                                'lib/assets/images/loading_img/complete_gif.gif',
                               ),
                             ),
                           ),
@@ -217,10 +217,19 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ),
                             ],
                           ),
-                          CircularProgressIndicator(
-                            color: Theme.of(context).primaryColor,
-                            // strokeWidth: 8,
+                          Container(
+                            constraints: const BoxConstraints(
+                              maxWidth: 180,
+                              maxHeight: 180,
+                            ),
+                            child: Image.asset(
+                              'lib/assets/images/loading_img/car_spinning.gif',
+                            ),
                           ),
+                          // CircularProgressIndicator(
+                          //   color: Theme.of(context).primaryColor,
+                          //   // strokeWidth: 8,
+                          // ),
                         ],
                       ),
                     ),
