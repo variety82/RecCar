@@ -190,7 +190,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                           Column(
                             children: [
                               Text(
-                                '녹화가',
+                                '영상 등록이',
                                 textAlign: TextAlign.center,
                                 softWrap: true,
                                 style: TextStyle(
