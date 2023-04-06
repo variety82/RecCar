@@ -399,13 +399,10 @@ docekr run --rm -d -p 8081:8081 --name fastapi-latest 이미지ID
    #### 로그인 & 로그아웃(구글OAuth)
 
    - 로그인 버튼을 누른 후 소셜 로그인을 진행할 수 있습니다
-   - ![로그인.gif](../assets/test.gif)
    
 
-![로그인.gif](../assets/login3.gif)
+​	
 
-![로그인.gif](../assets/login1.gif)
+		### 		지도 
 
-
-
-![로그인.gif](../assets/login2.gif)
+​		![지도](../assets/지도.gif)
