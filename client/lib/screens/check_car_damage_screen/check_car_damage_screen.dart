@@ -662,8 +662,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                     MaterialPageRoute(
                                       builder: (context) => VideoFullScreen(
                                         filePath: widget.filePath,
-                                        carDamagesAllList: carDamagesAllList,
-                                        selectedIndexList: selectedIndexList,
                                         timeStamp: _videoPlayerController
                                             .value.position,
                                       ),
