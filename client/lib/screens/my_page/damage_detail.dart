@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 import '../../widgets/my_page/rent_log_line.dart';
 import '../../widgets/common/footer.dart';
 import '../../services/my_page_api.dart';
+import 'package:client/widgets/common/image_go_detail.dart';
 
 class DamageDetail extends StatefulWidget {
-  final int damageId;
+  final damageImageUrl;
+  final damageDate;
+  final kindOfDamage;
+  final damagaLocation;
+  final memo;
 
   const DamageDetail({
     super.key,
-    required this.damageId,
+    required this.damageImageUrl,
+    required this.damageDate,
+    required this.kindOfDamage,
+    required this.damagaLocation,
+    required this.memo,
   });
 
   @override
@@ -17,22 +26,6 @@ class DamageDetail extends StatefulWidget {
 
 class _DamageDetailState extends State<DamageDetail> {
   Map<String, dynamic> detailDamageInfo = {};
-  @override
-  void initState() {
-    super.initState();
-    getDetailDamageInfo(
-      success: (dynamic response) {
-        setState(() {
-          detailDamageInfo = response;
-        });
-        print(response);
-      },
-      fail: (error) {
-        print('렌트 내역 호출 오류: $error');
-      },
-      damageId: widget.damageId,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,22 +33,24 @@ class _DamageDetailState extends State<DamageDetail> {
       color: Colors.white,
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 90,
           ),
           Expanded(
             child: Container(
               child: Column(
                 children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    height: 350,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: NetworkImage(
-                              "${detailDamageInfo['damageImageUrl']}")),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width,
+                        maxHeight: 300,
+                      ),
+                      child: ImageGoDetail(
+                        imagePath: widget.damageImageUrl,
+                        imageCase: 'url',
+                      ),
                     ),
                   ),
                   // const Divider(
@@ -83,8 +78,10 @@ class _DamageDetailState extends State<DamageDetail> {
                           )
                         ],
                       ),
-                      margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 15),
                       width: 1000,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,43 +91,74 @@ class _DamageDetailState extends State<DamageDetail> {
                             "손상 정보",
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              color: Theme.of(context).secondaryHeaderColor,
+                              color: Theme.of(context).primaryColor,
                               fontSize: 14,
+                              fontWeight: FontWeight.normal,
                               decoration: TextDecoration.none,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           RentLogLine(
                             infoTitle: "파손 일자",
-                            info: detailDamageInfo['damageDate'].toString().characters.take(10).toString(),
-                            space: 120,
+                            info: widget.damageDate.toString().substring(0, 10),
+                            space: 100,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           RentLogLine(
                             infoTitle: "파손 종류",
-                            info: "${detailDamageInfo['damage']}",
-                            space: 120,
+                            info: "${widget.kindOfDamage}",
+                            space: 100,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           RentLogLine(
                             infoTitle: "파손 부위",
-                            info: "${detailDamageInfo['part']}",
-                            space: 120,
+                            info: "${widget.damagaLocation}",
+                            space: 100,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
-                          RentLogLine(
-                            infoTitle: "메모",
-                            info: "${detailDamageInfo['memo']}",
-                            space: 120,
-                          ),
+                          if ("${widget.memo}" != "")
+                            RentLogLine(
+                              infoTitle: "메모",
+                              info: "${widget.memo}",
+                              space: 100,
+                            ),
+                          if ("${widget.memo}" == "")
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 100,
+                                  child: Text(
+                                    "메모",
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor,
+                                      fontSize: 12,
+                                      decoration: TextDecoration.none,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: const Text(
+                                    "메모가 없습니다",
+                                    style: TextStyle(
+                                      color: Color(0xFFD9D9D9),
+                                      fontSize: 13,
+                                      decoration: TextDecoration.none,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                     ),
@@ -139,7 +167,7 @@ class _DamageDetailState extends State<DamageDetail> {
               ),
             ),
           ),
-          Footer(),
+          const Footer(),
         ],
       ),
     );

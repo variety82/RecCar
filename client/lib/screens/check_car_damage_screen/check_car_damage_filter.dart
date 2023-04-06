@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:client/widgets/common/image_detail.dart';
 
 class CheckCarDamagefilter extends StatefulWidget {
   final void Function(String) addCategories;
@@ -41,172 +40,62 @@ class _CheckCarDamagefilterState extends State<CheckCarDamagefilter> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                children: [
-                  Text(
-                    '손상 종류',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              children: [
+                const Text(
+                  '손상 종류',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
                   ),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 5,
-                    children: damage_categories.map(
-                      (damage_category) {
-                        return InkWell(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () {
-                            if (widget.selected_categories
-                                .contains(damage_category)) {
-                              widget.removeCategories(damage_category);
-                              setState(() {
-                                widget.selected_categories;
-                              });
-                            } else {
-                              widget.addCategories(damage_category);
-                              setState(() {
-                                widget.selected_categories;
-                              });
-                            }
-                          },
-                          child: Chip(
-                              label: Text(
-                                damage_category,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                ),
+                ),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 5,
+                  children: damage_categories.map(
+                    (damageCategory) {
+                      return InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () {
+                          if (widget.selected_categories
+                              .contains(damageCategory)) {
+                            widget.removeCategories(damageCategory);
+                            setState(() {
+                              widget.selected_categories;
+                            });
+                          } else {
+                            widget.addCategories(damageCategory);
+                            setState(() {
+                              widget.selected_categories;
+                            });
+                          }
+                        },
+                        child: Chip(
+                            label: Text(
+                              damageCategory,
+                              style: const TextStyle(
+                                fontSize: 12,
                               ),
-                              labelPadding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                              ),
-                              backgroundColor: widget.selected_categories
-                                      .contains(damage_category)
-                                  ? Color(0xFFFBD5DC)
-                                  : Colors.grey
-                              // deleteIconColor: Color(0xFFE0426F),
-                              ),
-                        );
-                      },
-                    ).toList(),
-                  ),
-                ],
-              )),
-          // Padding(
-          //     padding: const EdgeInsets.all(12.0),
-          //     child: Column(
-          //       children: [
-          //         Text(
-          //           '차량 부위',
-          //           style: TextStyle(
-          //             fontSize: 16,
-          //             fontWeight: FontWeight.w700,
-          //             color: Colors.black,
-          //           ),
-          //         ),
-          //         Wrap(
-          //           spacing: 10,
-          //           runSpacing: 5,
-          //           children: part_categories.map(
-          //             (part_category) {
-          //               return InkWell(
-          //                 splashColor: Colors.transparent,
-          //                 highlightColor: Colors.transparent,
-          //                 onTap: () {
-          //                   if (widget.selected_categories
-          //                       .contains(part_category)) {
-          //                     setState(() {
-          //                       widget.removeCategories(part_category);
-          //                       // widget.selected_categories
-          //                       //     .remove(part_category);
-          //                     });
-          //                   } else {
-          //                     setState(() {
-          //                       widget.addCategories(part_category);
-          //                       // widget.selected_categories.add(part_category);
-          //                     });
-          //                   }
-          //                 },
-          //                 child: Chip(
-          //                     label: Text(
-          //                       part_category,
-          //                       style: TextStyle(
-          //                         fontSize: 12,
-          //                       ),
-          //                     ),
-          //                     labelPadding: EdgeInsets.symmetric(
-          //                       horizontal: 8,
-          //                     ),
-          //                     backgroundColor: widget.selected_categories
-          //                             .contains(part_category)
-          //                         ? Color(0xFFFBD5DC)
-          //                         : Colors.grey
-          //                     // deleteIconColor: Color(0xFFE0426F),
-          //                     ),
-          //               );
-          //             },
-          //           ).toList(),
-          //         ),
-          //       ],
-          //     )),
-          // Padding(
-          //   padding: const EdgeInsets.all(12.0),
-          //   child: Column(
-          //     children: [
-          //       Text(
-          //         '현재 필터링',
-          //         style: TextStyle(
-          //           fontSize: 16,
-          //           fontWeight: FontWeight.w700,
-          //           color: Colors.black,
-          //         ),
-          //       ),
-          //       SingleChildScrollView(
-          //         scrollDirection: Axis.horizontal,
-          //         child: Wrap(
-          //           spacing: 10,
-          //           runSpacing: 10,
-          //           children: widget.selected_categories.map(
-          //             (category) {
-          //               return Chip(
-          //                 onDeleted: () {
-          //                   setState(() {
-          //                     widget.removeCategories(category);
-          //                   });
-          //                   print(category);
-          //                 },
-          //                 deleteIcon: const Icon(
-          //                   Icons.clear_rounded,
-          //                   size: 16,
-          //                 ),
-          //                 label: Text(
-          //                   category,
-          //                   style: TextStyle(
-          //                     fontSize: 12,
-          //                   ),
-          //                 ),
-          //                 labelPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-          //                 backgroundColor: Color(0xFFFBD5DC),
-          //                 deleteIconColor: Color(0xFFE0426F),
-          //               );
-          //             },
-          //           ).toList(),
-          //         ),
-          //       ),
-          //       if (widget.selected_categories.isEmpty)
-          //         Container(
-          //           height: 60,
-          //           child: const Center(
-          //             child: Text('현재 적용된 필터링이 없습니다.'),
-          //           ),
-          //         ),
-          //     ],
-          //   ),
-          // ),
+                            ),
+                            labelPadding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                            ),
+                            backgroundColor: widget.selected_categories
+                                    .contains(damageCategory)
+                                ? const Color(0xFFFBD5DC)
+                                : Colors.grey
+                            // deleteIconColor: Color(0xFFE0426F),
+                            ),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

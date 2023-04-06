@@ -19,7 +19,7 @@ class RentLogLine extends StatelessWidget {
         Container(
           width: space,
           child: Text(
-            '${infoTitle}',
+            infoTitle,
             style: TextStyle(
               color: Theme.of(context).secondaryHeaderColor,
               fontSize: 12,
@@ -30,7 +30,7 @@ class RentLogLine extends StatelessWidget {
         ),
         Container(
           child: Text(
-            '${info}',
+            info,
             style: TextStyle(
               color: Color(0xFF6A6A6A),
               fontSize: 13,

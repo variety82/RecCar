@@ -1,12 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_detail_modal.dart';
-import 'package:client/screens/after_check_damage_screen/after_check_damage_screen.dart';
-import 'package:client/widgets/common/image_go_detail.dart';
 
 class CheckCarDamagePart extends StatefulWidget {
   final String imageUrl;
@@ -15,10 +10,12 @@ class CheckCarDamagePart extends StatefulWidget {
   final void Function(int) deleteDamageList;
   final void Function(int, String, int, int, int, int, String)
       changeDamageValue;
-  final void Function(BuildContext, Function, String, String, String, String, {dynamic data}) showConfirmationDialog;
+  final void Function(BuildContext, Function, String, String, String, String,
+      {dynamic data}) showConfirmationDialog;
   final String damageView;
 
   const CheckCarDamagePart({
+    super.key,
     required this.imageUrl,
     required this.videoPlayerController,
     required this.carDamage,
@@ -71,31 +68,15 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Container(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                 maxWidth: 300,
                 maxHeight: 200,
               ),
               child: FadeInImage(
-                placeholder:
-                    AssetImage('lib/assets/images/loading_img/loading_gif.gif'),
+                placeholder: const AssetImage(
+                    'lib/assets/images/loading_img/loading_gif.gif'),
                 image: NetworkImage(widget.imageUrl),
               ),
-              // 사진 존재 여부에 따라 사진 표시될 지 아닐지 여부 결정됨
-              // child: imageUrl != ''
-              //     ? ImageGoDetail(
-              //         imagePath: imageUrl,
-              //         imageCase: 'url',
-              //       )
-              //     : Container(
-              //         width: 300,
-              //         height: 200,
-              //         decoration: BoxDecoration(
-              //           color: Theme.of(context).disabledColor,
-              //         ),
-              //         child: Center(
-              //           child: Text('사진이 없습니다'),
-              //         ),
-              //       ),
             ),
           ),
           Padding(
@@ -106,7 +87,7 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
               children: [
                 Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(
                           Icons.timer,
@@ -121,7 +102,7 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     InkWell(
@@ -133,8 +114,9 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                         await widget.videoPlayerController.play();
                       },
                       child: Text(
-                        "${_durationToString(Duration(seconds: widget.carDamage["timeStamp"]))}",
-                        style: TextStyle(
+                        _durationToString(
+                            Duration(seconds: widget.carDamage["timeStamp"])),
+                        style: const TextStyle(
                           color: Colors.blueAccent,
                           decoration: TextDecoration.underline,
                           fontWeight: FontWeight.w600,
@@ -146,7 +128,7 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                 ),
                 Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(
                           Icons.broken_image,
@@ -161,18 +143,18 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Text(
-                        widget.damageView,
-                      style: TextStyle(fontSize: 12),
+                      widget.damageView,
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
                 Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(
                           Icons.car_crash,
@@ -187,14 +169,14 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Text(
                       widget.carDamage["part"] != ""
                           ? widget.carDamage["part"]
                           : '미정',
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
@@ -203,209 +185,217 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
           ),
           Expanded(
             flex: 2,
-            child: widget.carDamage['selected'] ? Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 20,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: widget.carDamage['selected']
+                ? Stack(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 20,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  useSafeArea: true,
+                                  context: context,
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(25.0),
+                                    ),
+                                  ),
+                                  builder: (BuildContext context) {
+                                    return SizedBox(
+                                      // height: MediaQuery.of(context).size.height * 6,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(25.0),
+                                          ),
+                                        ),
+                                        child: CheckCarDamageDetailModal(
+                                          carDamage: widget.carDamage,
+                                          changeDamageValue:
+                                              widget.changeDamageValue,
+                                          imageUrl: widget.imageUrl,
+                                          modalCase: '차량 손상 상세 확인',
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 2,
+                                ),
+                                child: Text(
+                                  "상세 보기",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: 30,
+                              width: 2,
+                              color: Theme.of(context).primaryColorLight,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  useSafeArea: true,
+                                  context: context,
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(25.0),
+                                    ),
+                                  ),
+                                  builder: (BuildContext context) {
+                                    return SizedBox(
+                                      // height: MediaQuery.of(context).size.height * 6,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(25.0),
+                                          ),
+                                        ),
+                                        child: CheckCarDamageDetailModal(
+                                          carDamage: widget.carDamage,
+                                          changeDamageValue:
+                                              widget.changeDamageValue,
+                                          imageUrl: widget.imageUrl,
+                                          modalCase: '차량 손상 상세 수정',
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 2,
+                                ),
+                                child: Text(
+                                  "상세 수정",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: 30,
+                              width: 2,
+                              color: Theme.of(context).primaryColorLight,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                widget.showConfirmationDialog(
+                                    context,
+                                    widget.deleteDamageList,
+                                    '리스트에서 제외',
+                                    '해당 손상 이미지를 리스트에서 제외합니다. 정말 괜찮으시겠습니까?',
+                                    '예',
+                                    '아니오',
+                                    data: widget.carDamage['index']);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 2,
+                                ),
+                                child: Text(
+                                  "리스트 제외",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                        useSafeArea: true,
+                        context: context,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(25.0),
+                          ),
+                        ),
+                        builder: (BuildContext context) {
+                          return SizedBox(
+                            // height: MediaQuery.of(context).size.height * 6,
+                            child: Card(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(25.0),
+                                ),
+                              ),
+                              child: CheckCarDamageDetailModal(
+                                carDamage: widget.carDamage,
+                                changeDamageValue: widget.changeDamageValue,
+                                imageUrl: widget.imageUrl,
+                                modalCase: '차량 손상 상세 등록',
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Stack(
                       children: [
-                        InkWell(
-                          onTap: () {
-                            showModalBottomSheet(
-                              useSafeArea: true,
-                              context: context,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(25.0),
-                                ),
-                              ),
-                              builder: (BuildContext context) {
-                                return SizedBox(
-                                  // height: MediaQuery.of(context).size.height * 6,
-                                  child: Card(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(25.0),
-                                      ),
-                                    ),
-                                    child: CheckCarDamageDetailModal(
-                                      carDamage: widget.carDamage,
-                                      changeDamageValue: widget.changeDamageValue,
-                                      imageUrl: widget.imageUrl,
-                                      modalCase: '차량 손상 상세 확인',
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 2,
-                            ),
-                            child: Text(
-                              "상세 보기",
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColorLight,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                        Container(
+                          width: double.infinity,
+                          height: 20,
+                          color: const Color(0xFFFBD5DC),
                         ),
                         Container(
-                          height: 30,
-                          width: 2,
-                          color: Theme.of(context).primaryColorLight,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            showModalBottomSheet(
-                              useSafeArea: true,
-                              context: context,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(25.0),
-                                ),
-                              ),
-                              builder: (BuildContext context) {
-                                return SizedBox(
-                                  // height: MediaQuery.of(context).size.height * 6,
-                                  child: Card(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(25.0),
-                                      ),
-                                    ),
-                                    child: CheckCarDamageDetailModal(
-                                      carDamage: widget.carDamage,
-                                      changeDamageValue: widget.changeDamageValue,
-                                      imageUrl: widget.imageUrl,
-                                      modalCase: '차량 손상 상세 수정',
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 2,
-                            ),
-                            child: Text(
-                              "상세 수정",
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColorLight,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
+                          height: double.infinity,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColorLight,
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ),
-                        Container(
-                          height: 30,
-                          width: 2,
-                          color: Theme.of(context).primaryColorLight,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            widget.showConfirmationDialog(
-                                context, widget.deleteDamageList, '리스트에서 제외', '해당 손상 이미지를 리스트에서 제외합니다. 정말 괜찮으시겠습니까?','예', '아니오', data: widget.carDamage['index']
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 2,
-                            ),
+                          child: Center(
                             child: Text(
-                              "리스트 제외",
+                              "리스트 추가",
                               style: TextStyle(
-                                color: Theme.of(context).primaryColorLight,
+                                color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.w600,
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              )
-             : InkWell(
-              onTap: () {
-                showModalBottomSheet(
-                  useSafeArea: true,
-                  context: context,
-                  isScrollControlled: true,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(25.0),
-                    ),
-                  ),
-                  builder: (BuildContext context) {
-                    return SizedBox(
-                      // height: MediaQuery.of(context).size.height * 6,
-                      child: Card(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(25.0),
-                          ),
-                        ),
-                        child: CheckCarDamageDetailModal(
-                          carDamage: widget.carDamage,
-                          changeDamageValue: widget.changeDamageValue,
-                          imageUrl: widget.imageUrl,
-                          modalCase: '차량 손상 상세 등록',
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-              child: Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 20,
-                    color: Color(0xFFFBD5DC),
-                  ),
-                  Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColorLight,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "리스트 추가",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ),
         ],
       ),

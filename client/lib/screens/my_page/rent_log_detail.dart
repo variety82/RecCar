@@ -1,10 +1,9 @@
-import 'package:client/screens/my_page/rent_log_detail_after.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/common/footer.dart';
 import '../../widgets/my_page/rent_log_line.dart';
 import './rent_log_detail_before.dart';
+import 'package:client/screens/my_page/rent_log_detail_after.dart';
 import 'package:client/services/my_page_api.dart';
-import 'package:characters/characters.dart';
 
 class RentLogDetail extends StatefulWidget {
   final int carId;
@@ -20,47 +19,49 @@ class RentLogDetail extends StatefulWidget {
 
 class _RentLogDetailState extends State<RentLogDetail> {
   Map<String, dynamic> detailRentInfo = {};
-  dynamic simpleDamageInfo = [];
-  dynamic beforeDamage =  List<Map<String, dynamic>>.filled(0, {}, growable: true);
-  dynamic afterDamage = List<Map<String, dynamic>>.filled(0, {}, growable: true);
+  Map<String, dynamic> simpleDamageInfo = {};
 
   @override
   void initState() {
-    super.initState();
-    getDetailRentInfo(
-      success: (dynamic response) {
-        setState(() {
-          print(detailRentInfo.runtimeType);
-          detailRentInfo = response;
-          print(response.runtimeType);
-          print(detailRentInfo.runtimeType);
-        });
-      },
-      fail: (error) {
-        print('렌트 상세 내역 호출 오류: $error');
-      },
-      carId: widget.carId,
-    );
-
     getSimpleDamageInfo(
       success: (dynamic response) {
         setState(() {
           simpleDamageInfo = response;
         });
-        for(int i = 0; i < response.length; i++) {
-          if(response[i]['former']) {
-            beforeDamage.add(response[i]);
-          }
-          else {
-            afterDamage.add(response[i]);
-          }
-        }
       },
       fail: (error) {
-        print('렌트 상세 내역 호출 오류: $error');
+        print('파손 상세 내역 호출 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
       carId: widget.carId,
     );
+    getDetailRentInfo(
+      success: (dynamic response) {
+        setState(() {
+          detailRentInfo = response;
+        });
+      },
+      fail: (error) {
+        print('렌트 상세 내역 호출 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
+      },
+      carId: widget.carId,
+    );
+    super.initState();
   }
 
   @override
@@ -76,16 +77,16 @@ class _RentLogDetailState extends State<RentLogDetail> {
                 toolbarHeight: 10,
                 backgroundColor: Colors.white,
                 bottom: TabBar(
-                  labelColor: Color(0xFFE0426F),
-                  unselectedLabelColor: Color(0xFF989696),
-                  indicatorColor: Color(0xFFE0426F),
+                  labelColor: const Color(0xFFE0426F),
+                  unselectedLabelColor: const Color(0xFF989696),
+                  indicatorColor: const Color(0xFFE0426F),
                   indicatorWeight: 3,
                   tabs: [
                     Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 10,
                         ),
-                        child: Text(
+                        child: const Text(
                           "대여 이전",
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -93,10 +94,10 @@ class _RentLogDetailState extends State<RentLogDetail> {
                           ),
                         )),
                     Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 10,
                         ),
-                        child: Text(
+                        child: const Text(
                           "대여 이후",
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -108,8 +109,12 @@ class _RentLogDetailState extends State<RentLogDetail> {
               ),
               body: TabBarView(
                 children: [
-                  BeforeRent(before: beforeDamage,),
-                  AfterRent(after: afterDamage,),
+                  BeforeRent(
+                    before: simpleDamageInfo['initialDetectionInfos'] ?? [],
+                  ),
+                  AfterRent(
+                    after: simpleDamageInfo['latterDetectionInfos'] ?? [],
+                  ),
                 ],
               ),
             ),
@@ -134,8 +139,8 @@ class _RentLogDetailState extends State<RentLogDetail> {
                   )
                 ],
               ),
-              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               width: 1000,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,57 +150,64 @@ class _RentLogDetailState extends State<RentLogDetail> {
                     "이용 정보",
                     textAlign: TextAlign.start,
                     style: TextStyle(
-                      color: Theme.of(context).secondaryHeaderColor,
+                      color: Theme.of(context).primaryColor,
                       fontSize: 14,
                       decoration: TextDecoration.none,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
-                  RentLogLine(
-                    infoTitle: "대여 일자",
-                    info: detailRentInfo['rentalDate'].toString().characters.take(10).toString(),
-                    space: 120,
-                  ),
-                  SizedBox(
+                  if (simpleDamageInfo['rentalDate'] != null)
+                    RentLogLine(
+                      infoTitle: "대여 일자",
+                      info: simpleDamageInfo['rentalDate']
+                          .toString()
+                          .substring(0, 10),
+                      space: 120,
+                    ),
+                  const SizedBox(
                     height: 5,
                   ),
-                  RentLogLine(
-                    infoTitle: "반납 일자",
-                    info: detailRentInfo['returnDate'].toString().characters.take(10).toString(),
-                    space: 120,
-                  ),
-                  SizedBox(
+                  if (simpleDamageInfo['rentalDate'] != null)
+                    RentLogLine(
+                      infoTitle: "반납 일자",
+                      info: simpleDamageInfo['returnDate']
+                          .toString()
+                          .substring(0, 10),
+                      space: 120,
+                    ),
+                  const SizedBox(
                     height: 5,
                   ),
                   RentLogLine(
                     infoTitle: "대여 업체",
-                    info: "${detailRentInfo['rentalCompany']}",
+                    info: simpleDamageInfo['rentalCompany'] ?? "",
                     space: 120,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   RentLogLine(
                     infoTitle: "제조사",
-                    info: "${detailRentInfo['carManufacturer']}",
+                    info: simpleDamageInfo['carManufacturer'] ?? "",
                     space: 120,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   RentLogLine(
                     infoTitle: "차종",
-                    info: "${detailRentInfo['carModel']}",
+                    info: simpleDamageInfo['carModel'] ?? "",
                     space: 120,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   RentLogLine(
                     infoTitle: "차량 번호",
-                    info: "${detailRentInfo['carNumber']}",
+                    info: simpleDamageInfo['carNumber'] ?? "",
                     space: 120,
                   ),
                 ],
@@ -203,7 +215,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
             ),
           ),
         ),
-        Footer(),
+        const Footer(),
       ],
     );
   }

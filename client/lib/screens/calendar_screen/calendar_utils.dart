@@ -6,7 +6,8 @@ class Event {
   final int id;
   final String title;
   final String memo;
-  const Event(this.id, this.title, this.memo);
+  final bool auto;
+  const Event(this.id, this.title, this.memo, this.auto);
 }
 
 

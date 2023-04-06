@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/common/footer.dart';
 import '../../widgets/my_page/rent_log_card.dart';
-import './rent_log_detail.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:client/services/my_page_api.dart';
 
@@ -14,10 +12,10 @@ class RentLog extends StatefulWidget {
 }
 
 class _RentLogState extends State<RentLog> {
-  static final storage = FlutterSecureStorage();
+  static final storage = const FlutterSecureStorage();
   // dynamic userId = '';
   dynamic userName = '';
-  dynamic userProfileImg = '';
+  // dynamic userProfileImg = '';
   dynamic simpleRentInfo = [];
 
   @override
@@ -32,6 +30,14 @@ class _RentLogState extends State<RentLog> {
       },
       fail: (error) {
         print('렌트 내역 호출 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
     );
     // 비동기로 flutter secure storage 정보를 불러오는 작업
@@ -65,7 +71,7 @@ class _RentLogState extends State<RentLog> {
           Container(
             color: Colors.white,
             height: 80,
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: 24,
             ),
             child: Row(
@@ -76,7 +82,7 @@ class _RentLogState extends State<RentLog> {
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text: '총 ',
                         style: TextStyle(
                           color: Colors.black,
@@ -91,7 +97,7 @@ class _RentLogState extends State<RentLog> {
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
-                      TextSpan(
+                      const TextSpan(
                         text: '건의 렌트 내역',
                         style: TextStyle(
                           fontSize: 16,
@@ -105,7 +111,7 @@ class _RentLogState extends State<RentLog> {
             ),
           ),
           // 간격
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Expanded(
@@ -114,24 +120,20 @@ class _RentLogState extends State<RentLog> {
               child: Column(
                 children: [
                   // 렌트 내역을 리스트로 출력
-                  for (int i = 0; i < simpleRentInfo.length; i++)
+                  for (var info in simpleRentInfo)
                     // RentLogCard 위젯에 데이터를 넘겨줌
                     RentLogCard(
-                      startDate: simpleRentInfo[i]['rentalDate']
-                          .toString()
-                          .substring(0, 10),
-                      endDate: simpleRentInfo[i]['returnDate']
-                          .toString()
-                          .substring(0, 10),
-                      company: simpleRentInfo[i]['rentalCompany'],
-                      damage: "0",
-                      carId: simpleRentInfo[i]['carId'],
+                      startDate: info['rentalDate'].toString().substring(0, 10),
+                      endDate: info['returnDate'].toString().substring(0, 10),
+                      company: info['rentalCompany'],
+                      damage: info['damage'] < 0 ? 0 : info['damage'],
+                      carId: info['carId'],
                     ),
                 ],
               ),
             ),
           ),
-          Footer(),
+          const Footer(),
         ],
       ),
     );

@@ -20,8 +20,13 @@ class MakerItem extends StatefulWidget {
 
 class _MakerItemState extends State<MakerItem> {
 
+
   @override
   Widget build(BuildContext context) {
+    int maxItemCountPerRow = 4;
+    double screenWidth = MediaQuery.of(context).size.width - 130;
+    double itemWidth = screenWidth / maxItemCountPerRow;
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -34,7 +39,7 @@ class _MakerItemState extends State<MakerItem> {
               });
             },
             child: Container(
-              width: 60,
+              width: itemWidth,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -44,8 +49,8 @@ class _MakerItemState extends State<MakerItem> {
               ),
               child: ClipOval(
                 child: Container(
-                  width: 60,
-                  height: 60,
+                  width: itemWidth - 4,
+                  height: itemWidth - 4,
                   padding: EdgeInsets.all(8.0), // 테두리와 이미지 사이의 간격을 조절합니다.
                   child: FittedBox(
                     fit: BoxFit.fitWidth,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_part.dart';
@@ -8,13 +7,16 @@ class CheckCarDamageContainer extends StatefulWidget {
   final VideoPlayerController videoPlayerController;
   final List<Map<String, dynamic>> carDamageList;
   final List<int> selectedIndexList;
+  final List<int> filteredDamagedIndex;
   final void Function(int, String, int, int, int, int, String)
       changeDamageValue;
   final void Function(int) deleteDamageList;
-  final void Function(BuildContext, Function, String, String, String, String, {dynamic data}) showConfirmationDialog;
+  final void Function(BuildContext, Function, String, String, String, String,
+      {dynamic data}) showConfirmationDialog;
   final bool isSelectedView;
 
-  CheckCarDamageContainer({
+  const CheckCarDamageContainer({
+    super.key,
     required this.videoPlayerController,
     required this.carDamageList,
     required this.selectedIndexList,
@@ -22,6 +24,7 @@ class CheckCarDamageContainer extends StatefulWidget {
     required this.isSelectedView,
     required this.deleteDamageList,
     required this.showConfirmationDialog,
+    required this.filteredDamagedIndex,
   });
 
   @override
@@ -39,8 +42,8 @@ class _CheckCarDamageContainerState extends State<CheckCarDamageContainer> {
       controller:
           widget.isSelectedView ? _selectedScrollController : _scrollController,
       thumbVisibility: true,
-      radius: Radius.circular(10),
-      thumbColor: Color(0xFF453F52).withOpacity(0.5),
+      radius: const Radius.circular(10),
+      thumbColor: const Color(0xFF453F52).withOpacity(0.5),
       thickness: 5,
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -49,20 +52,28 @@ class _CheckCarDamageContainerState extends State<CheckCarDamageContainer> {
         child: widget.isSelectedView
             ? ListView(
                 children: [
-                  Column(children: widget.carDamageList.where((damage) => damage['selected'] == true)
-                      .map((damage) => Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: CheckCarDamagePart(
-                      imageUrl: damage['Damage_Image_URL'],
-                      videoPlayerController: widget.videoPlayerController,
-                      carDamage: damage,
-                      changeDamageValue: widget.changeDamageValue,
-                      deleteDamageList: widget.deleteDamageList,
-                      showConfirmationDialog: widget.showConfirmationDialog,
-                      damageView: damage["damageView"] ?? "미정",
-                    ),
-                  ))
-                      .toList(),)
+                  Column(
+                    children: widget.carDamageList
+                        .where((damage) =>
+                            damage['selected'] == true &&
+                            widget.filteredDamagedIndex
+                                .contains(damage['index']))
+                        .map((damage) => Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: CheckCarDamagePart(
+                                imageUrl: damage['Damage_Image_URL'],
+                                videoPlayerController:
+                                    widget.videoPlayerController,
+                                carDamage: damage,
+                                changeDamageValue: widget.changeDamageValue,
+                                deleteDamageList: widget.deleteDamageList,
+                                showConfirmationDialog:
+                                    widget.showConfirmationDialog,
+                                damageView: damage["damageView"] ?? "미정",
+                              ),
+                            ))
+                        .toList(),
+                  )
                 ],
               )
             : ListView(
@@ -70,20 +81,23 @@ class _CheckCarDamageContainerState extends State<CheckCarDamageContainer> {
                     ? _selectedScrollController
                     : _scrollController,
                 children: widget.carDamageList
-            .where((damage) => damage['selected'] == false)
-          .map((damage) => Padding(
-        padding: const EdgeInsets.all(12),
-        child: CheckCarDamagePart(
-          imageUrl: damage['Damage_Image_URL'],
-          videoPlayerController: widget.videoPlayerController,
-          carDamage: damage,
-          changeDamageValue: widget.changeDamageValue,
-            deleteDamageList: widget.deleteDamageList,
-            showConfirmationDialog: widget.showConfirmationDialog,
-          damageView: damage["damageView"] ?? "미정",
-        ),
-      ))
-          .toList(),
+                    .where((damage) =>
+                        damage['selected'] == false &&
+                        widget.filteredDamagedIndex.contains(damage['index']))
+                    .map((damage) => Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: CheckCarDamagePart(
+                            imageUrl: damage['Damage_Image_URL'],
+                            videoPlayerController: widget.videoPlayerController,
+                            carDamage: damage,
+                            changeDamageValue: widget.changeDamageValue,
+                            deleteDamageList: widget.deleteDamageList,
+                            showConfirmationDialog:
+                                widget.showConfirmationDialog,
+                            damageView: damage["damageView"] ?? "미정",
+                          ),
+                        ))
+                    .toList(),
               ),
       ),
     );

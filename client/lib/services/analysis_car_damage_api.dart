@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -12,18 +11,15 @@ Future<dynamic> analysisCarDamageApi({
   required dynamic Function(dynamic) success,
   required Function(String error) fail,
   required String filePath,
-  required int user_id,
+  required String? user_id,
 }) async {
   // api URL 주소를 넣습니다
+  final encodedUserId = Uri.encodeComponent(user_id!);
   String URL =
-      'http://j8a102.p.ssafy.io:8081/ai-api/v1/damage?user_id=${user_id}';
+      'http://j8a102.p.ssafy.io:8081/ai-api/v1/damage?user_id=$encodedUserId';
   // uri 형식으로 변경합니다
   final url = Uri.parse(URL);
-  print(filePath);
-  ByteData byteData = await rootBundle.load('lib/assets/car_video/video.mp4');
-  Uint8List uint8List = byteData.buffer.asUint8List();
-  String fileData = base64Encode(uint8List);
-  print(fileData);
+
   // 기본 headers
   Map<String, String> headers = {
     "accept": "application/json",
@@ -33,8 +29,7 @@ Future<dynamic> analysisCarDamageApi({
   var request = http.MultipartRequest("POST", url);
   request.headers.addAll(headers);
   File file = File(filePath);
-  print('myname');
-  print(file);
+
   request.files.add(await http.MultipartFile.fromPath("file", filePath));
   var response = await request.send();
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:client/services/my_page_api.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/common/header.dart';
 import '../../widgets/common/footer.dart';
@@ -15,8 +16,7 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   XFile? profileImg;
-  static final storage = FlutterSecureStorage();
-
+  static const storage = FlutterSecureStorage();
   String? userName;
   String? userProfileImg;
 
@@ -32,6 +32,7 @@ class _MyPageState extends State<MyPage> {
         userProfileImg = value;
       });
     });
+
     super.initState();
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   setUser();
@@ -44,8 +45,8 @@ class _MyPageState extends State<MyPage> {
   }
 
   Future<String?> setUserProfileImg() async {
-    final userProfileImg = await storage.read(key: 'picture');
-    return userProfileImg;
+    final userImg = await storage.read(key: 'picture');
+    return userImg;
   }
 
   @override
@@ -63,13 +64,15 @@ class _MyPageState extends State<MyPage> {
                 width: 5000,
                 color: Theme.of(context).primaryColor,
               ),
-              Positioned.fill(
-                bottom: -65,
+              Positioned(
+                top: 150,
+                left: 10,
+                right: 10,
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    width: 300,
-                    height: 130,
+                    width: 280,
+                    height: 120,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -84,7 +87,10 @@ class _MyPageState extends State<MyPage> {
                   ),
                 ),
               ),
-              Positioned.fill(
+              Positioned(
+                top: 100,
+                left: 50,
+                right: 50,
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -95,79 +101,37 @@ class _MyPageState extends State<MyPage> {
                       border: Border.all(
                           color: Theme.of(context).primaryColor, width: 2.5),
                       color: Colors.white,
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          "${userProfileImg}" == ""
-                              ? "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"
-                              : userProfileImg.toString(),
-                        ),
-                        fit: BoxFit.cover,
-                      ),
+                      image: userProfileImg == ""
+                          ? const DecorationImage(
+                              image: NetworkImage(
+                                  "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"))
+                          : DecorationImage(
+                              image: NetworkImage('$userProfileImg'),
+                              // image: DecorationImage(
+                              //   image: NetworkImage(
+                              //     "${userProfileImg}" == ""
+                              //         ? "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"
+                              //         : userProfileImg.toString(),
+                              //   ),
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                 ),
-                bottom: 15,
               ),
-              Positioned.fill(
-                bottom: -200,
+              Positioned(
+                top: 225,
+                left: 50,
+                right: 50,
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "${userName}",
+                    userName ?? "",
                     style: TextStyle(
                       color: Theme.of(context).secondaryHeaderColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                       decoration: TextDecoration.none,
-                    ),
-                  ),
-                ),
-              ),
-              Positioned.fill(
-                bottom: -265,
-                child: // 프로필 편집 버튼 Container
-                    Container(
-                  child: TextButton(
-                    onPressed: () => {_getPhotoLibraryImage()},
-                    child: Container(
-                      width: 110,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 5, vertical: 3.5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          width: 1,
-                          color: Colors.white,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.7),
-                            blurRadius: 2.0,
-                            spreadRadius: 0.0,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.settings,
-                            color: Theme.of(context).secondaryHeaderColor,
-                            size: 17,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "프로필 편집",
-                            style: TextStyle(
-                                color: Theme.of(context).secondaryHeaderColor,
-                                fontSize: 13,
-                                decoration: TextDecoration.none),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                 ),
@@ -178,50 +142,32 @@ class _MyPageState extends State<MyPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "내 정보 수정",
-                      textColor: Theme.of(context).secondaryHeaderColor),
-                ),
+                MyPageCategory(
+                    category: "내 정보 수정",
+                    textColor: Theme.of(context).secondaryHeaderColor),
                 // 메뉴 카테고리
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "차량 정보 조회",
-                      textColor: Theme.of(context).secondaryHeaderColor),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "렌트 내역",
-                      textColor: Theme.of(context).secondaryHeaderColor),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "알림 설정",
-                      textColor: Theme.of(context).secondaryHeaderColor),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "로그아웃",
-                      textColor: Theme.of(context).secondaryHeaderColor),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MyPageCategory(
-                      category: "회원 정보 초기화",
-                      textColor: Theme.of(context).primaryColor),
-                ),
+                MyPageCategory(
+                    category: "차량 정보 조회",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "렌트 내역",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "알림 설정",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "로그아웃",
+                    textColor: Theme.of(context).secondaryHeaderColor),
+                MyPageCategory(
+                    category: "회원 정보 초기화",
+                    textColor: Theme.of(context).primaryColor),
               ],
             ),
           ),
-          Footer(),
+          const Footer(),
         ],
       ),
     );

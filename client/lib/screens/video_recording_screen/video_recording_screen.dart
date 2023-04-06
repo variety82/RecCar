@@ -1,16 +1,12 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:client/screens/check_video_screen/check_video_screen.dart';
 
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:video_player/video_player.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 
 // 내부 요소 실시간 변경되므로 Stateful Widget 생성
 class VideoRecordingScreen extends StatefulWidget {
@@ -43,8 +39,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
   // 현재 녹화 관련 기능에 어떤 오류가 있는지 구분
   // 디렉토리, 카메라 순
-  String _nowReasonDirectoryError = '';
-  String _nowReasonCameraError = '';
+  final String _nowReasonDirectoryError = '';
+  final String _nowReasonCameraError = '';
 
   // 현재 앞면 카메라 선택한 상태인지 구분
   bool _nowSelectFrontCamera = false;
@@ -67,6 +63,14 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       nowFilePath = filePath;
     } catch (err) {
       print('$err로 인해 디렉토리 경로 불러오기 실패');
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/error',
+        arguments: {
+          'errorText': err,
+        },
+        ModalRoute.withName('/home'),
+      );
     }
   }
 
@@ -120,7 +124,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     try {
       // prefer using rename as it is probably faster
       return await sourceFile.rename(newPath);
-    } on FileSystemException catch (e) {
+    } on FileSystemException {
       // if rename fails, copy the source file and then delete it
       final newFile = await sourceFile.copy(newPath);
       await sourceFile.delete();
@@ -142,6 +146,14 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       return myFilePath;
     } catch (err) {
       print('$err로 인해 녹화 실패');
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/error',
+        arguments: {
+          'errorText': err,
+        },
+        ModalRoute.withName('/home'),
+      );
       return 'error';
     }
   }
@@ -180,7 +192,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   void _resumeTimer() {
     if (stopwatch == null) {
       setState(() {
-        stopwatch = Timer.periodic(Duration(seconds: 1), (timer) {
+        stopwatch = Timer.periodic(const Duration(seconds: 1), (timer) {
           setState(() {
             _timeCounter++;
           });
@@ -211,16 +223,16 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   // 녹화 화면을 벗어날 시, 메모리 누수 방지를 위해 dispose함
   @override
   void dispose() {
-    _cameraController?.dispose();
+    _cameraController.dispose();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final CameraController? cameraController = _cameraController;
+    final CameraController cameraController = _cameraController;
 
     // App state changed before we got the chance to initialize.
-    if (cameraController == null || !cameraController.value.isInitialized) {
+    if (!cameraController.value.isInitialized) {
       return;
     }
 
@@ -239,7 +251,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       List<CameraDescription> availableCameraList = await availableCameras();
       // 후면 카메라 선택
       final back = availableCameraList.firstWhere(
-              (camera) => camera.lensDirection == CameraLensDirection.back);
+          (camera) => camera.lensDirection == CameraLensDirection.back);
       // 후면 카메라를 선택한 후, 영상 해상도를 최대로 선택함
       _cameraController = CameraController(
         back,
@@ -255,8 +267,6 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       setState(() {
         _nowLoading = false;
       });
-
-      print(_nowLoading);
     } catch (err) {
       print('$err로 인해 카메라 initialized 실패');
     }
@@ -325,8 +335,9 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                           ),
                           child: Center(
                             child: Text(
-                              "${_durationToString(Duration(seconds: _timeCounter))}",
-                              style: TextStyle(
+                              _durationToString(
+                                  Duration(seconds: _timeCounter)),
+                              style: const TextStyle(
                                 fontSize: 24,
                                 color: Colors.white,
                               ),
@@ -339,7 +350,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                         left: 16,
                         right: 16,
                         child: Container(
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                             top: 16.0,
                             bottom: 16.0,
                           ),
@@ -352,14 +363,14 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                     setState(() {
                                       _nowFlashMode = FlashMode.torch;
                                     });
-                                    await _cameraController!.setFlashMode(
+                                    await _cameraController.setFlashMode(
                                       FlashMode.torch,
                                     );
                                   } else {
                                     setState(() {
                                       _nowFlashMode = FlashMode.off;
                                     });
-                                    await _cameraController!.setFlashMode(
+                                    await _cameraController.setFlashMode(
                                       FlashMode.off,
                                     );
                                   }
@@ -367,7 +378,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.circle,
                                       color: Colors.black38,
                                       size: 60,
@@ -424,7 +435,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                             child: Stack(
                                               alignment: Alignment.center,
                                               children: [
-                                                _cameraController!
+                                                _cameraController
                                                         .value.isRecordingPaused
                                                     ? const Stack(
                                                         alignment:
@@ -442,7 +453,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                                           ),
                                                         ],
                                                       )
-                                                    : Icon(
+                                                    : const Icon(
                                                         Icons.pause_rounded,
                                                         color: Colors.black,
                                                         size: 42,
@@ -469,7 +480,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                               Navigator.pop(context);
                                               Navigator.push(context, route);
                                             },
-                                            child: Stack(
+                                            child: const Stack(
                                               alignment: Alignment.center,
                                               children: [
                                                 Icon(
@@ -498,7 +509,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                           print('$err로 인해 녹화 시작 불가');
                                         }
                                       },
-                                      child: Stack(
+                                      child: const Stack(
                                         alignment: Alignment.center,
                                         children: [
                                           Icon(
@@ -517,7 +528,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                               _nowRecording
                                   ? InkWell(
                                       onTap: () async {},
-                                      child: Stack(
+                                      child: const Stack(
                                         alignment: Alignment.center,
                                         children: [
                                           Icon(
@@ -545,7 +556,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                       child: Stack(
                                         alignment: Alignment.center,
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.circle,
                                             color: Colors.black38,
                                             size: 60,
@@ -570,21 +581,21 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('현재 ${_nowReasonDeniedCamera}된 상태입니다.'),
-                    Text('설정에서 권한을 허가해주시기 바랍니다.'),
+                    Text('현재 $_nowReasonDeniedCamera된 상태입니다.'),
+                    const Text('설정에서 권한을 허가해주시기 바랍니다.'),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        fixedSize: Size(200, 40),
-                        backgroundColor: Color(0xFFE0426F),
+                        fixedSize: const Size(200, 40),
+                        backgroundColor: const Color(0xFFE0426F),
                       ),
                       onPressed: () {
                         openAppSettings();
                         Navigator.of(context).pop();
                       },
-                      child: Text(
+                      child: const Text(
                         '설정으로 이동',
                         style: TextStyle(
                           color: Colors.white,

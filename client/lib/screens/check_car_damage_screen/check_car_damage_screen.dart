@@ -1,27 +1,23 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_container.dart';
 import 'package:client/screens/after_check_damage_screen/after_check_damage_screen.dart';
-import 'package:client/screens/check_car_damage_screen/check_car_damage_FAB.dart';
-import 'package:client/services/analysis_car_damage_api.dart';
-// import 'package:client/utils/dialog_util.dart';
-
+import 'package:client/screens/check_car_damage_screen/video_full_screen.dart';
 
 class CheckCarDamageScreen extends StatefulWidget {
   final String filePath;
   final List<Map<String, dynamic>> carDamagesAllList;
+  final List<int> selectedIndexList;
 
   const CheckCarDamageScreen({
     Key? key,
     required this.filePath,
     required this.carDamagesAllList,
+    required this.selectedIndexList,
   }) : super(key: key);
 
   @override
@@ -33,8 +29,8 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
   late VideoPlayerController _videoPlayerController;
   late TabController _tabController;
   final List<Widget> _tabs = [
-    Text('전체 보기'),
-    Text('리스트만 보기'),
+    const Text('전체 보기'),
+    const Text('리스트만 보기'),
   ];
   bool loading_api = true;
   bool loading_video = false;
@@ -51,12 +47,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
   List<dynamic> carDamageInfo = [];
 
-  List<String> selected_categories = [
-    '스크래치',
-    '찌그러짐',
-    '파손',
-    '이격',
-  ];
+  List<String> selected_categories = [];
 
   List<String> damage_categories = [
     '스크래치',
@@ -82,7 +73,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _timer.cancel();
     _videoPlayerController.dispose();
     super.dispose();
   }
@@ -104,8 +95,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       File(widget.filePath),
     );
     await _videoPlayerController.initialize();
-    print("aspectratio@@@@");
-    print(_videoPlayerController.value.aspectRatio);
     setState(
       () {
         loading_video = true;
@@ -125,8 +114,6 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
         }
       },
     );
-    // await _videoPlayerController.setLooping(true);
-    // await _videoPlayerController.play();
   }
 
   void _handleTabSelection() {
@@ -141,25 +128,10 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       () {
         _isVisible = !_isVisible;
         _isVisibleSPBTN = !_isVisibleSPBTN;
-        print(_isVisible);
         _timeChecker();
       },
     );
   }
-
-  // void _watchVideoFast() {
-  //   setState(() {
-  //     _isVisible = true;
-  //     _isTimeSkip = true;
-  //   });
-  // }
-  //
-  // void _stopWatchVideoFast() {
-  //   setState(() {
-  //     _isVisible = false;
-  //     _isTimeSkip = false;
-  //   });
-  // }
 
   void _timeChecker() {
     const duration = Duration(seconds: 3); // 버튼이 사라지는 시간 설정 (3초)
@@ -180,7 +152,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
   void _resetTimer() {
     if (_isVisible) {
-      _timer?.cancel(); // 기존 타이머 취소
+      _timer.cancel(); // 기존 타이머 취소
       _timeChecker(); // 새로운 타이머 시작
     }
   }
@@ -196,7 +168,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       // 첫번째 탭을 눌렀을 때의 동작
       _timeChecker();
       _isSecondTap = true;
-      Future.delayed(Duration(milliseconds: 250), () {
+      Future.delayed(const Duration(milliseconds: 250), () {
         _isSecondTap = false;
       });
     }
@@ -205,19 +177,18 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
   void changeDamageValue(
     int indexValue,
     String partValue,
-    int scratch_count,
-    int crushed_count,
-    int breakage_count,
-    int separated_count,
+    int scratchCount,
+    int crushedCount,
+    int breakageCount,
+    int separatedCount,
     String memoValue,
   ) {
     setState(() {
-      // print(indexValue);
       carDamagesAllList[indexValue]["part"] = partValue;
-      carDamagesAllList[indexValue]["Scratch"] = scratch_count;
-      carDamagesAllList[indexValue]["Crushed"] = crushed_count;
-      carDamagesAllList[indexValue]["Breakage"] = breakage_count;
-      carDamagesAllList[indexValue]["Separated"] = separated_count;
+      carDamagesAllList[indexValue]["Scratch"] = scratchCount;
+      carDamagesAllList[indexValue]["Crushed"] = crushedCount;
+      carDamagesAllList[indexValue]["Breakage"] = breakageCount;
+      carDamagesAllList[indexValue]["Separated"] = separatedCount;
       carDamagesAllList[indexValue]["memo"] = memoValue;
       carDamagesAllList[indexValue]["selected"] = true;
 
@@ -226,17 +197,18 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
       }
       selectedIndexList.sort((a, b) => a.compareTo(b));
       damageView(indexValue);
-    }
-    );
+      // _tabController.animateTo(1);
+    });
   }
 
-  void deleteDamageList(
-      int indexValue
-      ) {
-      setState(() {
+  void deleteDamageList(int indexValue) {
+    setState(
+      () {
         carDamagesAllList[indexValue]["selected"] = false;
         selectedIndexList.remove(indexValue);
-      },);
+        // _tabController.animateTo(0);
+      },
+    );
   }
 
   void damageView(int indexValue) {
@@ -257,11 +229,12 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
 
     if (damagedParts.length > 1) {
       setState(() {
-        carDamagesAllList[indexValue]["damageView"] = '${damagedParts[0]} 외 ${damagedParts.length - 1}건';
+        carDamagesAllList[indexValue]["damageView"] =
+            '${damagedParts[0]} 외 ${damagedParts.length - 1}건';
       });
-    } else if (damagedParts.length > 0) {
+    } else if (damagedParts.isNotEmpty) {
       setState(() {
-        carDamagesAllList[indexValue]["damageView"] = damagedParts[0]!;
+        carDamagesAllList[indexValue]["damageView"] = damagedParts[0];
       });
     } else {
       //
@@ -280,23 +253,39 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     );
   }
 
-  void showConfirmationDialog(BuildContext context, Function func, String title, String content, String yes_text, String no_text, {dynamic data}) {
+  void showConfirmationDialog(BuildContext context, Function func, String title,
+      String content, String yesText, String noText,
+      {dynamic data}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700,),),
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           content: Text(content),
           actions: <Widget>[
             TextButton(
-              child: Text(yes_text, style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),),
+              child: Text(
+                yesText,
+                style: TextStyle(
+                    fontSize: 14, color: Theme.of(context).primaryColor),
+              ),
               onPressed: () {
                 // Yes 버튼을 눌렀을 때 수행할 작업
                 Navigator.of(context).pop(true);
               },
             ),
             TextButton(
-              child: Text(no_text, style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),),
+              child: Text(
+                noText,
+                style: TextStyle(
+                    fontSize: 14, color: Theme.of(context).primaryColor),
+              ),
               onPressed: () {
                 // No 버튼을 눌렀을 때 수행할 작업
                 Navigator.of(context).pop(false);
@@ -326,25 +315,74 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     });
   }
 
+  // List<Map<String, dynamic>> filteredDamagedIndex = [];
+  List<int> filteredDamagedIndex = [];
+
+  void changeFilter() {
+    filteredDamagedIndex = [];
+    if (selected_categories.isEmpty) {
+      for (var damage in carDamagesAllList) {
+        setState(() {
+          filteredDamagedIndex.add(damage['index']);
+        });
+      }
+    } else {
+      for (var damage in carDamagesAllList) {
+        if (selected_categories.contains('스크래치') &&
+            damage['Scratch'] != 0 &&
+            !filteredDamagedIndex.contains(damage['index'])) {
+          filteredDamagedIndex.add(damage['index']);
+        }
+        if (selected_categories.contains('찌그러짐') &&
+            damage['Crushed'] != 0 &&
+            !filteredDamagedIndex.contains(damage['index'])) {
+          filteredDamagedIndex.add(damage['index']);
+        }
+        if (selected_categories.contains('파손') &&
+            damage['Breakage'] != 0 &&
+            !filteredDamagedIndex.contains(damage['index'])) {
+          filteredDamagedIndex.add(damage['index']);
+        }
+        if (selected_categories.contains('이격') &&
+            damage['Separated'] != 0 &&
+            !filteredDamagedIndex.contains(damage['index'])) {
+          filteredDamagedIndex.add(damage['index']);
+        }
+      }
+    }
+    setState(() {
+      filteredDamagedIndex.sort((a, b) => a.compareTo(b));
+    });
+  }
+
+  // timer 시, 분, 초 단위로 표시 전환해줌
+  String _durationToString(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
+  }
 
   @override
   void initState() {
     _initVideoPlayer();
 
     carDamagesAllList = widget.carDamagesAllList;
+    selectedIndexList = widget.selectedIndexList;
 
     _tabController = TabController(vsync: this, length: 2); // 탭 수에 따라 length 변경
-    int _selectedTabIndex = 0; // 기본값은 첫 번째 탭
+    int selectedTabIndex = 0; // 기본값은 첫 번째 탭
 
     _tabController.addListener(() {
       final newIndex = _tabController.index;
-      if (newIndex != _selectedTabIndex) {
+      if (newIndex != selectedTabIndex) {
         setState(() {
-          _selectedTabIndex = newIndex;
+          selectedTabIndex = newIndex;
           isSelectedView = !isSelectedView;
         });
       }
     });
+    changeFilter();
     super.initState();
   }
 
@@ -359,6 +397,9 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
         backgroundColor: Colors.white,
         body: loading_video
             ? Container(
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                ),
                 height: screenHeight,
                 width: screenWidth,
                 child: Column(
@@ -367,242 +408,277 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                       onTap: () {
                         _watchVideoMenu();
                       },
-                      child: RotatedBox(
-                        quarterTurns: aspectRatio > 1 ? 0 : 3,
-                        child: AspectRatio(
-                          aspectRatio: aspectRatio,
-                          child: Stack(
-                            children: [
-                              VideoPlayer(_videoPlayerController),
-                              AspectRatio(
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.black,
+                        ),
+                        height: 240,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            AspectRatio(
                                 aspectRatio: aspectRatio,
-                                child: Container(
-                                  // height: screenHeight,
-                                  // width: screenWidth,
-                                  decoration: BoxDecoration(
-                                    color: _isVisible
-                                        ? Colors.black54
-                                        : Colors.black.withOpacity(0.0),
-                                  ),
-                                  child: RotatedBox(
-                                    quarterTurns: aspectRatio > 1 ? 0 : 1,
-                                    child: OverflowBox(
-                                      maxWidth: double.infinity,
-                                      maxHeight: double.infinity,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () {
-                                              _watchVideoMenu();
-                                            },
-                                            onDoubleTap: () {
-                                              setState(() {
-                                                _isVisibleSPBTN = false;
-                                                _isVisible = true;
-                                                _isbackTimeSkip = true;
-                                              });
-                                              _videoPlayerController.seekTo(
-                                                Duration(
-                                                    seconds:
-                                                        _videoPlayerController
-                                                                .value
-                                                                .position
-                                                                .inSeconds -
-                                                            10),
-                                              );
-                                              Future.delayed(
-                                                Duration(milliseconds: 200),
-                                                () {
-                                                  setState(() {
-                                                    _isVisible = false;
-                                                    _isbackTimeSkip = false;
-                                                  });
-                                                },
-                                              );
-                                            },
-                                            child: AnimatedOpacity(
-                                              opacity:
-                                                  _isbackTimeSkip ? 1.0 : 0.0,
-                                              duration:
-                                                  Duration(milliseconds: 200),
-                                              child: Stack(
-                                                children: [
-                                                  Icon(
-                                                    Icons.circle,
-                                                    color: Colors.black38,
-                                                    size: screenWidth,
-                                                  ),
-                                                  Positioned(
-                                                    right:
-                                                        (screenWidth / 4) + 10,
-                                                    top: (screenWidth / 2) - 10,
-                                                    child: Column(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.fast_rewind,
-                                                          color: Colors.white,
-                                                          size: 20,
-                                                        ),
-                                                        Text(
-                                                          '10초',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
+                                child: VideoPlayer(_videoPlayerController)),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: _isVisible
+                                    ? Colors.black54
+                                    : Colors.black.withOpacity(0.0),
+                              ),
+                              child: OverflowBox(
+                                maxWidth: double.infinity,
+                                maxHeight: double.infinity,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () {
+                                        _watchVideoMenu();
+                                      },
+                                      onDoubleTap: () {
+                                        setState(() {
+                                          _isVisibleSPBTN = false;
+                                          _isVisible = true;
+                                          _isbackTimeSkip = true;
+                                        });
+                                        _videoPlayerController.seekTo(
+                                          Duration(
+                                              seconds: _videoPlayerController
+                                                      .value
+                                                      .position
+                                                      .inSeconds -
+                                                  10),
+                                        );
+                                        Future.delayed(
+                                          const Duration(milliseconds: 200),
+                                          () {
+                                            setState(() {
+                                              _isVisible = false;
+                                              _isbackTimeSkip = false;
+                                            });
+                                          },
+                                        );
+                                      },
+                                      child: AnimatedOpacity(
+                                        opacity: _isbackTimeSkip ? 1.0 : 0.0,
+                                        duration:
+                                            const Duration(milliseconds: 200),
+                                        child: Stack(
+                                          children: [
+                                            Icon(
+                                              Icons.circle,
+                                              color: Colors.black38,
+                                              size: screenWidth,
                                             ),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              if (_isVisible) {
-                                                if (video_pause) {
-                                                  _videoPlayerController.play();
-                                                  setState(() {
-                                                    video_pause = false;
-                                                  });
-                                                  _timeChecker();
-                                                } else {
-                                                  _videoPlayerController
-                                                      .pause();
-                                                  setState(() {
-                                                    video_pause = true;
-                                                  });
-                                                }
-                                              } else {
-                                                setState(() {
-                                                  _isVisible = true;
-                                                  _timeChecker();
-                                                });
-                                              }
-                                            },
-                                            child: _isVisibleSPBTN
-                                                ? Stack(
-                                                    alignment: Alignment.center,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.circle,
-                                                        color: Colors.black38,
-                                                        size: 80,
-                                                      ),
-                                                      _videoPlayerController
-                                                              .value.isPlaying
-                                                          ? Icon(
-                                                              Icons.pause,
-                                                              color:
-                                                                  Colors.white,
-                                                              size: 40,
-                                                            )
-                                                          : Icon(
-                                                              Icons.play_arrow,
-                                                              color:
-                                                                  Colors.white,
-                                                              size: 40,
-                                                            ),
-                                                    ],
-                                                  )
-                                                : Container(),
-                                          ),
-                                          AnimatedOpacity(
-                                            opacity:
-                                                _isforwardTimeSkip ? 1.0 : 0.0,
-                                            duration:
-                                                Duration(milliseconds: 200),
-                                            child: InkWell(
-                                              onTap: () {
-                                                _watchVideoMenu();
-                                              },
-                                              onDoubleTap: () {
-                                                setState(() {
-                                                  _isVisibleSPBTN = false;
-                                                  _isVisible = true;
-                                                  _isforwardTimeSkip = true;
-                                                });
-                                                _videoPlayerController.seekTo(
-                                                  Duration(
-                                                      seconds:
-                                                          _videoPlayerController
-                                                                  .value
-                                                                  .position
-                                                                  .inSeconds +
-                                                              10),
-                                                );
-                                                Future.delayed(
-                                                  Duration(milliseconds: 200),
-                                                  () {
-                                                    setState(() {
-                                                      _isVisible = false;
-                                                      _isforwardTimeSkip =
-                                                          false;
-                                                    });
-                                                  },
-                                                );
-                                              },
-                                              child: Stack(
+                                            Positioned(
+                                              right: (screenWidth / 4) + 10,
+                                              top: (screenWidth / 2) - 10,
+                                              child: const Column(
                                                 children: [
                                                   Icon(
-                                                    Icons.circle,
-                                                    color: Colors.black38,
-                                                    size: screenWidth,
+                                                    Icons.fast_rewind,
+                                                    color: Colors.white,
+                                                    size: 20,
                                                   ),
-                                                  Positioned(
-                                                    left:
-                                                        (screenWidth / 4) + 10,
-                                                    top: (screenWidth / 2) - 10,
-                                                    child: Column(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.fast_forward,
-                                                          color: Colors.white,
-                                                          size: 20,
-                                                        ),
-                                                        Text(
-                                                          '10초',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    left: 12,
-                                                    bottom: 12,
-                                                    child: Row(
-                                                      children: [
-                                                        Text(
-                                                          'data',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                  Text(
+                                                    '10초',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                          ),
-                                        ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    InkWell(
+                                      onTap: () {
+                                        if (_isVisible) {
+                                          if (video_pause) {
+                                            _videoPlayerController.play();
+                                            setState(() {
+                                              video_pause = false;
+                                            });
+                                            _timeChecker();
+                                          } else {
+                                            _videoPlayerController.pause();
+                                            setState(() {
+                                              video_pause = true;
+                                            });
+                                          }
+                                        } else {
+                                          setState(() {
+                                            _isVisible = true;
+                                            _timeChecker();
+                                          });
+                                        }
+                                      },
+                                      child: _isVisibleSPBTN
+                                          ? Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                const Icon(
+                                                  Icons.circle,
+                                                  color: Colors.black38,
+                                                  size: 80,
+                                                ),
+                                                _videoPlayerController
+                                                        .value.isPlaying
+                                                    ? const Icon(
+                                                        Icons.pause,
+                                                        color: Colors.white,
+                                                        size: 40,
+                                                      )
+                                                    : const Icon(
+                                                        Icons.play_arrow,
+                                                        color: Colors.white,
+                                                        size: 40,
+                                                      ),
+                                              ],
+                                            )
+                                          : Container(),
+                                    ),
+                                    AnimatedOpacity(
+                                      opacity: _isforwardTimeSkip ? 1.0 : 0.0,
+                                      duration:
+                                          const Duration(milliseconds: 200),
+                                      child: InkWell(
+                                        onTap: () {
+                                          _watchVideoMenu();
+                                        },
+                                        onDoubleTap: () {
+                                          setState(() {
+                                            _isVisibleSPBTN = false;
+                                            _isVisible = true;
+                                            _isforwardTimeSkip = true;
+                                          });
+                                          _videoPlayerController.seekTo(
+                                            Duration(
+                                                seconds: _videoPlayerController
+                                                        .value
+                                                        .position
+                                                        .inSeconds +
+                                                    10),
+                                          );
+                                          Future.delayed(
+                                            const Duration(milliseconds: 200),
+                                            () {
+                                              setState(() {
+                                                _isVisible = false;
+                                                _isforwardTimeSkip = false;
+                                              });
+                                            },
+                                          );
+                                        },
+                                        child: Stack(
+                                          children: [
+                                            Icon(
+                                              Icons.circle,
+                                              color: Colors.black38,
+                                              size: screenWidth,
+                                            ),
+                                            Positioned(
+                                              left: (screenWidth / 4) + 10,
+                                              top: (screenWidth / 2) - 10,
+                                              child: const Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.fast_forward,
+                                                    color: Colors.white,
+                                                    size: 20,
+                                                  ),
+                                                  Text(
+                                                    '10초',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const Positioned(
+                                              left: 12,
+                                              bottom: 12,
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    'data',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            Positioned(
+                              bottom: 10,
+                              left: 10,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "${_durationToString(_videoPlayerController.value.position)} / ",
+                                    style: TextStyle(
+                                      color: _isVisible
+                                          ? Colors.white.withOpacity(0.75)
+                                          : Colors.white.withOpacity(0),
+                                    ),
+                                  ),
+                                  Text(
+                                    _durationToString(
+                                        _videoPlayerController.value.duration),
+                                    style: TextStyle(
+                                      color: _isVisible
+                                          ? Colors.white.withOpacity(0.75)
+                                          : Colors.white.withOpacity(0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 5,
+                              right: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => VideoFullScreen(
+                                        filePath: widget.filePath,
+                                        carDamagesAllList: carDamagesAllList,
+                                        selectedIndexList: selectedIndexList,
+                                        timeStamp: _videoPlayerController
+                                            .value.position,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Icon(
+                                  Icons.fullscreen,
+                                  color: _isVisible
+                                      ? Colors.white.withOpacity(0.75)
+                                      : Colors.white.withOpacity(0),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -610,16 +686,16 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                     Container(
                       height: 16,
                       width: double.infinity,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.black,
                       ),
                       child: VideoProgressIndicator(
                         _videoPlayerController,
                         allowScrubbing: true,
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 5,
                         ),
-                        colors: VideoProgressColors(
+                        colors: const VideoProgressColors(
                           backgroundColor: Color(0xFF453F52),
                           bufferedColor: Color(0xFFEFEFEF),
                           playedColor: Color(0xFFE0426F),
@@ -632,20 +708,40 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                       child: DefaultTabController(
                         length: 2,
                         child: Scaffold(
-                          floatingActionButton:
-                              FloatingActionButton(
-                            onPressed:
-                                selectedIndexList.length > 0 ? () {
-                                  showConfirmationDialog(
-                                    context, goOtherScreen, '손상 등록', '손상을 등록합니다. 정말 괜찮으시겠습니까?','예', '아니오'
-                                  );
-                                } : null,
-                            backgroundColor: selectedIndexList.length > 0 ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
+                          floatingActionButton: FloatingActionButton(
+                            onPressed: () {
+                              selectedIndexList.isNotEmpty
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            AfterCheckDamageScreen(
+                                          filePath: widget.filePath,
+                                          carDamagesAllList:
+                                              widget.carDamagesAllList,
+                                        ),
+                                      ),
+                                    )
+                                  // ? showConfirmationDialog(
+                                  //     context,
+                                  //     goOtherScreen,
+                                  //     '손상 등록',
+                                  //     '손상을 등록합니다. 정말 괜찮으시겠습니까?',
+                                  //     '예',
+                                  //     '아니오')
+                                  : showConfirmationDialog(
+                                      context,
+                                      goOtherScreen,
+                                      '선택한 손상 없음',
+                                      '현재 선택하신 손상이 존재하지 않는 상태입니다. 정말 괜찮으시겠습니까?',
+                                      '예',
+                                      '아니오');
+                            },
+                            backgroundColor: Theme.of(context).primaryColor,
                             tooltip: '손상을 저장할 수 있습니다.',
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-
                                 Icon(
                                   Icons.save_as,
                                   size: 28,
@@ -658,16 +754,16 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                             backgroundColor: Colors.white,
                             bottom: TabBar(
                               controller: _tabController,
-                              labelColor: Color(0xFFE0426F),
-                              unselectedLabelColor: Color(0xFF989696),
-                              indicatorColor: Color(0xFFE0426F),
+                              labelColor: const Color(0xFFE0426F),
+                              unselectedLabelColor: const Color(0xFF989696),
+                              indicatorColor: const Color(0xFFE0426F),
                               indicatorWeight: 3,
                               tabs: [
                                 Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       vertical: 4,
                                     ),
-                                    child: Text(
+                                    child: const Text(
                                       "추가 전 손상",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
@@ -675,11 +771,11 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       ),
                                     )),
                                 Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       vertical: 4,
                                     ),
-                                    child: Text(
-                                      "추가할 손상",
+                                    child: const Text(
+                                      "추가 후 손상",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
@@ -691,24 +787,44 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                           body: TabBarView(
                             controller: _tabController,
                             children: [
-                              CheckCarDamageContainer(
-                                carDamageList: carDamagesAllList,
-                                videoPlayerController: _videoPlayerController,
-                                changeDamageValue: changeDamageValue,
-                                selectedIndexList: selectedIndexList,
-                                isSelectedView: false,
-                                  deleteDamageList: deleteDamageList,
-                                  showConfirmationDialog: showConfirmationDialog,
-                              ),
-                              CheckCarDamageContainer(
-                                carDamageList: carDamagesAllList,
-                                videoPlayerController: _videoPlayerController,
-                                changeDamageValue: changeDamageValue,
-                                selectedIndexList: selectedIndexList,
-                                isSelectedView: true,
-                                deleteDamageList: deleteDamageList,
-                                  showConfirmationDialog: showConfirmationDialog,
-                              ),
+                              selectedIndexList.length !=
+                                          carDamagesAllList.length ||
+                                      selected_categories.length !=
+                                          filteredDamagedIndex.length ||
+                                      filteredDamagedIndex.isNotEmpty
+                                  ? CheckCarDamageContainer(
+                                      carDamageList: carDamagesAllList,
+                                      videoPlayerController:
+                                          _videoPlayerController,
+                                      changeDamageValue: changeDamageValue,
+                                      selectedIndexList: selectedIndexList,
+                                      isSelectedView: false,
+                                      deleteDamageList: deleteDamageList,
+                                      showConfirmationDialog:
+                                          showConfirmationDialog,
+                                      filteredDamagedIndex:
+                                          filteredDamagedIndex,
+                                    )
+                                  : const Center(
+                                      child: Text('추가 전 손상이 존재하지 않습니다.'),
+                                    ),
+                              selectedIndexList.isNotEmpty
+                                  ? CheckCarDamageContainer(
+                                      carDamageList: carDamagesAllList,
+                                      videoPlayerController:
+                                          _videoPlayerController,
+                                      changeDamageValue: changeDamageValue,
+                                      selectedIndexList: selectedIndexList,
+                                      isSelectedView: true,
+                                      deleteDamageList: deleteDamageList,
+                                      showConfirmationDialog:
+                                          showConfirmationDialog,
+                                      filteredDamagedIndex:
+                                          filteredDamagedIndex,
+                                    )
+                                  : const Center(
+                                      child: Text('추가 예정인 손상이 존재하지 않습니다.'),
+                                    ),
                             ],
                           ),
                         ),
@@ -736,7 +852,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                   children: [
                                     Row(
                                       children: [
-                                        Text(
+                                        const Text(
                                           '현재 개수',
                                           style: TextStyle(
                                             color: Colors.black,
@@ -744,18 +860,17 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                             fontSize: 14,
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 5,
                                         ),
                                         Text(
                                           isSelectedView
                                               ? selectedIndexList.length
                                                   .toString()
-                                              : (carDamagesAllList
-                                                          .length -
+                                              : (carDamagesAllList.length -
                                                       selectedIndexList.length)
                                                   .toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Color(0xFFE0426F),
                                             fontWeight: FontWeight.w700,
                                             fontSize: 14,
@@ -770,7 +885,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: damage_categories.map(
-                                  (part_category) {
+                                  (partCategory) {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 4,
@@ -779,38 +894,44 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                         borderRadius: BorderRadius.circular(10),
                                         onTap: () {
                                           if (selected_categories
-                                              .contains(part_category)) {
+                                              .contains(partCategory)) {
                                             setState(() {
-                                              removeCategories(part_category);
+                                              removeCategories(partCategory);
                                             });
                                           } else {
                                             setState(
                                               () {
-                                                addCategories(part_category);
+                                                addCategories(partCategory);
                                               },
                                             );
                                           }
+                                          changeFilter();
                                         },
                                         child: Chip(
-                                            label: Text(
-                                              part_category,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: selected_categories
-                                                    .contains(part_category)
-                                                    ? Theme.of(context).primaryColor : Colors.black,
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                          label: Text(
+                                            partCategory,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: selected_categories
+                                                      .contains(partCategory)
+                                                  ? Theme.of(context)
+                                                      .primaryColor
+                                                  : Theme.of(context)
+                                                      .disabledColor,
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                            labelPadding: EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                            ),
-                                            backgroundColor: selected_categories
-                                                    .contains(part_category)
-                                                ? Color(0xFFFBD5DC)
-                                                : Colors.grey
-                                            // deleteIconColor: Color(0xFFE0426F),
-                                            ),
+                                          ),
+                                          labelPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                          ),
+                                          backgroundColor: selected_categories
+                                                  .contains(partCategory)
+                                              ? Theme.of(context)
+                                                  .primaryColorLight
+                                              : Theme.of(context).shadowColor,
+                                          // deleteIconColor: Color(0xFFE0426F),
+                                        ),
                                       ),
                                     );
                                   },
@@ -824,7 +945,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                   ],
                 ),
               )
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(
                   color: Color(0xFFE0426F),
                 ),
@@ -833,20 +954,3 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     );
   }
 }
-
-// isSelectedView
-//     ? Icon(
-//         Icons.fact_check,
-//       )
-//     : Icon(
-//         Icons.fact_check_outlined,
-//       ),
-// Switch(
-//   value: isSelectedView,
-//   onChanged: (value) {
-//     setState(() {
-//       isSelectedView = !isSelectedView;
-//     });
-//   },
-//   activeColor: Color(0xFFE0426F),
-// ),

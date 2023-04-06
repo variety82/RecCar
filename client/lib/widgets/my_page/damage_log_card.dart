@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../screens/my_page/damage_detail.dart';
 import './rent_log_line.dart';
-import '../../services/my_page_api.dart';
 
 class DamageLogCard extends StatefulWidget {
   final String imageUrl;
   final String kindOfDamage;
   final String damageLocation;
+  final String damageDate;
+  final String memo;
   final int damageId;
 
   const DamageLogCard({
@@ -14,6 +15,8 @@ class DamageLogCard extends StatefulWidget {
     required this.imageUrl,
     required this.kindOfDamage,
     required this.damageLocation,
+    required this.damageDate,
+    required this.memo,
     required this.damageId,
   });
 
@@ -30,7 +33,11 @@ class _DamageLogCardState extends State<DamageLogCard> {
           context,
           MaterialPageRoute(
             builder: (context) => DamageDetail(
-              damageId: widget.damageId,
+              damageImageUrl: widget.imageUrl,
+              damageDate: widget.damageDate,
+              damagaLocation: widget.damageLocation,
+              kindOfDamage: widget.kindOfDamage,
+              memo: widget.memo,
             ),
           ),
         );
@@ -64,24 +71,31 @@ class _DamageLogCardState extends State<DamageLogCard> {
                     child: Row(
                       children: [
                         Container(
-                          width: 140,
+                          width: 120,
                           height: 100,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.7),
+                                blurRadius: 2.0,
+                                spreadRadius: 0.0,
+                              )
+                            ],
                             image: DecorationImage(
                                 fit: BoxFit.fill,
                                 image: NetworkImage("${widget.imageUrl}")),
                           ),
                         ),
-                        SizedBox(width: 18),
+                        SizedBox(width: 5),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             RentLogLine(
-                              infoTitle: "파손 종류",
-                              info: "${widget.kindOfDamage}",
-                              space: 70,
+                              infoTitle: "파손 일자",
+                              info: widget.damageDate.toString().substring(0, 10),
+                              space: 50,
                             ),
                             SizedBox(
                               height: 5,
@@ -89,12 +103,13 @@ class _DamageLogCardState extends State<DamageLogCard> {
                             RentLogLine(
                               infoTitle: "파손 부위",
                               info: "${widget.damageLocation}",
-                              space: 70,
+                              space: 50,
                             ),
                             Divider(
                               thickness: 1.5,
                             ),
                             Text(
+                              textAlign: TextAlign.center,
                               "자세히 보기",
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,

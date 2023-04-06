@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:client/widgets/detail/damage_detail.dart';
+import 'dart:math';
 
 class DamageLevelCard extends StatefulWidget {
   final int damageLevel;
   final String partName;
+  final List<dynamic> damageList;
 
   const DamageLevelCard({
     super.key,
-    required this.damageLevel, required this.partName,
+    required this.damageLevel, required this.partName, required this.damageList,
   });
 
 
@@ -80,11 +83,11 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
                               margin: const EdgeInsets.only(
                                 top: 10,
                               ),
-                              width: 180 * (widget.damageLevel / 4),
+                              width: 180 * min((widget.damageLevel / 12), 1),
                               height: 13,
                               decoration: BoxDecoration(
                                 borderRadius:
-                                  widget.damageLevel == 4
+                                  widget.damageLevel >= 12
                                     ? BorderRadius.circular(5)
                                     : const BorderRadius.only(
                                         topLeft: Radius.circular(5),
@@ -135,77 +138,13 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
               ),
               if (_isExpanded)
                 Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 30,
-                      ),
-                      child: Container(
-                        height: 1,
-                        width: double.infinity,
-                        color: const Color(0xFFEFEFEF),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 10,
-                        left: 10,
-                        top: 20,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(7),
-                            child: Container(
-                              height: 70,
-                              width: 70,
-                              child: Image.network(
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtHU4BqZcNHPKDPWdn28TYFjpJWWNhZvUvWQ&usqp=CAU', // 이미지 URL
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 3,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColorLight,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(7)
-                                  )
-                                ),
-                                child: Text(
-                                  '스크래치',
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                '2023.03.03 18:30',
-                                style: TextStyle(
-                                  color: Theme.of(context).secondaryHeaderColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  children:
+                    widget.damageList.map<DamageDetail>((damageInfo) {
+                      return DamageDetail(
+                        damageInfo: damageInfo,
+                      );
+                    }).toList()
+                  ,
                 )
             ],
           ),
@@ -215,3 +154,4 @@ class _DamageLevelCardState extends State<DamageLevelCard> {
     );
   }
 }
+
