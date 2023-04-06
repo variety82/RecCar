@@ -401,8 +401,20 @@ docekr run --rm -d -p 8081:8081 --name fastapi-latest 이미지ID
    - 로그인 버튼을 누른 후 소셜 로그인을 진행할 수 있습니다
    
 
-​	
+​	![로그인](../assets/login.gif)
 
 		### 		지도 
 
-​		![지도](../assets/지도.gif)
+
+
+​		![지도](../assets/map.gif)
+
+
+
+### 일정관리
+
+![일정관리](../assets/calander.gif)
+
+### 차량 영상 등록
+
+![차량등록](../assets/regist.gif)
