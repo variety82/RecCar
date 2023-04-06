@@ -111,6 +111,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     double statusBarHeight = MediaQuery.of(context).padding.top;
+    double screenHeight = MediaQuery.of(context).size.height;
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -120,456 +122,463 @@ class _HomeState extends State<Home> {
                 color: Theme.of(context).primaryColor,
               ),
             )
-          : Column(
-              children: [
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 130,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: statusBarHeight,
-                        vertical: 0
+          : SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: screenHeight),
+              child: IntrinsicHeight(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: statusBarHeight + screenHeight * 0.01,
+                              left: 20,
+                              right: 20,
+                              bottom: screenHeight * 0.05,
+                            ),
+                            child:
+                            SvgPicture.asset(
+                              'lib/assets/images/logo/reccar_logo_horizontal.svg',
+                              height: 30,
+                            ),
+                          ),
+                        ],
                       ),
-                      child:
-                      SvgPicture.asset(
-                        'lib/assets/images/logo/reccar_logo_horizontal.svg',
-                        height: 30,
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: userCarId == '0'
-                      ? MainPageBody(
-                          imgRoute: 'lib/assets/images/empty_garage.svg',
-                          imageDisabled: true,
-                          mainContainter: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                ),
-                                child: Column(
+                      Flexible(
+                        child: userCarId == '0'
+                            ? MainPageBody(
+                                imgRoute: 'lib/assets/images/empty_garage.svg',
+                                imageDisabled: true,
+                                mainContainter: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: const Color(0xFF999999)
-                                                  .withOpacity(0.5),
-                                              spreadRadius: 0.3,
-                                              blurRadius: 6,
-                                            )
-                                          ]),
-                                      width: double.infinity,
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: const Color(0xFF999999)
+                                                        .withOpacity(0.5),
+                                                    spreadRadius: 0.3,
+                                                    blurRadius: 6,
+                                                  )
+                                                ]),
+                                            width: double.infinity,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: 20,
+                                                vertical: 20,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '대여중인 차가 없습니다',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Theme.of(context)
+                                                            .secondaryHeaderColor,
+                                                        fontWeight: FontWeight.w400),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Text(
+                                                    '자동차를 등록해주세요',
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                        fontWeight: FontWeight.w600),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(context, '/register');
+                                      },
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 20,
-                                          vertical: 20,
+                                          vertical: 10,
                                         ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '대여중인 차가 없습니다',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Theme.of(context)
-                                                      .secondaryHeaderColor,
-                                                  fontWeight: FontWeight.w400),
+                                        child: Container(
+                                          height: 75,
+                                          decoration: BoxDecoration(
+                                              color: Theme.of(context).primaryColor,
+                                              borderRadius: BorderRadius.circular(10),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: const Color(0xFF999999)
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 0.3,
+                                                  blurRadius: 6,
+                                                )
+                                              ]),
+                                          width: double.infinity,
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.add,
+                                              size: 40,
+                                              color: Colors.white,
                                             ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              '자동차를 등록해주세요',
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                          ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/register');
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10,
-                                  ),
-                                  child: Container(
-                                    height: 75,
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context).primaryColor,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: const Color(0xFF999999)
-                                                .withOpacity(0.5),
-                                            spreadRadius: 0.3,
-                                            blurRadius: 6,
-                                          )
-                                        ]),
-                                    width: double.infinity,
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.add,
-                                        size: 40,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : MainPageBody(
-                          imgRoute: 'lib/assets/images/car_garage.svg',
-                          imageDisabled: false,
-                          mainContainter: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (currentCarVideo == '0')
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          _showSelectModal(context);
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                width: 2,
+                              )
+                            : MainPageBody(
+                                imgRoute: 'lib/assets/images/car_garage.svg',
+                                imageDisabled: false,
+                                mainContainter: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    if (currentCarVideo == '0')
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                _showSelectModal(context);
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(10),
+                                                    border: Border.all(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      width: 2,
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: const Color(0xFF999999)
+                                                            .withOpacity(0.5),
+                                                        spreadRadius: 0.3,
+                                                        blurRadius: 6,
+                                                      )
+                                                    ]),
+                                                width: double.infinity,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    vertical: 20,
+                                                    horizontal: 20,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            '대여 영상 등록하기',
+                                                            style: TextStyle(
+                                                                fontSize: 14,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .secondaryHeaderColor,
+                                                                fontWeight:
+                                                                    FontWeight.w700),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            '차량 손상 분석을 위해 대여 영상 촬영이 필요합니다',
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .secondaryHeaderColor,
+                                                                fontWeight:
+                                                                    FontWeight.w400),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const Icon(
+                                                          Icons.arrow_forward_ios)
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: const Color(0xFF999999)
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 0.3,
-                                                  blurRadius: 6,
-                                                )
-                                              ]),
-                                          width: double.infinity,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 20,
-                                              horizontal: 20,
                                             ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      '대여 영상 등록하기',
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .secondaryHeaderColor,
-                                                          fontWeight:
-                                                              FontWeight.w700),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Text(
-                                                      '차량 손상 분석을 위해 대여 영상 촬영이 필요합니다',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .secondaryHeaderColor,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const Icon(
-                                                    Icons.arrow_forward_ios)
-                                              ],
-                                            ),
-                                          ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              if (currentCarVideo == '1')
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            '/detail',
-                                            arguments: {
-                                              'currentCarVideo': currentCarVideo
-                                            },
-                                          );
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: const Color(0xFF999999)
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 0.3,
-                                                  blurRadius: 6,
-                                                )
-                                              ]),
-                                          width: double.infinity,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 20,
-                                              vertical: 20,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      '대여 영상이 등록되었습니다.',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .secondaryHeaderColor,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Text(
-                                                      '손상 내역 확인하기',
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const Icon(
-                                                    Icons.arrow_forward_ios)
-                                              ],
-                                            ),
-                                          ),
+                                    if (currentCarVideo == '1')
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 6,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _showSelectModal(context);
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                width: 2,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  '/detail',
+                                                  arguments: {
+                                                    'currentCarVideo': currentCarVideo
+                                                  },
+                                                );
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(10),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: const Color(0xFF999999)
+                                                            .withOpacity(0.5),
+                                                        spreadRadius: 0.3,
+                                                        blurRadius: 6,
+                                                      )
+                                                    ]),
+                                                width: double.infinity,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 20,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            '대여 영상이 등록되었습니다.',
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .secondaryHeaderColor,
+                                                                fontWeight:
+                                                                    FontWeight.w400),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            '손상 내역 확인하기',
+                                                            style: TextStyle(
+                                                                fontSize: 14,
+                                                                color:
+                                                                    Theme.of(context)
+                                                                        .primaryColor,
+                                                                fontWeight:
+                                                                    FontWeight.w600),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const Icon(
+                                                          Icons.arrow_forward_ios)
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: const Color(0xFF999999)
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 0.3,
-                                                  blurRadius: 6,
-                                                )
-                                              ]),
-                                          width: double.infinity,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 20,
-                                              horizontal: 20,
                                             ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      '반납 영상 등록',
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .secondaryHeaderColor,
-                                                          fontWeight:
-                                                              FontWeight.w700),
+                                            const SizedBox(
+                                              height: 6,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                _showSelectModal(context);
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(10),
+                                                    border: Border.all(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      width: 2,
                                                     ),
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Text(
-                                                      '차량 손상 분석을 위해 영상 촬영이 필요합니다',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .secondaryHeaderColor,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    ),
-                                                  ],
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: const Color(0xFF999999)
+                                                            .withOpacity(0.5),
+                                                        spreadRadius: 0.3,
+                                                        blurRadius: 6,
+                                                      )
+                                                    ]),
+                                                width: double.infinity,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    vertical: 20,
+                                                    horizontal: 20,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            '반납 영상 등록',
+                                                            style: TextStyle(
+                                                                fontSize: 14,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .secondaryHeaderColor,
+                                                                fontWeight:
+                                                                    FontWeight.w700),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            '차량 손상 분석을 위해 영상 촬영이 필요합니다',
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .secondaryHeaderColor,
+                                                                fontWeight:
+                                                                    FontWeight.w400),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const Icon(
+                                                          Icons.arrow_forward_ios)
+                                                    ],
+                                                  ),
                                                 ),
-                                                const Icon(
-                                                    Icons.arrow_forward_ios)
-                                              ],
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              if (currentCarVideo == '2')
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            '/detail',
-                                            arguments: {
-                                              'currentCarVideo': currentCarVideo
-                                            },
-                                          );
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: const Color(0xFF999999)
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 0.3,
-                                                blurRadius: 6,
-                                              )
-                                            ],
-                                          ),
-                                          width: double.infinity,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 20,
-                                              vertical: 20,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      '반납 영상이 등록되었습니다.',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .secondaryHeaderColor,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Text(
-                                                      '손상 내역 확인하고 반납하기',
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
+                                    if (currentCarVideo == '2')
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  '/detail',
+                                                  arguments: {
+                                                    'currentCarVideo': currentCarVideo
+                                                  },
+                                                );
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: const Color(0xFF999999)
+                                                          .withOpacity(0.5),
+                                                      spreadRadius: 0.3,
+                                                      blurRadius: 6,
+                                                    )
                                                   ],
                                                 ),
-                                                const Icon(
-                                                    Icons.arrow_forward_ios)
-                                              ],
+                                                width: double.infinity,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 20,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            '반납 영상이 등록되었습니다.',
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .secondaryHeaderColor,
+                                                                fontWeight:
+                                                                    FontWeight.w400),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            '손상 내역 확인하고 반납하기',
+                                                            style: TextStyle(
+                                                                fontSize: 14,
+                                                                color:
+                                                                    Theme.of(context)
+                                                                        .primaryColor,
+                                                                fontWeight:
+                                                                    FontWeight.w600),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const Icon(
+                                                          Icons.arrow_forward_ios)
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                  ],
                                 ),
-                            ],
-                          ),
-                        ),
-                ),
-                const Footer()
-              ],
+                              ),
+                      ),
+                      const Footer()
+                    ],
+                  ),
+              ),
             ),
+          ),
     );
   }
 }

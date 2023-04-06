@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/my_page/rent_log_line.dart';
 import '../../widgets/common/footer.dart';
 import '../../services/my_page_api.dart';
+import 'package:client/widgets/common/image_go_detail.dart';
 
 class DamageDetail extends StatefulWidget {
   final damageImageUrl;
@@ -56,14 +57,17 @@ class _DamageDetailState extends State<DamageDetail> {
             child: Container(
               child: Column(
                 children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    height: 350,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: NetworkImage("${widget.damageImageUrl}")),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width,
+                        maxHeight: 300,
+                      ),
+                      child: ImageGoDetail(
+                        imagePath: widget.damageImageUrl,
+                        imageCase: 'url',
+                      ),
                     ),
                   ),
                   // const Divider(

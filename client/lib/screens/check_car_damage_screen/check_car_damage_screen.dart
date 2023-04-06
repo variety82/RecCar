@@ -9,9 +9,7 @@ import 'package:video_player/video_player.dart';
 
 import 'package:client/screens/check_car_damage_screen/check_car_damage_container.dart';
 import 'package:client/screens/after_check_damage_screen/after_check_damage_screen.dart';
-import 'package:client/screens/check_car_damage_screen/check_car_damage_FAB.dart';
-import 'package:client/services/analysis_car_damage_api.dart';
-// import 'package:client/utils/dialog_util.dart';
+import 'package:client/screens/check_car_damage_screen/video_full_screen.dart';
 
 class CheckCarDamageScreen extends StatefulWidget {
   final String filePath;
@@ -365,6 +363,14 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
     print(filteredDamagedIndex);
   }
 
+  // timer 시, 분, 초 단위로 표시 전환해줌
+  String _durationToString(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
+  }
+
   @override
   void initState() {
     _initVideoPlayer();
@@ -624,6 +630,56 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                       ),
                                     ),
                                   ],
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 10,
+                              left: 10,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "${_durationToString(_videoPlayerController.value.position)} / ",
+                                    style: TextStyle(
+                                      color: _isVisible
+                                          ? Colors.white.withOpacity(0.75)
+                                          : Colors.white.withOpacity(0),
+                                    ),
+                                  ),
+                                  Text(
+                                    "${_durationToString(_videoPlayerController.value.duration)}",
+                                    style: TextStyle(
+                                      color: _isVisible
+                                          ? Colors.white.withOpacity(0.75)
+                                          : Colors.white.withOpacity(0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 5,
+                              right: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => VideoFullScreen(
+                                        filePath: widget.filePath,
+                                        carDamagesAllList: carDamagesAllList,
+                                        selectedIndexList: selectedIndexList,
+                                        timeStamp: _videoPlayerController
+                                            .value.position,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Icon(
+                                  Icons.fullscreen,
+                                  color: _isVisible
+                                      ? Colors.white.withOpacity(0.75)
+                                      : Colors.white.withOpacity(0),
                                 ),
                               ),
                             ),

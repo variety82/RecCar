@@ -183,7 +183,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                         // 나열 방향
                         crossAxisAlignment: WrapCrossAlignment.center,
                         // 정렬 방식
-                        spacing: 24,
+                        spacing: 32,
                         // 좌우 간격
                         runSpacing: 10,
                         children: [
@@ -219,7 +219,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFFFF3F3F),
+                                  color: Theme.of(context).primaryColor,
                                 ),
                                 softWrap: true,
                               ),
@@ -229,7 +229,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFFFF3F3F),
+                                  color: Theme.of(context).primaryColor,
                                 ),
                                 softWrap: true,
                               ),
@@ -245,7 +245,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                           //   ),
                           // ),
                           CircularProgressIndicator(
-                            color: Color(0xFFE0426F),
+                            color: Theme.of(context).primaryColor,
                             // strokeWidth: 8,
                           ),
                         ],
