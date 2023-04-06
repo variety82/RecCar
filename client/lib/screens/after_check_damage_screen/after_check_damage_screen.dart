@@ -23,7 +23,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
   bool loading_api = false;
   List<Map<String, dynamic>> damageInfoList = [];
 
-  static final storage = FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
   int? currentCarId;
   int? currentCarVideo;
   late DateTime nowDateTime;
@@ -46,7 +46,6 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
     setState(() {
       currentCarId = int.parse(carId!);
     });
-    print(currentCarId);
   }
 
   Future<void> setCurrentCarVideo() async {
@@ -97,7 +96,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
   }
 
   Future<void> fetchData() async {
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
     dataChange();
   }
 
@@ -107,8 +106,8 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
         .forEach((damage) {
       Map<String, dynamic> carDamageInfo = {
         // "carId": int.parse(currentCarId!),
-        "carId": currentCarId == null ? 0 : currentCarId,
-        "former": formerState == null ? false : formerState,
+        "carId": currentCarId ?? 0,
+        "former": formerState ?? false,
         "pictureUrl": damage["Damage_Image_URL"],
         "part": checkDamagePart(damage),
         "memo": damage["memo"],
@@ -118,7 +117,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
         "crushed": damage["Crushed"],
         "separated": damage["Separated"],
       };
-      print(carDamageInfo);
+
       setState(() {
         damageInfoList.add(carDamageInfo);
         scratch_count += damage["Scratch"];
@@ -152,7 +151,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
           ? Center(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.all(30),
+                  padding: const EdgeInsets.all(30),
                   child: loading_api
                       ? Center(
                           // 상하 간격
@@ -169,22 +168,40 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                               Column(
                                 children: [
                                   Text(
+                                    currentCarVideo! + 1 == 1
+                                        ? '대여 시 손상의'
+                                        : '반납 시 손상의',
+                                    textAlign: TextAlign.center,
+                                    softWrap: true,
+                                    style: const TextStyle(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFF453F52),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                  const Text(
                                     '등록이',
                                     textAlign: TextAlign.center,
                                     softWrap: true,
                                     style: TextStyle(
                                       fontSize: 32,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w800,
                                       color: Color(0xFF453F52),
                                     ),
                                   ),
-                                  Text(
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                  const Text(
                                     '완료되었습니다!',
                                     textAlign: TextAlign.center,
                                     softWrap: true,
                                     style: TextStyle(
                                       fontSize: 32,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w800,
                                       color: Color(0xFF453F52),
                                     ),
                                   ),
@@ -193,7 +210,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                               RichText(
                                 text: TextSpan(
                                   children: [
-                                    TextSpan(
+                                    const TextSpan(
                                       text: '총 ',
                                       style: TextStyle(
                                         color: Colors.black,
@@ -214,7 +231,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                         color: Theme.of(context).primaryColor,
                                       ),
                                     ),
-                                    TextSpan(
+                                    const TextSpan(
                                       text: '건의 손상이 등록되었습니다',
                                       style: TextStyle(
                                         fontSize: 16,
@@ -225,7 +242,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                 ),
                               ),
                               Container(
-                                constraints: BoxConstraints(
+                                constraints: const BoxConstraints(
                                   maxWidth: 120,
                                   maxHeight: 120,
                                 ),
@@ -243,12 +260,12 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                         ),
-                                        fixedSize: Size(80, 80),
+                                        fixedSize: const Size(80, 80),
                                         backgroundColor: Theme.of(context)
                                             .secondaryHeaderColor,
                                       ),
                                       onPressed: () {
-                                        Navigator.pushNamed(
+                                        Navigator.pushNamedAndRemoveUntil(
                                           context,
                                           '/detail',
                                           arguments: {
@@ -256,9 +273,10 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                                 (currentCarVideo! + 1)
                                                     .toString(),
                                           },
+                                          ModalRoute.withName('/home'),
                                         );
                                       },
-                                      child: Column(
+                                      child: const Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -283,14 +301,18 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                         ),
-                                        fixedSize: Size(80, 80),
+                                        fixedSize: const Size(80, 80),
                                         backgroundColor:
                                             Theme.of(context).primaryColor,
                                       ),
                                       onPressed: () async {
-                                        Navigator.pushNamed(context, '/home');
+                                        Navigator.pushNamedAndRemoveUntil(
+                                          context,
+                                          '/home',
+                                          ModalRoute.withName('/home'),
+                                        );
                                       },
-                                      child: Column(
+                                      child: const Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -329,7 +351,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                   RichText(
                                     text: TextSpan(
                                       children: [
-                                        TextSpan(
+                                        const TextSpan(
                                           text: '총 ',
                                           style: TextStyle(
                                             fontSize: 32,
@@ -344,8 +366,6 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                                   breakage_count)
                                               .toInt()
                                               .toString(),
-                                          // text:
-                                          //     damageInfoList.length.toString(),
                                           style: TextStyle(
                                             fontSize: 32,
                                             fontWeight: FontWeight.w900,
@@ -353,7 +373,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                                 Theme.of(context).primaryColor,
                                           ),
                                         ),
-                                        TextSpan(
+                                        const TextSpan(
                                           text: '건의 손상을',
                                           style: TextStyle(
                                             fontSize: 32,
@@ -364,13 +384,13 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                       ],
                                     ),
                                   ),
-                                  Text(
+                                  const Text(
                                     '등록할 예정입니다',
                                     textAlign: TextAlign.center,
                                     softWrap: true,
                                     style: TextStyle(
                                       fontSize: 32,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w800,
                                       color: Color(0xFF453F52),
                                     ),
                                   ),
@@ -412,7 +432,7 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                   ],
                                 ),
                               ),
-                              Text(
+                              const Text(
                                 '정말 등록하시겠습니까?',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -432,14 +452,14 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                         ),
-                                        fixedSize: Size(80, 80),
+                                        fixedSize: const Size(80, 80),
                                         backgroundColor: Theme.of(context)
                                             .secondaryHeaderColor,
                                       ),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: Column(
+                                      child: const Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -464,42 +484,48 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                         ),
-                                        fixedSize: Size(80, 80),
+                                        fixedSize: const Size(80, 80),
                                         backgroundColor:
                                             Theme.of(context).primaryColor,
                                       ),
                                       onPressed: () async {
-                                        setState(() {
-                                          load_data = false;
-                                        });
-                                        postCarDamageInfo(
-                                          success: (dynamic response) {
-                                            setState(() {
-                                              loading_api = true;
-                                            });
-                                          },
-                                          fail: (error) {
-                                            print('차량 손상 분석 오류: $error');
-                                            setState(
-                                              () {
+                                        if (damageInfoList.isNotEmpty) {
+                                          postCarDamageInfo(
+                                            success: (dynamic response) {
+                                              setState(() {
                                                 loading_api = true;
-                                              },
-                                            );
-                                          },
-                                          bodyList: damageInfoList,
-                                        );
+                                              });
+                                            },
+                                            fail: (error) {
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                '/error',
+                                                arguments: {
+                                                  'errorText': error,
+                                                },
+                                                ModalRoute.withName('/home'),
+                                              );
+                                              print('차량 손상 분석 오류: $error');
+                                              // setState(
+                                              //   () {
+                                              //     loading_api = true;
+                                              //   },
+                                              // );
+                                            },
+                                            bodyList: damageInfoList,
+                                          );
+                                        }
                                         await storage.write(
                                             key: "carVideoState",
                                             value: currentCarVideo == 0
                                                 ? '1'
                                                 : '2');
-                                        print(currentCarVideo);
                                         setState(() {
                                           load_data = true;
                                           loading_api = true;
                                         });
                                       },
-                                      child: Column(
+                                      child: const Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [

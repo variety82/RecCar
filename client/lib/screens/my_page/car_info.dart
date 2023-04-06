@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
-import '../../services/detail_api.dart';
 import '../../services/my_page_api.dart';
 import '../../widgets/common/header.dart';
 import '../../widgets/common/footer.dart';
@@ -18,7 +17,7 @@ class CarInfo extends StatefulWidget {
 }
 
 class _CarInfoState extends State<CarInfo> {
-  static final storage = FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
   var rentedCar;
 
   @override
@@ -31,6 +30,14 @@ class _CarInfoState extends State<CarInfo> {
       },
       fail: (error) {
         print('대여중인 차량 호출 오류: $error');
+        // Navigator.pushNamedAndRemoveUntil(
+        //   context,
+        //   '/error',
+        //   arguments: {
+        //     'errorText': error,
+        //   },
+        //   ModalRoute.withName('/home'),
+        // );
       },
     );
     super.initState();
@@ -48,7 +55,7 @@ class _CarInfoState extends State<CarInfo> {
           Expanded(
             // 공간 전체 Padding
             child: rentedCar == null
-                ? Center(child: Text("현재 대여중인 차량이 없습니다"))
+                ? const Center(child: Text("현재 대여중인 차량이 없습니다"))
                 : SafeArea(
                     child: SingleChildScrollView(
                       child: Padding(
@@ -180,11 +187,22 @@ class _CarInfoState extends State<CarInfo> {
                                     onPressed: () {
                                       deleteCarInfo(
                                           success: (dynamic response) async {
-                                            await storage.write(key: "carId", value: "0");
-                                            await storage.write(key: "carVideoState", value: "0");
+                                            await storage.write(
+                                                key: "carId", value: "0");
+                                            await storage.write(
+                                                key: "carVideoState",
+                                                value: "0");
                                           },
                                           fail: (error) {
                                             print('차량 삭제 호출 오류: $error');
+                                            Navigator.pushNamedAndRemoveUntil(
+                                              context,
+                                              '/error',
+                                              arguments: {
+                                                'errorText': error,
+                                              },
+                                              ModalRoute.withName('/home'),
+                                            );
                                           },
                                           carId: rentedCar['carId']);
                                       Navigator.pushNamed(context, '/my-page');

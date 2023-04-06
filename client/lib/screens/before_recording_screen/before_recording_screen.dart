@@ -17,7 +17,7 @@ class BeforeRecordingScreen extends StatelessWidget {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
-          foregroundColor: Color(0xFFFF3F3F),
+          foregroundColor: const Color(0xFFFF3F3F),
         ),
         // Column 정렬 이용해 화면 정가운데에 이하 요소들을 정렬
         body: const Center(

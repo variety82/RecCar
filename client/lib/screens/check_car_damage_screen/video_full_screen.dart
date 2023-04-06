@@ -33,8 +33,8 @@ class _VideoFullScreenState extends State<VideoFullScreen>
   late VideoPlayerController _videoPlayerController;
   late TabController _tabController;
   final List<Widget> _tabs = [
-    Text('전체 보기'),
-    Text('리스트만 보기'),
+    const Text('전체 보기'),
+    const Text('리스트만 보기'),
   ];
   bool loading_api = true;
   bool loading_video = false;
@@ -68,7 +68,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _timer.cancel();
     _videoPlayerController.dispose();
     super.dispose();
   }
@@ -140,7 +140,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
 
   void _resetTimer() {
     if (_isVisible) {
-      _timer?.cancel(); // 기존 타이머 취소
+      _timer.cancel(); // 기존 타이머 취소
       _timeChecker(); // 새로운 타이머 시작
     }
   }
@@ -156,7 +156,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
       // 첫번째 탭을 눌렀을 때의 동작
       _timeChecker();
       _isSecondTap = true;
-      Future.delayed(Duration(milliseconds: 250), () {
+      Future.delayed(const Duration(milliseconds: 250), () {
         _isSecondTap = false;
       });
     }
@@ -175,7 +175,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
   }
 
   void showConfirmationDialog(BuildContext context, Function func, String title,
-      String content, String yes_text, String no_text,
+      String content, String yesText, String noText,
       {dynamic data}) {
     showDialog(
       context: context,
@@ -183,7 +183,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
         return AlertDialog(
           title: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
             ),
@@ -192,7 +192,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
           actions: <Widget>[
             TextButton(
               child: Text(
-                yes_text,
+                yesText,
                 style: TextStyle(
                     fontSize: 14, color: Theme.of(context).primaryColor),
               ),
@@ -203,7 +203,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
             ),
             TextButton(
               child: Text(
-                no_text,
+                noText,
                 style: TextStyle(
                     fontSize: 14, color: Theme.of(context).primaryColor),
               ),
@@ -255,7 +255,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
       child: Scaffold(
         backgroundColor: Colors.black,
         body: loading_video
-            ? Container(
+            ? SizedBox(
                 height: screenHeight,
                 width: screenWidth,
                 child: GestureDetector(
@@ -263,7 +263,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                     _watchVideoMenu();
                   },
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.black,
                     ),
                     height: screenHeight,
@@ -306,7 +306,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                               10),
                                     );
                                     Future.delayed(
-                                      Duration(milliseconds: 200),
+                                      const Duration(milliseconds: 200),
                                       () {
                                         setState(() {
                                           _isVisible = false;
@@ -317,7 +317,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                   },
                                   child: AnimatedOpacity(
                                     opacity: _isbackTimeSkip ? 1.0 : 0.0,
-                                    duration: Duration(milliseconds: 200),
+                                    duration: const Duration(milliseconds: 200),
                                     child: Stack(
                                       children: [
                                         Icon(
@@ -328,7 +328,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                         Positioned(
                                           right: (screenWidth / 4) + 10,
                                           top: (screenWidth / 2) - 10,
-                                          child: Column(
+                                          child: const Column(
                                             children: [
                                               Icon(
                                                 Icons.fast_rewind,
@@ -375,19 +375,19 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                       ? Stack(
                                           alignment: Alignment.center,
                                           children: [
-                                            Icon(
+                                            const Icon(
                                               Icons.circle,
                                               color: Colors.black38,
                                               size: 80,
                                             ),
                                             _videoPlayerController
                                                     .value.isPlaying
-                                                ? Icon(
+                                                ? const Icon(
                                                     Icons.pause,
                                                     color: Colors.white,
                                                     size: 40,
                                                   )
-                                                : Icon(
+                                                : const Icon(
                                                     Icons.play_arrow,
                                                     color: Colors.white,
                                                     size: 40,
@@ -398,7 +398,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                 ),
                                 AnimatedOpacity(
                                   opacity: _isforwardTimeSkip ? 1.0 : 0.0,
-                                  duration: Duration(milliseconds: 200),
+                                  duration: const Duration(milliseconds: 200),
                                   child: InkWell(
                                     onTap: () {
                                       _watchVideoMenu();
@@ -416,7 +416,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                                 10),
                                       );
                                       Future.delayed(
-                                        Duration(milliseconds: 200),
+                                        const Duration(milliseconds: 200),
                                         () {
                                           setState(() {
                                             _isVisible = false;
@@ -435,7 +435,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                         Positioned(
                                           left: (screenWidth / 4) + 10,
                                           top: (screenWidth / 2) - 10,
-                                          child: Column(
+                                          child: const Column(
                                             children: [
                                               Icon(
                                                 Icons.fast_forward,
@@ -452,7 +452,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                             ],
                                           ),
                                         ),
-                                        Positioned(
+                                        const Positioned(
                                           left: 12,
                                           bottom: 12,
                                           child: Row(
@@ -489,7 +489,8 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                 ),
                               ),
                               Text(
-                                "${_durationToString(_videoPlayerController.value.duration)}",
+                                _durationToString(
+                                    _videoPlayerController.value.duration),
                                 style: TextStyle(
                                   color: _isVisible
                                       ? Colors.white.withOpacity(0.75)
@@ -520,16 +521,16 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                 child: Container(
                                   height: 16,
                                   width: screenWidth,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: Colors.black,
                                   ),
                                   child: VideoProgressIndicator(
                                     _videoPlayerController,
                                     allowScrubbing: true,
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       vertical: 5,
                                     ),
-                                    colors: VideoProgressColors(
+                                    colors: const VideoProgressColors(
                                       backgroundColor: Color(0xFF453F52),
                                       bufferedColor: Color(0xFFEFEFEF),
                                       playedColor: Color(0xFFE0426F),
@@ -544,7 +545,7 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                 ),
               )
             // 동영상 제어(progressindicator) 파트
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(
                   color: Color(0xFFE0426F),
                 ),

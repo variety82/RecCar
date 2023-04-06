@@ -18,7 +18,7 @@ class AfterRecordingScreen extends StatefulWidget {
 class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
   bool loading_api = false;
 
-  static final storage = FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
   String? userNickName;
 
   List<Map<String, dynamic>> carDamagesAllList = [];
@@ -32,7 +32,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
   }
 
   Future<void> fetchData() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     analysisCarDamageApi(
       success: (dynamic response) {
         setState(() {
@@ -48,7 +48,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
         );
       },
       filePath: widget.filePath,
-      user_id: userNickName == null ? 'default' : userNickName,
+      user_id: userNickName ?? 'default',
     );
   }
 
@@ -64,12 +64,12 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
     return SafeArea(
       child: Scaffold(
         // backgroundColor는 흰색으로 설정
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
         // Column 정렬 이용해 화면 정가운데에 이하 요소들을 정렬
         body: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.all(30),
+              padding: const EdgeInsets.all(30),
               child: loading_api
                   ? Center(
                       // 상하 간격
@@ -83,7 +83,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                         // 좌우 간격
                         runSpacing: 10,
                         children: [
-                          Column(
+                          const Column(
                             children: [
                               Text(
                                 '분석이',
@@ -91,7 +91,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 softWrap: true,
                                 style: TextStyle(
                                   fontSize: 32,
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.w800,
                                   color: Color(0xFF453F52),
                                 ),
                               ),
@@ -101,7 +101,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 softWrap: true,
                                 style: TextStyle(
                                   fontSize: 32,
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.w800,
                                   color: Color(0xFF453F52),
                                 ),
                               ),
@@ -110,7 +110,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             child: Container(
-                              constraints: BoxConstraints(
+                              constraints: const BoxConstraints(
                                 maxWidth: 140,
                                 maxHeight: 140,
                               ),
@@ -119,24 +119,6 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ),
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.all(24.0),
-                          //   child: Stack(
-                          //     alignment: AlignmentDirectional.center,
-                          //     children: [
-                          //       Icon(
-                          //         Icons.circle_outlined,
-                          //         size: 100.0,
-                          //         color: Theme.of(context).primaryColor,
-                          //       ),
-                          //       Icon(
-                          //         Icons.done_outline_outlined,
-                          //         size: 40.0,
-                          //         color: Theme.of(context).primaryColor,
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                           OutlinedButton(
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -146,7 +128,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                     style: BorderStyle.solid,
                                     color: Theme.of(context).primaryColor),
                               ),
-                              fixedSize: Size(180, 50),
+                              fixedSize: const Size(180, 50),
                               backgroundColor: Colors.white,
                               foregroundColor: Theme.of(context).primaryColor,
                               shadowColor: Theme.of(context).shadowColor,
@@ -157,7 +139,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => CheckCarDamageScreen(
                                     filePath: widget.filePath,
-                                    carDamagesAllList: carDamagesAllList!,
+                                    carDamagesAllList: carDamagesAllList,
                                     selectedIndexList: selectedIndexList,
                                   ),
                                 ),
@@ -190,12 +172,12 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                           Column(
                             children: [
                               Text(
-                                '영상 등록이',
+                                '영상 업로드가',
                                 textAlign: TextAlign.center,
                                 softWrap: true,
                                 style: TextStyle(
                                   fontSize: 32,
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.w800,
                                   color: Theme.of(context).secondaryHeaderColor,
                                 ),
                               ),
@@ -205,8 +187,8 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 softWrap: true,
                                 style: TextStyle(
                                   fontSize: 32,
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xFF453F52),
+                                  fontWeight: FontWeight.w800,
+                                  color: Theme.of(context).secondaryHeaderColor,
                                 ),
                               ),
                             ],
@@ -235,15 +217,6 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ),
                             ],
                           ),
-                          // Container(
-                          //   constraints: BoxConstraints(
-                          //     maxWidth: 300,
-                          //     maxHeight: 400,
-                          //   ),
-                          //   child: Image.asset(
-                          //     'lib/assets/images/loading_img/car_running.gif',
-                          //   ),
-                          // ),
                           CircularProgressIndicator(
                             color: Theme.of(context).primaryColor,
                             // strokeWidth: 8,

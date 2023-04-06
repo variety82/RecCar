@@ -16,7 +16,7 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   XFile? profileImg;
-  static final storage = FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
   String? userName;
   String? userProfileImg;
 
@@ -88,6 +88,9 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
               Positioned(
+                top: 100,
+                left: 50,
+                right: 50,
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -99,11 +102,11 @@ class _MyPageState extends State<MyPage> {
                           color: Theme.of(context).primaryColor, width: 2.5),
                       color: Colors.white,
                       image: userProfileImg == ""
-                          ? DecorationImage(
+                          ? const DecorationImage(
                               image: NetworkImage(
                                   "https://profileimg.plaync.com/account_profile_images/8A3BFAF2-D15F-E011-9A06-E61F135E992F?imageSize=large"))
                           : DecorationImage(
-                              image: NetworkImage('${userProfileImg}'),
+                              image: NetworkImage('$userProfileImg'),
                               // image: DecorationImage(
                               //   image: NetworkImage(
                               //     "${userProfileImg}" == ""
@@ -115,9 +118,6 @@ class _MyPageState extends State<MyPage> {
                     ),
                   ),
                 ),
-                top: 100,
-                left: 50,
-                right: 50,
               ),
               Positioned(
                 top: 225,
@@ -126,7 +126,7 @@ class _MyPageState extends State<MyPage> {
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "${userName}",
+                    "$userName",
                     style: TextStyle(
                       color: Theme.of(context).secondaryHeaderColor,
                       fontSize: 16,
@@ -136,40 +136,13 @@ class _MyPageState extends State<MyPage> {
                   ),
                 ),
               ),
-              // Visibility(
-              //   visible: true,
-              //   child: Positioned(
-              //     child: Card(
-              //       child: InkWell(
-              //         child: Text(
-              //           "프로필 편집",
-              //           style: TextStyle(
-              //             color: Theme.of(context).primaryColor,
-              //             fontWeight: FontWeight.w700,
-              //           ),
-              //         ),
-              //         onTap: () {
-              //           // print("HI");
-              //           showDialog(context: context, builder: (BuildContext context) {
-              //             return Dialog(
-              //               child: Text("HI"),
-              //             );
-              //           });
-              //         },
-              //       ),
-              //     ),
-              //     top: 240,
-              //     left: 50,
-              //     right: 50,
-              //   ),
-              // ),
             ],
           ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 ),
                 MyPageCategory(
@@ -194,7 +167,7 @@ class _MyPageState extends State<MyPage> {
               ],
             ),
           ),
-          Footer(),
+          const Footer(),
         ],
       ),
     );

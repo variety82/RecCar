@@ -49,6 +49,14 @@ class _CarModifyState extends State<CarModify> {
       },
       fail: (error) {
         print('차량 리스트 호출 오류: $error');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/error',
+          arguments: {
+            'errorText': error,
+          },
+          ModalRoute.withName('/home'),
+        );
       },
     );
   }
@@ -208,7 +216,6 @@ class _CarModifyState extends State<CarModify> {
       _isValidatedDate = _returnDate.isAtSameMomentAs(_borrowingDate) ||
           _returnDate.isAfter(_borrowingDate);
       _updateAllRegistered();
-      print(_isValidatedDate);
     });
   }
 
@@ -449,6 +456,15 @@ class _CarModifyState extends State<CarModify> {
                                               success: (dynamic response) {},
                                               fail: (error) {
                                                 print('차량 리스트 호출 오류: $error');
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  '/error',
+                                                  arguments: {
+                                                    'errorText': error,
+                                                  },
+                                                  ModalRoute.withName('/home'),
+                                                );
                                               },
                                               body: _buildCarInfoBody());
                                           Navigator.pushNamed(

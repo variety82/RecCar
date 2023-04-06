@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:animations/animations.dart';
 import 'package:client/screens/after_recording_screen/after_recording_screen.dart';
 
 class BeforeRecordingConfirmScreen extends StatefulWidget {
@@ -39,15 +37,14 @@ class _BeforeRecordingConfirmScreenState
 
   Future<void> _pickVideo(BuildContext context) async {
     final pickedFile =
-        await ImagePicker().getVideo(source: ImageSource.gallery);
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _isLoading = true;
       });
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       videoFile = File(pickedFile.path);
       videoFilePath = videoFile!.path;
-      print(videoFilePath);
       if (videoFilePath != null || videoFilePath != '') {
         final route = MaterialPageRoute(
           fullscreenDialog: true,
@@ -67,12 +64,13 @@ class _BeforeRecordingConfirmScreenState
   }
 
   Future<void> _takeVideo(BuildContext context) async {
-    final pickedFile = await ImagePicker().getVideo(source: ImageSource.camera);
+    final pickedFile =
+        await ImagePicker().pickVideo(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         _isLoading = true;
       });
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       videoFile = File(pickedFile.path);
       videoFilePath = videoFile!.path;
       if (videoFilePath != null || videoFilePath != '') {
@@ -103,7 +101,7 @@ class _BeforeRecordingConfirmScreenState
             : AppBar(
                 elevation: 0,
                 backgroundColor: Colors.white,
-                foregroundColor: Color(0xFFFF3F3F),
+                foregroundColor: const Color(0xFFFF3F3F),
               ),
         // Column 정렬 이용해 화면 정가운데에 이하 요소들을 정렬
         body: _isLoading
@@ -116,7 +114,7 @@ class _BeforeRecordingConfirmScreenState
                 ? Center(
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 10,
                         ),
                         child: Column(
@@ -124,7 +122,7 @@ class _BeforeRecordingConfirmScreenState
                           crossAxisAlignment: CrossAxisAlignment.center,
                           // 상하 간격
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.all(10),
                               child: Wrap(
                                 // 세로로 나열
@@ -141,7 +139,7 @@ class _BeforeRecordingConfirmScreenState
                                     softWrap: true,
                                     style: TextStyle(
                                       fontSize: 32,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w800,
                                       color: Color(0xFF453F52),
                                     ),
                                   ),
@@ -151,7 +149,7 @@ class _BeforeRecordingConfirmScreenState
                                     softWrap: true,
                                     style: TextStyle(
                                       fontSize: 32,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w800,
                                       color: Color(0xFF453F52),
                                     ),
                                   ),
@@ -159,11 +157,11 @@ class _BeforeRecordingConfirmScreenState
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 20,
                               ),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   vertical: 10,
                                 ),
                                 child: Column(
@@ -185,7 +183,7 @@ class _BeforeRecordingConfirmScreenState
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 24),
                               child: Padding(
-                                padding: EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(20),
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -215,7 +213,7 @@ class _BeforeRecordingConfirmScreenState
                                                 )
                                               ]),
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                               vertical: 16,
                                               horizontal: 8,
                                             ),
@@ -225,11 +223,11 @@ class _BeforeRecordingConfirmScreenState
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Icons.light_mode,
                                                   size: 24,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 8,
                                                 ),
                                                 Text(
@@ -242,10 +240,10 @@ class _BeforeRecordingConfirmScreenState
                                                         .primaryColor,
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 4,
                                                 ),
-                                                Text(
+                                                const Text(
                                                   '어두운 곳에서는',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
@@ -253,7 +251,7 @@ class _BeforeRecordingConfirmScreenState
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                                Text(
+                                                const Text(
                                                   '플래시를',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
@@ -286,7 +284,7 @@ class _BeforeRecordingConfirmScreenState
                                                 )
                                               ]),
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                               vertical: 16,
                                               horizontal: 8,
                                             ),
@@ -296,11 +294,11 @@ class _BeforeRecordingConfirmScreenState
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Icons.car_crash,
                                                   size: 24,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 8,
                                                 ),
                                                 Text(
@@ -313,10 +311,10 @@ class _BeforeRecordingConfirmScreenState
                                                         .primaryColor,
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 4,
                                                 ),
-                                                Text(
+                                                const Text(
                                                   '차 표면에',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
@@ -324,7 +322,7 @@ class _BeforeRecordingConfirmScreenState
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                                Text(
+                                                const Text(
                                                   '비치지 않도록',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
@@ -338,7 +336,7 @@ class _BeforeRecordingConfirmScreenState
                                         ),
                                       ],
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     ),
                                     Row(
@@ -366,7 +364,7 @@ class _BeforeRecordingConfirmScreenState
                                                 )
                                               ]),
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                               vertical: 16,
                                               horizontal: 12,
                                             ),
@@ -376,11 +374,11 @@ class _BeforeRecordingConfirmScreenState
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Icons.text_rotation_angleup,
                                                   size: 24,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 8,
                                                 ),
                                                 Text(
@@ -393,10 +391,10 @@ class _BeforeRecordingConfirmScreenState
                                                         .primaryColor,
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 4,
                                                 ),
-                                                Text(
+                                                const Text(
                                                   '잘 포착하도록',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
@@ -404,7 +402,7 @@ class _BeforeRecordingConfirmScreenState
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                                Text(
+                                                const Text(
                                                   '각도 조절하기',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
@@ -437,7 +435,7 @@ class _BeforeRecordingConfirmScreenState
                                                 )
                                               ]),
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                               vertical: 16,
                                               horizontal: 8,
                                             ),
@@ -447,11 +445,11 @@ class _BeforeRecordingConfirmScreenState
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Icons.flash_off_outlined,
                                                   size: 24,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 8,
                                                 ),
                                                 Text(
@@ -464,10 +462,10 @@ class _BeforeRecordingConfirmScreenState
                                                         .primaryColor,
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 4,
                                                 ),
-                                                Text(
+                                                const Text(
                                                   '카메라 이동은',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
@@ -475,7 +473,7 @@ class _BeforeRecordingConfirmScreenState
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                                Text(
+                                                const Text(
                                                   '천천히',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
@@ -494,7 +492,7 @@ class _BeforeRecordingConfirmScreenState
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 20,
                               ),
                               child: ElevatedButton(
@@ -502,14 +500,14 @@ class _BeforeRecordingConfirmScreenState
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  fixedSize: Size(180, 50),
+                                  fixedSize: const Size(180, 50),
                                   backgroundColor:
                                       Theme.of(context).primaryColor,
                                 ),
                                 onPressed: () {
                                   _takeVideo(context);
                                 },
-                                child: Row(
+                                child: const Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
@@ -537,7 +535,7 @@ class _BeforeRecordingConfirmScreenState
                 : Center(
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 30,
                         ),
                         child: Column(
@@ -545,7 +543,7 @@ class _BeforeRecordingConfirmScreenState
                           crossAxisAlignment: CrossAxisAlignment.center,
                           // 상하 간격
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 20),
                               child: Wrap(
@@ -563,7 +561,7 @@ class _BeforeRecordingConfirmScreenState
                                     softWrap: true,
                                     style: TextStyle(
                                       fontSize: 32,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w800,
                                       color: Color(0xFF453F52),
                                     ),
                                   ),
@@ -573,14 +571,14 @@ class _BeforeRecordingConfirmScreenState
                                     softWrap: true,
                                     style: TextStyle(
                                       fontSize: 32,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w800,
                                       color: Color(0xFF453F52),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.symmetric(vertical: 10),
                               child: Column(
                                 children: [
@@ -596,7 +594,7 @@ class _BeforeRecordingConfirmScreenState
                               ),
                             ),
                             Padding(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   vertical: 20,
                                 ),
                                 child: Column(
@@ -607,7 +605,7 @@ class _BeforeRecordingConfirmScreenState
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
-                                        fixedSize: Size(180, 50),
+                                        fixedSize: const Size(180, 50),
                                         backgroundColor:
                                             Theme.of(context).primaryColorLight,
                                       ),
@@ -635,7 +633,7 @@ class _BeforeRecordingConfirmScreenState
                                         ],
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     ),
                                     ElevatedButton(
@@ -644,14 +642,14 @@ class _BeforeRecordingConfirmScreenState
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
-                                        fixedSize: Size(180, 50),
+                                        fixedSize: const Size(180, 50),
                                         backgroundColor:
                                             Theme.of(context).primaryColor,
                                       ),
                                       onPressed: () {
                                         _takeVideo(context);
                                       },
-                                      child: Row(
+                                      child: const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [

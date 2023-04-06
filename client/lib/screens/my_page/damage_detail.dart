@@ -27,30 +27,13 @@ class DamageDetail extends StatefulWidget {
 class _DamageDetailState extends State<DamageDetail> {
   Map<String, dynamic> detailDamageInfo = {};
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getDetailDamageInfo(
-  //     success: (dynamic response) {
-  //       setState(() {
-  //         detailDamageInfo = response;
-  //       });
-  //       print(response);
-  //     },
-  //     fail: (error) {
-  //       print('렌트 내역 호출 오류: $error');
-  //     },
-  //     damageId: widget.damageId,
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 90,
           ),
           Expanded(
@@ -95,10 +78,10 @@ class _DamageDetailState extends State<DamageDetail> {
                           )
                         ],
                       ),
-                      margin:
-                          EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 15),
                       width: 1000,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +97,7 @@ class _DamageDetailState extends State<DamageDetail> {
                               decoration: TextDecoration.none,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           RentLogLine(
@@ -122,7 +105,7 @@ class _DamageDetailState extends State<DamageDetail> {
                             info: widget.damageDate.toString().substring(0, 10),
                             space: 100,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           RentLogLine(
@@ -130,7 +113,7 @@ class _DamageDetailState extends State<DamageDetail> {
                             info: "${widget.kindOfDamage}",
                             space: 100,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           RentLogLine(
@@ -138,7 +121,7 @@ class _DamageDetailState extends State<DamageDetail> {
                             info: "${widget.damagaLocation}",
                             space: 100,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           if ("${widget.memo}" != "")
@@ -150,7 +133,7 @@ class _DamageDetailState extends State<DamageDetail> {
                           if ("${widget.memo}" == "")
                             Row(
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 100,
                                   child: Text(
                                     "메모",
@@ -164,7 +147,7 @@ class _DamageDetailState extends State<DamageDetail> {
                                   ),
                                 ),
                                 Container(
-                                  child: Text(
+                                  child: const Text(
                                     "메모가 없습니다",
                                     style: TextStyle(
                                       color: Color(0xFFD9D9D9),
@@ -184,7 +167,7 @@ class _DamageDetailState extends State<DamageDetail> {
               ),
             ),
           ),
-          Footer(),
+          const Footer(),
         ],
       ),
     );
