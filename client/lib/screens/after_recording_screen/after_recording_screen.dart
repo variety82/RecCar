@@ -33,23 +33,35 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
 
   Future<void> fetchData() async {
     await Future.delayed(const Duration(seconds: 1));
-    analysisCarDamageApi(
-      success: (dynamic response) {
-        setState(() {
-          carDamagesAllList = response;
-          loading_api = true;
-        });
-      },
-      fail: (error) {
-        setState(
-          () {
+    print('haha');
+    try {
+      analysisCarDamageApi(
+        success: (dynamic response) {
+          setState(() {
+            carDamagesAllList = response;
             loading_api = true;
-          },
-        );
-      },
-      filePath: widget.filePath,
-      user_id: userNickName ?? 'default',
-    );
+          });
+        },
+        fail: (error) {
+          setState(
+                () {
+              loading_api = true;
+            },
+          );
+        },
+        filePath: widget.filePath,
+        user_id: userNickName ?? 'default',
+      );
+    } catch (error) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/error',
+        arguments: {
+          'errorText': error,
+        },
+        ModalRoute.withName('/home'),
+      );
+    }
   }
 
   @override

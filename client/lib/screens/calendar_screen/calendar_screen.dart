@@ -89,14 +89,14 @@ class _CalendarState extends State<Calendar> {
       },
       fail: (error) {
         print('캘린더 내역 호출 오류: $error');
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/error',
-          arguments: {
-            'errorText': error,
-          },
-          ModalRoute.withName('/home'),
-        );
+        // Navigator.pushNamedAndRemoveUntil(
+        //   context,
+        //   '/error',
+        //   arguments: {
+        //     'errorText': error,
+        //   },
+        //   ModalRoute.withName('/home'),
+        // );
       },
     );
     _selectedDay = _focusedDay;
@@ -521,14 +521,14 @@ class _CalendarState extends State<Calendar> {
         },
         fail: (error) {
           print('일정 등록 오류: $error');
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/error',
-            arguments: {
-              'errorText': error,
-            },
-            ModalRoute.withName('/home'),
-          );
+          // Navigator.pushNamedAndRemoveUntil(
+          //   context,
+          //   '/error',
+          //   arguments: {
+          //     'errorText': error,
+          //   },
+          //   ModalRoute.withName('/home'),
+          // );
         },
         body: _buildCalendarInfoBody(),
       );
@@ -954,14 +954,14 @@ class _CalendarState extends State<Calendar> {
       },
       fail: (error) {
         print('일정 수정 오류: $error');
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/error',
-          arguments: {
-            'errorText': error,
-          },
-          ModalRoute.withName('/home'),
-        );
+        // Navigator.pushNamedAndRemoveUntil(
+        //   context,
+        //   '/error',
+        //   arguments: {
+        //     'errorText': error,
+        //   },
+        //   ModalRoute.withName('/home'),
+        // );
       },
       body: _buildCalendarInfoBody2(id),
     );
@@ -977,14 +977,14 @@ class _CalendarState extends State<Calendar> {
       },
       fail: (error) {
         print('일정 삭제 오류: $error');
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/error',
-          arguments: {
-            'errorText': error,
-          },
-          ModalRoute.withName('/home'),
-        );
+        // Navigator.pushNamedAndRemoveUntil(
+        //   context,
+        //   '/error',
+        //   arguments: {
+        //     'errorText': error,
+        //   },
+        //   ModalRoute.withName('/home'),
+        // );
       },
       calendarId: id,
     );
