@@ -1,0 +1,9 @@
+opencv-python
+segmentation-models-pytorch==0.2.1
+matplotlib==3.7.1
+fastapi==0.94.1
+uvicorn==0.21.0
+pytz==2021.3
+boto3==1.26.90
+python-dotenv==1.0.0
+python-multipart==0.0.6
