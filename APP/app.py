@@ -59,6 +59,7 @@ async def upload_video(file : UploadFile, user_id : str):
     else:
         images = [{}]
         images[0]['url'] = "http://image.dongascience.com/Photo/2020/03/5bddba7b6574b95d37b6079c199d7101.jpg"
+        return images
 
 @app.post("/ai-api/v1/image")
 async def upload_image(file : UploadFile, user_id : str):
