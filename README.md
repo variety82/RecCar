@@ -1,4 +1,4 @@
-# 🚗RecCar 자동차 손상 관리 서비스
+# RecCar 자동차 손상 관리 서비스
 
 ### 프로젝트 진행 기간
 
@@ -75,8 +75,6 @@
   </table>
 </div>
 
-
-
 ## 🚦등장 배경
 
 관광지, 휴가 등에서 차량 대여 서비스 이용 후 분쟁을 겪으신 적이 있으신가요?
@@ -87,7 +85,7 @@
 
 ### 당신의 소중한 여행, 휴가가 되도록 저희 RecCar가 지켜드리겠습니다
 
-## 개요
+## 💭개요
 
 렉카(RecCar)는 AI를 이용한 차량 파손 손상 인식 및 기록 서비스입니다.
 
@@ -114,16 +112,12 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 
 ![Architecture](./assets/Architecture.png)
 
-
-
 ### 📂디렉토리 구조
 
 <details>
   <summary>
   백엔드 디렉토리 구조(Java)
   </summary>
-
-
 
     ├─main
     │  ├─java
@@ -173,14 +167,12 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 
  </details>
 
-### 
+###
 
 <details>
   <summary>
   백엔드 디렉토리 구조(Python)
   </summary>
-
-
 
     ├─dataset
     │  ├─images
@@ -197,13 +189,10 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 
  </details>
 
-
-
 <details>
   <summary>
   프론트엔드 디렉토리 구조
   </summary>
-
 
     ├─assets
     │  ├─car_video
@@ -264,8 +253,6 @@ git clone https://lab.ssafy.com/s08-ai-image-sub2/S08P22A102.git
 | ----- | -------- | ---- |
 | Unet  | ResNet34 | 0.72 |
 
-
-
 ## 💡 Model Installation Guide
 
 ```
@@ -287,8 +274,6 @@ python code/src/Utils.py --make_cocoformat 1 --task damage
 cd AI/code로 이동하여 아래 명령어를 실행합니다.
 python main.py --train y --task damage --label all
 ```
-
-
 
 ## 주요기능 및 화면
 
