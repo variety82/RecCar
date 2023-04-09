@@ -3,6 +3,8 @@ import '../../widgets/common/footer.dart';
 import '../../widgets/my_page/rent_log_line.dart';
 import './rent_log_detail_before.dart';
 import 'package:client/screens/my_page/rent_log_detail_after.dart';
+import 'package:client/screens/make_damage_pdf_screen/make_damage_pdf_screen.dart';
+import 'package:client/screens/make_damage_pdf_screen/pdf_maker_yeah.dart';
 import 'package:client/services/my_page_api.dart';
 
 class RentLogDetail extends StatefulWidget {
@@ -27,6 +29,8 @@ class _RentLogDetailState extends State<RentLogDetail> {
       success: (dynamic response) {
         setState(() {
           simpleDamageInfo = response;
+          print(simpleDamageInfo);
+          print(detailRentInfo);
         });
       },
       fail: (error) {
@@ -210,6 +214,19 @@ class _RentLogDetailState extends State<RentLogDetail> {
                     info: simpleDamageInfo['carNumber'] ?? "",
                     space: 120,
                   ),
+                  Center(
+                    child: TextButton(style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                        EdgeInsets.symmetric(horizontal: 100, vertical: 0),
+                      ),
+                    ), onPressed: () {Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        // builder: (context) => MakeDamagePdfScreen(detailRentInfo: detailRentInfo, simpleDamageInfo: simpleDamageInfo)
+                        builder: (context) => PdfMakerScreen(title: 'title', detailRentInfo: detailRentInfo, simpleDamageInfo: simpleDamageInfo)
+                      ),
+                    );}, child: Text('pdf 만들기', style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor, decoration: TextDecoration.underline,),)),
+                  )
                 ],
               ),
             ),
