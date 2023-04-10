@@ -49,7 +49,7 @@ class _PdfMakerScreenState extends State<PdfMakerScreen> {
         Map<String, dynamic> damageInfo = {
           'part': widget.detailRentInfo[dataCase][i]['part'],
           'damageDate': widget.detailRentInfo[dataCase][i]['damageDate'],
-          'memo': widget.detailRentInfo[dataCase][i]['memo'],
+          'memo': widget.detailRentInfo[dataCase][i]['memo'] == '' ? '없음' : widget.detailRentInfo[dataCase][i]['memo'],
           'scratch':widget.detailRentInfo[dataCase][i]['scratch'],
           'crushed': widget.detailRentInfo[dataCase][i]['crushed'],
           'breakage': widget.detailRentInfo[dataCase][i]['breakage'],
@@ -312,67 +312,6 @@ class _PdfMakerScreenState extends State<PdfMakerScreen> {
       ),
     );
 
-    // pdf.addPage(
-    //   pw.Page(
-    //     pageFormat: pageFormat,
-    //     build: (context) {
-    //       return pw.Column(
-    //         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-    //         crossAxisAlignment: pw.CrossAxisAlignment.center,
-    //         children: [
-    //           pw.Column(
-    //               crossAxisAlignment: pw.CrossAxisAlignment.center,
-    //               children: [
-    //                 pw.Text('주의사항', style: pw.TextStyle(fontSize: 30, fontWeight: pw.FontWeight.bold, color: PdfColor.fromInt(0xFFFF0000),
-    //                 ),),
-    //                 pw.SizedBox(
-    //                   width: 20,
-    //                   height: 28,
-    //                 ),
-    //                 pw.Container(
-    //                   width: 40,
-    //                   height: 40,
-    //                   child: pw.FittedBox(
-    //                     child: pw.Image(imageLogo),
-    //                   ),
-    //                 ),
-    //               ]
-    //           ),
-    //
-    //           pw.SizedBox(height: 20),
-    //           pw.Container(
-    //               decoration: pw.BoxDecoration(
-    //                   color: PdfColor.fromInt(0xFFFFFFFFF),
-    //                   // borderRadius:
-    //                   // pw.BorderRadius.circular(10),
-    //                   border: pw.Border.all(
-    //                     color: PdfColor.fromInt(0xFF000000),
-    //                     width: 2,
-    //                   ),
-    //                   boxShadow: [
-    //                     pw.BoxShadow(
-    //                       color: PdfColor.fromInt(0xFF999999),
-    //                       spreadRadius: 0.3,
-    //                       blurRadius: 6,
-    //                     )
-    //                   ]),
-    //             child:
-    //               pw.Column(
-    //                 children: [
-    //                   pw.Padding(
-    //                     child: pw.Text(
-    //                       '차량 번호',
-    //                     ),
-    //                     padding: pw.EdgeInsets.all(10),
-    //                   ),
-    //                 ]
-    //               )
-    //           )
-    //         ],
-    //       );
-    //     },
-    //   ),
-    // );
 
     pdf.addPage(pw.MultiPage(
       build: (context) => [

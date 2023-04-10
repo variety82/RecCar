@@ -126,7 +126,7 @@ class _RentLogDetailState extends State<RentLogDetail> {
         ),
         Container(
           color: Colors.white,
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.32,
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
