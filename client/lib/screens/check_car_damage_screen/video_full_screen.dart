@@ -441,8 +441,8 @@ class _VideoFullScreenState extends State<VideoFullScreen>
                                   height: 16,
                                   width: screenWidth,
                                   decoration: const BoxDecoration(
-                                    color: Colors.black,
-                                  ),
+                                      // color: Colors.black,
+                                      ),
                                   child: VideoProgressIndicator(
                                     _videoPlayerController,
                                     allowScrubbing: true,
