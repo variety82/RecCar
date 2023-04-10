@@ -240,7 +240,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       // 후면 카메라 선택
       final back = availableCameraList.firstWhere(
           (camera) => camera.lensDirection == CameraLensDirection.back);
-      // 후면 카메라를 선택한 후, 영상 해상도를 최대로 선택함
+      // 후면 카메라를 선택한 후, 영상 해상도를 높음으로 선택함
       _cameraController = CameraController(
         back,
         ResolutionPreset.high,
