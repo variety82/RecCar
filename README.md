@@ -277,6 +277,8 @@ python main.py --train y --task damage --label all
 
 ## 주요기능 및 화면
 
+
+
 ### 소셜 로그인(로그인 & 로그아웃(구글OAuth))
 
 - RecCar의 로그인은 소셜 로그인 방식으로 이루어집니다.
@@ -286,6 +288,7 @@ python main.py --train y --task damage --label all
 <div align="center">
 	![로그인](./assets/login.gif)
 </div>
+
 
 ### 근처 렌트카존 찾기
 
@@ -297,6 +300,7 @@ python main.py --train y --task damage --label all
 <div align="center">
     ![지도](./assets/map.gif)
 </div>
+
 
 ### 일정관리(차량 대여 및 반납 일자)
 
@@ -312,6 +316,7 @@ python main.py --train y --task damage --label all
 ![일정관리](./assets/calander.gif)
 </div>
 
+
 ### 차량 영상 등록
 
 - 홈 화면 또는 화면 하단 Footer의 카메라 아이콘 버튼을 클릭할 시 차량 손상을 등록하는 것이 가능합니다.
@@ -321,4 +326,25 @@ python main.py --train y --task damage --label all
 
 <div align="center">
 ![차량등록](./assets/regist.gif)
+</div>
+
+
+### 차량 손상 확인
+
+- 차량 손상 확인 페이지에서는 분석에 사용된 영상과, AI가 영상을 분석하여 캡쳐한 사진을 각 목록 별로 확인할 수 있습니다.
+- 각 손상 목록은 ‘추가 전 손상’, ‘추가할 손상’ 두 가지로 나뉩니다. 이 중 추가할 손상만이 서버에 전송되며, 네비게이션 바로 분리해서 확인할 수 있습니다.
+- 등록 전, 각 손상 종류마다 몇 건이나 존재하는지 확인할 수 있습니다.
+
+<div align="center">
+![차량손상확인](./assets/car_damage.gif)
+</div>
+
+
+
+### 현재 대여 중인 차량
+
+- 현재 대여 중인 차량의 정보를 확인 가능하고, 대여 직후, 반납 직전 영상에서 감지된 손상을 네비게이션 바로 분리하여 확인할 수 있습니다.
+
+<div align="center">
+![현재대여](./assets/현재.gif)
 </div>
