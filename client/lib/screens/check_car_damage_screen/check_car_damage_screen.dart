@@ -112,6 +112,9 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
             },
           );
         }
+        // if (_videoPlayerController.value.isPlaying) {
+        //   _timeChecker();
+        // }
       },
     );
   }
@@ -520,7 +523,7 @@ class _CheckCarDamageScreenState extends State<CheckCarDamageScreen>
                                           });
                                         }
                                       },
-                                      child: _isVisibleSPBTN
+                                      child: (_isVisibleSPBTN && _isVisible)
                                           ? Stack(
                                               alignment: Alignment.center,
                                               children: [

@@ -7,8 +7,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 // 만약 애니메이션 효과 추가 시, 수정 필요
 class AfterRecordingScreen extends StatefulWidget {
   final String filePath;
+  final int video_time;
 
-  const AfterRecordingScreen({Key? key, required this.filePath})
+  const AfterRecordingScreen(
+      {Key? key, required this.filePath, required this.video_time})
       : super(key: key);
 
   @override
@@ -44,13 +46,14 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
         },
         fail: (error) {
           setState(
-                () {
+            () {
               loading_api = true;
             },
           );
         },
         filePath: widget.filePath,
         user_id: userNickName ?? 'default',
+        video_time: widget.video_time,
       );
     } catch (error) {
       Navigator.pushNamedAndRemoveUntil(
