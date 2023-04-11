@@ -6,12 +6,14 @@ void getCarAnalysis({
   required Function(String error) fail,
   required String filePath,
   Map<String, String>? body,
+  required int video_time,
 }) {
   analysisCarDamageApi(
     success: success,
     fail: fail,
     filePath: filePath,
     user_id: 'default_name',
+    video_time: video_time,
   );
 }
 

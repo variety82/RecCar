@@ -19,6 +19,7 @@ class _CheckVideoPageState extends State<CheckVideoPage> {
   late VideoPlayerController _videoPlayerController;
   bool _isPlaying = false;
   bool loading_video = false;
+  int? video_time;
 
   @override
   void dispose() {
@@ -31,9 +32,11 @@ class _CheckVideoPageState extends State<CheckVideoPage> {
       File(widget.filePath),
     );
     await _videoPlayerController.initialize();
+    await Future.delayed(const Duration(milliseconds: 10));
     setState(
       () {
         loading_video = true;
+        video_time = _videoPlayerController.value.duration.inSeconds;
       },
     );
     await _videoPlayerController.pause();
@@ -120,6 +123,7 @@ class _CheckVideoPageState extends State<CheckVideoPage> {
                   fullscreenDialog: true,
                   builder: (_) => AfterRecordingScreen(
                     filePath: widget.filePath,
+                    video_time: video_time!,
                   ),
                 );
                 Navigator.push(context, route);
