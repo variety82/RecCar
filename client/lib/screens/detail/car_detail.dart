@@ -119,6 +119,7 @@ class _CarDetailState extends State<CarDetail>
                   //   },
                   //   ModalRoute.withName('/home'),
                   // );
+                  print('해결?');
                 });
               },
               child: const Text('네'),
