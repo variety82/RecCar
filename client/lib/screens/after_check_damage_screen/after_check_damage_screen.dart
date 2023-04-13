@@ -491,8 +491,14 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                       onPressed: () async {
                                         if (damageInfoList.isNotEmpty) {
                                           postCarDamageInfo(
-                                            success: (dynamic response) {
+                                            success: (dynamic response) async {
+                                              await storage.write(
+                                                  key: "carVideoState",
+                                                  value: currentCarVideo == 0
+                                                      ? '1'
+                                                      : '2');
                                               setState(() {
+                                                load_data = true;
                                                 loading_api = true;
                                               });
                                             },
@@ -514,16 +520,17 @@ class _AfterCheckDamageScreen extends State<AfterCheckDamageScreen> {
                                             },
                                             bodyList: damageInfoList,
                                           );
+                                        } else {
+                                          await storage.write(
+                                              key: "carVideoState",
+                                              value: currentCarVideo == 0
+                                                  ? '1'
+                                                  : '2');
+                                          setState(() {
+                                            load_data = true;
+                                            loading_api = true;
+                                          });
                                         }
-                                        await storage.write(
-                                            key: "carVideoState",
-                                            value: currentCarVideo == 0
-                                                ? '1'
-                                                : '2');
-                                        setState(() {
-                                          load_data = true;
-                                          loading_api = true;
-                                        });
                                       },
                                       child: const Column(
                                         mainAxisAlignment:
