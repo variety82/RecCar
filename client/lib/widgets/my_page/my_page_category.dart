@@ -27,12 +27,18 @@ enum CategoryName { ModifyInfo, MyCar, RentLog, NoticeSetting, Logout, Resign }
 
 String convertCategoryNameToKor(CategoryName name) {
   switch (name) {
-    case CategoryName.ModifyInfo: return "내 정보 수정";
-    case CategoryName.MyCar: return "차량 정보 조회";
-    case CategoryName.RentLog: return "렌트 내역";
-    case CategoryName.NoticeSetting: return "알림 설정";
-    case CategoryName.Logout: return "로그아웃";
-    case CategoryName.Resign: return "회원 정보 초기화";
+    case CategoryName.ModifyInfo:
+      return "내 정보 수정";
+    case CategoryName.MyCar:
+      return "차량 정보 조회";
+    case CategoryName.RentLog:
+      return "렌트 내역";
+    case CategoryName.NoticeSetting:
+      return "알림 설정";
+    case CategoryName.Logout:
+      return "로그아웃";
+    case CategoryName.Resign:
+      return "회원 정보 초기화";
   }
 }
 
@@ -80,14 +86,14 @@ class _MyPageCategoryState extends State<MyPageCategory> {
       },
       fail: (error) {
         print("사용자 수정 오류: $error");
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/error',
-          arguments: {
-            'errorText': error,
-          },
-          ModalRoute.withName('/home'),
-        );
+        // Navigator.pushNamedAndRemoveUntil(
+        //   context,
+        //   '/error',
+        //   arguments: {
+        //     'errorText': error,
+        //   },
+        //   ModalRoute.withName('/home'),
+        // );
       },
       nickname: "$_modifiedName",
       profileImg: path,
@@ -388,14 +394,14 @@ class _MyPageCategoryState extends State<MyPageCategory> {
       success: (dynamic response) {},
       fail: (error) {
         print('사용자 정보 초기화 오류: $error');
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/error',
-          arguments: {
-            'errorText': error,
-          },
-          ModalRoute.withName('/home'),
-        );
+        // Navigator.pushNamedAndRemoveUntil(
+        //   context,
+        //   '/error',
+        //   arguments: {
+        //     'errorText': error,
+        //   },
+        //   ModalRoute.withName('/home'),
+        // );
       },
     );
     Navigator.pop(context);

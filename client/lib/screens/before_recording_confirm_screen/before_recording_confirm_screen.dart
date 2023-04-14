@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:client/screens/after_recording_screen/after_recording_screen.dart';
+import 'package:client/screens/check_video_screen/check_video_screen.dart';
 
 class BeforeRecordingConfirmScreen extends StatefulWidget {
   final String? videoCase;
@@ -48,9 +49,7 @@ class _BeforeRecordingConfirmScreenState
       if (videoFilePath != null || videoFilePath != '') {
         final route = MaterialPageRoute(
           fullscreenDialog: true,
-          builder: (_) => AfterRecordingScreen(
-            filePath: videoFilePath!,
-          ),
+          builder: (_) => CheckVideoPage(filePath: videoFilePath!),
         );
         Navigator.pop(context);
         Navigator.push(context, route);
@@ -63,32 +62,32 @@ class _BeforeRecordingConfirmScreenState
     }
   }
 
-  Future<void> _takeVideo(BuildContext context) async {
-    final pickedFile =
-        await ImagePicker().pickVideo(source: ImageSource.camera);
-    if (pickedFile != null) {
-      setState(() {
-        _isLoading = true;
-      });
-      await Future.delayed(const Duration(seconds: 1));
-      videoFile = File(pickedFile.path);
-      videoFilePath = videoFile!.path;
-      if (videoFilePath != null || videoFilePath != '') {
-        final route = MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (_) => AfterRecordingScreen(
-            filePath: videoFilePath!,
-          ),
-        );
-        Navigator.pop(context);
-        Navigator.push(context, route);
-      } else {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
+  // Future<void> _takeVideo(BuildContext context) async {
+  //   final pickedFile =
+  //       await ImagePicker().pickVideo(source: ImageSource.camera);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //     await Future.delayed(const Duration(seconds: 1));
+  //     videoFile = File(pickedFile.path);
+  //     videoFilePath = videoFile!.path;
+  //     if (videoFilePath != null || videoFilePath != '') {
+  //       final route = MaterialPageRoute(
+  //         fullscreenDialog: true,
+  //         builder: (_) => AfterRecordingScreen(
+  //           filePath: videoFilePath!,
+  //         ),
+  //       );
+  //       Navigator.pop(context);
+  //       Navigator.push(context, route);
+  //     } else {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

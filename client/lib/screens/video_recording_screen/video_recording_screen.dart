@@ -1,12 +1,16 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:client/screens/check_video_screen/check_video_screen.dart';
 
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:video_player/video_player.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 // 내부 요소 실시간 변경되므로 Stateful Widget 생성
 class VideoRecordingScreen extends StatefulWidget {
@@ -32,7 +36,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   bool _nowcameraInitialized = false;
 
   // 현재 카메라&녹음 허가가 받아진 상태인지 구분
-  bool _nowCameraPermissionGranted = false;
+  bool _nowCameraPermissionGranted = true;
 
   // 현재 허가가 어떤 식으로 거부당했는지 구분
   String _nowReasonDeniedCamera = '';
@@ -47,7 +51,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
   // 카메라 컨트롤러와 플래쉬 모드는 이후 값 들어오면 배정해주기 위해 late로 배정해줌
   late CameraController _cameraController;
-  late FlashMode _nowFlashMode;
+  FlashMode _nowFlashMode = FlashMode.off;
 
   // 파일 경로도 나중에 지정해줄 것이므로 late로 배정
   late String nowFilePath;
@@ -63,14 +67,6 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       nowFilePath = filePath;
     } catch (err) {
       print('$err로 인해 디렉토리 경로 불러오기 실패');
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/error',
-        arguments: {
-          'errorText': err,
-        },
-        ModalRoute.withName('/home'),
-      );
     }
   }
 
@@ -80,13 +76,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   // 카메라 및 녹음 기능 사용을 위해 permission_handler를 이용함
   void _cameraPermission() async {
     // 권한 부여되지 않았을 시 권한 요청 후 결과 받아와 requestStatus에 저장
-    await Permission.camera.request();
+    // await Permission.camera.request();
     // 현재 권한 부여 상태가 어떤지 nowPermissionStatus로 받아옴
     var cameraPermissionStatus = await Permission.camera.status;
     // 만약 카메라 권한이 허용되었거나(isGranted == true), 제한적 허가 되었다면(isLimited)
     if (cameraPermissionStatus.isGranted || cameraPermissionStatus.isLimited) {
       // 카메라 권한 허용 시 녹음 권한 요청
-      await Permission.microphone.request();
+      // await Permission.microphone.request();
       var microphonePermissionStatus = await Permission.microphone.status;
       // 카메라 및 녹음 권한 요청에 모두 성공했을 시
       // setState로 _nowCameraPermissionGranted 값을 true로 바꿔줌
@@ -146,14 +142,6 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       return myFilePath;
     } catch (err) {
       print('$err로 인해 녹화 실패');
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/error',
-        arguments: {
-          'errorText': err,
-        },
-        ModalRoute.withName('/home'),
-      );
       return 'error';
     }
   }
@@ -213,7 +201,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   @override
   void initState() {
     // 하단바만 보이게 조절
-    _cameraPermission();
+    // _cameraPermission();
     _initCamera();
     getVideoFilePath();
 
@@ -232,7 +220,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     final CameraController cameraController = _cameraController;
 
     // App state changed before we got the chance to initialize.
-    if (!cameraController.value.isInitialized) {
+    if (cameraController == null || !cameraController.value.isInitialized) {
       return;
     }
 
@@ -252,7 +240,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       // 후면 카메라 선택
       final back = availableCameraList.firstWhere(
           (camera) => camera.lensDirection == CameraLensDirection.back);
-      // 후면 카메라를 선택한 후, 영상 해상도를 최대로 선택함
+      // 후면 카메라를 선택한 후, 영상 해상도를 높음으로 선택함
       _cameraController = CameraController(
         back,
         ResolutionPreset.high,
@@ -262,11 +250,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
       // 컨트롤러를 초기화함
       await _cameraController.initialize();
-      _nowFlashMode = FlashMode.auto;
-      await _cameraController.setFlashMode(_nowFlashMode);
+
+      // await _cameraController.setFlashMode(_nowFlashMode);
       setState(() {
         _nowLoading = false;
       });
+
+      print(_nowLoading);
     } catch (err) {
       print('$err로 인해 카메라 initialized 실패');
     }
@@ -528,12 +518,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                               _nowRecording
                                   ? InkWell(
                                       onTap: () async {},
-                                      child: const Stack(
+                                      child: Stack(
                                         alignment: Alignment.center,
                                         children: [
                                           Icon(
                                             Icons.circle,
-                                            color: Colors.black38,
+                                            color:
+                                                Colors.black38.withOpacity(0),
                                             size: 60,
                                           ),
                                           // Icon(
@@ -543,7 +534,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                           // ),
                                           Icon(
                                             Icons.camera,
-                                            color: Colors.white,
+                                            color: Colors.white.withOpacity(0),
                                             size: 30,
                                           )
                                         ],
@@ -556,16 +547,17 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                                       child: Stack(
                                         alignment: Alignment.center,
                                         children: [
-                                          const Icon(
+                                          Icon(
                                             Icons.circle,
-                                            color: Colors.black38,
+                                            color:
+                                                Colors.black38.withOpacity(0),
                                             size: 60,
                                           ),
                                           Icon(
                                             !_nowSelectFrontCamera
                                                 ? Icons.camera_front
                                                 : Icons.camera_rear,
-                                            color: Colors.white,
+                                            color: Colors.white.withOpacity(0),
                                             size: 30,
                                           ),
                                         ],

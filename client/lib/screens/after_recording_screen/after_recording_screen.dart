@@ -7,8 +7,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 // 만약 애니메이션 효과 추가 시, 수정 필요
 class AfterRecordingScreen extends StatefulWidget {
   final String filePath;
+  final int video_time;
 
-  const AfterRecordingScreen({Key? key, required this.filePath})
+  const AfterRecordingScreen(
+      {Key? key, required this.filePath, required this.video_time})
       : super(key: key);
 
   @override
@@ -33,23 +35,36 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
 
   Future<void> fetchData() async {
     await Future.delayed(const Duration(seconds: 1));
-    analysisCarDamageApi(
-      success: (dynamic response) {
-        setState(() {
-          carDamagesAllList = response;
-          loading_api = true;
-        });
-      },
-      fail: (error) {
-        setState(
-          () {
+    print('haha');
+    try {
+      analysisCarDamageApi(
+        success: (dynamic response) {
+          setState(() {
+            carDamagesAllList = response;
             loading_api = true;
-          },
-        );
-      },
-      filePath: widget.filePath,
-      user_id: userNickName ?? 'default',
-    );
+          });
+        },
+        fail: (error) {
+          setState(
+            () {
+              loading_api = true;
+            },
+          );
+        },
+        filePath: widget.filePath,
+        user_id: userNickName ?? 'default',
+        video_time: widget.video_time,
+      );
+    } catch (error) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/error',
+        arguments: {
+          'errorText': error,
+        },
+        ModalRoute.withName('/home'),
+      );
+    }
   }
 
   @override
@@ -115,7 +130,7 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                                 maxHeight: 140,
                               ),
                               child: Image.asset(
-                                'lib/assets/images/loading_img/complete.gif.gif',
+                                'lib/assets/images/loading_img/complete_gif.gif',
                               ),
                             ),
                           ),
@@ -217,10 +232,19 @@ class _AfterRecordingScreenState extends State<AfterRecordingScreen> {
                               ),
                             ],
                           ),
-                          CircularProgressIndicator(
-                            color: Theme.of(context).primaryColor,
-                            // strokeWidth: 8,
+                          Container(
+                            constraints: const BoxConstraints(
+                              maxWidth: 180,
+                              maxHeight: 180,
+                            ),
+                            child: Image.asset(
+                              'lib/assets/images/loading_img/car_spinning.gif',
+                            ),
                           ),
+                          // CircularProgressIndicator(
+                          //   color: Theme.of(context).primaryColor,
+                          //   // strokeWidth: 8,
+                          // ),
                         ],
                       ),
                     ),

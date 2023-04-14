@@ -12,6 +12,7 @@ Future<dynamic> analysisCarDamageApi({
   required Function(String error) fail,
   required String filePath,
   required String? user_id,
+  required int video_time,
 }) async {
   // api URL 주소를 넣습니다
   final encodedUserId = Uri.encodeComponent(user_id!);
@@ -25,12 +26,14 @@ Future<dynamic> analysisCarDamageApi({
     "accept": "application/json",
     "Content-Type": "multipart/form-data",
   };
-
+  print('its video time!');
+  print(video_time);
   var request = http.MultipartRequest("POST", url);
   request.headers.addAll(headers);
   File file = File(filePath);
 
   request.files.add(await http.MultipartFile.fromPath("file", filePath));
+  print(request);
   var response = await request.send();
 
   if (200 <= response.statusCode && response.statusCode < 300) {
@@ -38,6 +41,9 @@ Future<dynamic> analysisCarDamageApi({
     String responseBody = await response.stream.transform(utf8.decoder).join();
     dynamic jsonResponse = jsonDecode(responseBody);
     dynamic jsonList = jsonResponse;
+    int countTimeStamp = (video_time / jsonList.length).toInt();
+    print('its time stamp!');
+    print(countTimeStamp);
 
     List<Map<String, dynamic>> carDamagesAllList = [];
 
@@ -51,7 +57,7 @@ Future<dynamic> analysisCarDamageApi({
           "Crushed": 0,
           "Breakage": 0,
           "Separated": 0,
-          "timeStamp": i,
+          "timeStamp": countTimeStamp * (i + 1),
           "damageView": '미정',
           "memo": "",
           "selected": false,
