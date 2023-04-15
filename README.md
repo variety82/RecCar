@@ -285,10 +285,7 @@ python main.py --train y --task damage --label all
 - 현재 소셜 로그인은 구글 계정으로만 가능합니다.
 - 로그인 완료 시, 자동으로 홈 화면으로 이동합니다.
 
-<div align="center">
-	![로그인](./assets/login.gif)
-</div>
-
+<p align="center"><img src="./assets/login.gif"></p>
 
 ### 근처 렌트카존 찾기
 
@@ -297,9 +294,7 @@ python main.py --train y --task damage --label all
 - 상단의 검색 바에 검색어를 입력할 경우, 해당 검색어와 관련된 지점의 정보를 하단의 모달에서 확인할 수 있습니다.
   - 각 항목을 클릭할 시 현재 위치에서 해당 지점까지 도보로 얼마나 걸리는지도 확인이 가능합니다.
 
-<div align="center">
-    ![지도](./assets/map.gif)
-</div>
+<p align="center"><img src="./assets/map.gif"></p>
 
 
 ### 일정관리(차량 대여 및 반납 일자)
@@ -312,10 +307,7 @@ python main.py --train y --task damage --label all
 - 한 번 등록한 일정은 수정과 삭제가 가능합니다.
   - 단, 차량 대여 시 자동으로 생성된 일정의 경우 삭제가 불가능합니다.
 
-<div align="center">
-![일정관리](./assets/calander.gif)
-</div>
-
+<p align="center"><img src="./assets/calander.gif"></p>
 
 ### 차량 영상 등록
 
@@ -324,9 +316,8 @@ python main.py --train y --task damage --label all
   - 영상 촬영을 선택했을 경우, 촬영 후 영상 확인이 가능합니다.
 - 영상 촬영 또는 선택 후, 일정 시간 동안 AI를 통한 분석이 진행되며, 분석이 완료되었을 시 차량 손상 확인 페이지로 이동합니다.
 
-<div align="center">
-![차량등록](./assets/regist.gif)
-</div>
+
+<p align="center"><img src="./assets/regist.gif"></p>
 
 
 ### 차량 손상 확인
@@ -335,16 +326,11 @@ python main.py --train y --task damage --label all
 - 각 손상 목록은 ‘추가 전 손상’, ‘추가할 손상’ 두 가지로 나뉩니다. 이 중 추가할 손상만이 서버에 전송되며, 네비게이션 바로 분리해서 확인할 수 있습니다.
 - 등록 전, 각 손상 종류마다 몇 건이나 존재하는지 확인할 수 있습니다.
 
-<div align="center">
-![차량손상확인](./assets/car_damage.gif)
-</div>
-
+<p align="center"><img src="./assets/car_damage.gif"></p>
 
 
 ### 현재 대여 중인 차량
 
 - 현재 대여 중인 차량의 정보를 확인 가능하고, 대여 직후, 반납 직전 영상에서 감지된 손상을 네비게이션 바로 분리하여 확인할 수 있습니다.
 
-<div align="center">
-![현재대여](./assets/현재.gif)
-</div>
+<p align="center"><img src="./assets/현재.gif"></p>
