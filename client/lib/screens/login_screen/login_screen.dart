@@ -92,7 +92,7 @@ class _LoginState extends State<Login> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              '©2023 SSAFY. All rights reserved.',
+              '©2023 VALUEUP.',
               style: TextStyle(
                   color: Theme.of(context).disabledColor,
                   fontWeight: FontWeight.w500),
