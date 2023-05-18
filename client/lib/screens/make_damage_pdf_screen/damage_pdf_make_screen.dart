@@ -261,7 +261,7 @@ class _PdfMakerScreenState extends State<PdfMakerScreen> {
                 ),
                 pw.SizedBox(height: 10),
                 pw.Text(
-                  '주의: 본 문서는 참고용으로 봐주시기 바랍니다.',
+                  '',
                   style: pw.TextStyle(
                     fontSize: 14,
                     color: PdfColor.fromInt(0xFFFF0000),
