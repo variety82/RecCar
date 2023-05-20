@@ -68,13 +68,15 @@ class _CheckCarDamagePartState extends State<CheckCarDamagePart> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Container(
-              constraints: const BoxConstraints(
-                maxWidth: 300,
-                maxHeight: 200,
-              ),
+              // constraints: const BoxConstraints(
+              //   maxWidth: 300,
+              //   maxHeight: 200,
+              // ),
+              width: double.infinity,
+              height: 184,
               child: FadeInImage(
                 placeholder: const AssetImage(
-                    'lib/assets/images/loading_img/loading_gif.gif'),
+                    'lib/assets/images/loading_img/loadingCar.gif'),
                 image: NetworkImage(widget.imageUrl),
               ),
             ),

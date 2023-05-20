@@ -33,6 +33,12 @@ void main() async {
     MaterialApp(
       title: 'cilent',
       theme: ThemeData(
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: NoTransitionPageTransitionsBuilder(),
+            TargetPlatform.iOS: NoTransitionPageTransitionsBuilder(),
+          },
+        ),
         fontFamily: 'Pretendard',
         primaryColor: const Color(0xFFE0426F),
         primaryColorLight: const Color(0xFFFBD5DC),
@@ -57,4 +63,18 @@ void main() async {
       },
     ),
   );
+}
+
+// Custom PageTransitionsBuilder that disables the transition animation
+class NoTransitionPageTransitionsBuilder extends PageTransitionsBuilder {
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return child; // Returns the child directly without any transition animation
+  }
 }

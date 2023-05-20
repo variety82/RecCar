@@ -153,7 +153,7 @@ class _CheckCarDamageDetailState extends State<CheckCarDamageDetail> {
         child: RawScrollbar(
     thumbVisibility: true,
     radius: const Radius.circular(10),
-    thumbColor: Theme.of(context).primaryColor,
+    thumbColor: Theme.of(context).primaryColor.withOpacity(0.5),
     thickness: 5,
     child: Padding(
     padding: const EdgeInsets.symmetric(
